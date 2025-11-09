@@ -96,6 +96,23 @@ Remarques :
 - Sur iOS, la prise en charge des Service Workers est plus limitée que sur Android. Certaines fonctionnalités (background sync, push) peuvent être restreintes.
 - Notre manifeste et le `apple-touch-icon` (180×180) sont fournis pour améliorer la présentation sur l'écran d'accueil.
 
+### Splash screens iOS
+
+Des images de démarrage (splash screens) iOS ont été ajoutées pour améliorer l'apparence au lancement depuis l'écran d'accueil. Les fichiers ajoutés se trouvent dans `icons/` :
+
+- `icons/splash-640x1136.png` (iPhone 4/SE portrait)
+- `icons/splash-750x1334.png` (iPhone 6/7/8 portrait)
+- `icons/splash-1125x2436.png` (iPhone X/XS portrait)
+- `icons/splash-1242x2208.png` (iPhone Plus portrait)
+- `icons/splash-1536x2048.png` (iPad portrait)
+
+Les splash screens sont référencés automatiquement dans la page via des balises `link rel="apple-touch-startup-image"` avec des media queries adaptées.
+
+Pour tester :
+1. Sur iOS, ajoute l'application à l'écran d'accueil (Safari > Partager > Ajouter à l'écran d'accueil).
+2. Ouvre l'application depuis l'écran d'accueil (ne pas l'ouvrir dans Safari) — le splash devrait s'afficher au démarrage.
+
+
 
 ## Limitations et améliorations possibles
 
