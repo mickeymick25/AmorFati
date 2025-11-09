@@ -19,8 +19,9 @@ jobs:
         with:
           # URL to audit - GitHub Pages public URL for this repo
           urls: 'https://mickeymick25.github.io/AmorFati'
-          # upload json/html artifacts for later inspection
-          uploadArtifacts: true
-          uploadReports: true
-          # post a comment on PR with summary (requires GITHUB_TOKEN)
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Use temporary public storage for reports (avoids artifact creation issues)
+          temporaryPublicStorage: true
+          # do not attempt the runner artifact upload (can fail on some runners)
+          uploadArtifacts: false
+          # name for artifacts if enabled
+          artifactName: 'lighthouse-results'
