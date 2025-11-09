@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#667eea">
     <meta name="description" content="Évaluation personnelle Amor Fati - Suivi de ton évolution philosophique">
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQW1vciBGYXRpIFRyYWNrZXIiLCJzaG9ydF9uYW1lIjoiQW1vciBGYXRpIiwiZGVzY3JpcHRpb24iOiLDiXZhbHVhdGlvbiBwZXJzb25uZWxsZSBBbW9yIEZhdGkiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiIzY2N2VlYSIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBeE1USWdNVEV5SWo0OFkybHlZMnhsSUdONFBTSTFOaUlnWTNrOUlqVTJJaUJ5UFNJME1DSWdabWxzYkQwaUl6WTJOMlZsWVNJdlBqd3ZjM1puUGc9PSIsInNpemVzIjoiMTEyeDExMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-180.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Amor Fati Tracker - Suivi Personnel</title>
     <style>
         * {
@@ -1710,8 +1713,36 @@
         // Enregistrer le Service Worker pour PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Note: En production, vous devriez avoir un vrai service-worker.js
-                // Pour cette démo, l'app fonctionne sans service worker
+                navigator.serviceWorker.register('service-worker.js', { scope: '/AmorFati/' })
+                    .then(reg => {
+                        console.log('ServiceWorker registered with scope:', reg.scope);
+
+                        // If there's an update found, notify clients
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed') {
+                                    // New content available, inform the user
+                                    if (navigator.serviceWorker.controller) {
+                                        // Show a small prompt to refresh
+                                        if (confirm('Une nouvelle version est disponible. Voulez-vous recharger pour l\'installer maintenant ?')) {
+                                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => console.warn('ServiceWorker registration failed:', err));
+
+            });
+
+            // React to messages from the SW (e.g., for skipWaiting)
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (!event.data) return;
+                if (event.data.type === 'RELOAD_PAGE') {
+                    window.location.reload();
+                }
             });
         }
     </script>
