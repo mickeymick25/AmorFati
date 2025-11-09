@@ -1,7 +1,7 @@
 {
   "name": "Amor Fati Tracker",
   "short_name": "AmorFati",
-  "start_url": ".",
+  "start_url": "/AmorFati/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#667eea",
