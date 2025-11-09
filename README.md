@@ -1,6 +1,7 @@
 # AmorFati
 
 [![Deployed on GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-blue?logo=github)](https://mickeymick25.github.io/AmorFati)
+[![Pages deploy status](https://github.com/mickeymick25/AmorFati/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/mickeymick25/AmorFati/actions/workflows/deploy-pages.yml)
 
 Une petite application front-end (single file) pour suivre ton cheminement vers l'« Amor Fati »
 (acceptation de sa vie). L'interface est contenue dans `index.html` et fonctionne entièrement
