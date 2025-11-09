@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#667eea">
     <meta name="description" content="Évaluation personnelle Amor Fati - Suivi de ton évolution philosophique">
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQW1vciBGYXRpIFRyYWNrZXIiLCJzaG9ydF9uYW1lIjoiQW1vciBGYXRpIiwiZGVzY3JpcHRpb24iOiLDiXZhbHVhdGlvbiBwZXJzb25uZWxsZSBBbW9yIEZhdGkiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiIzY2N2VlYSIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBeE1USWdNVEV5SWo0OFkybHlZMnhsSUdONFBTSTFOaUlnWTNrOUlqVTJJaUJ5UFNJME1DSWdabWxzYkQwaUl6WTJOMlZsWVNJdlBqd3ZjM1puUGc9PSIsInNpemVzIjoiMTEyeDExMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
+    <link rel="manifest" href="/manifest.json">
     <title>Amor Fati Tracker - Suivi Personnel</title>
     <style>
         * {
@@ -1711,8 +1711,13 @@
         // Enregistrer le Service Worker pour PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Note: En production, vous devriez avoir un vrai service-worker.js
-                // Pour cette démo, l'app fonctionne sans service worker
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => {
+                        console.log('Service Worker registered.', reg);
+                    })
+                    .catch(err => {
+                        console.error('Service Worker registration failed:', err);
+                    });
             });
         }
     </script>

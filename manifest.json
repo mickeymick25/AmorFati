@@ -1,0 +1,10 @@
+{
+  "name": "Amor Fati Tracker",
+  "short_name": "AmorFati",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "description": "Suivi personnel Amor Fati - évalue et suis ton évolution vers l'acceptation",
+  "lang": "fr-FR"
+}
