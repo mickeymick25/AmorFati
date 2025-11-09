@@ -1052,6 +1052,23 @@
         </div>
     </div>
 
+    <!-- Update available banner -->
+    <div id="updateBanner" style="display:none; position:fixed;bottom:20px;left:20px;right:20px;z-index:1100;">
+        <div style="background:#fff; padding:12px; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.15); display:flex; gap:10px; align-items:center; justify-content:space-between;">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <div style="width:36px; height:36px; border-radius:8px; background:linear-gradient(90deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">↻</div>
+                <div>
+                    <div style="font-weight:700; color:#333">Nouvelle version disponible</div>
+                    <div style="font-size:0.9em; color:#666">Recharge pour appliquer la mise à jour</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button id="updateReload" class="btn">Recharger</button>
+                <button id="updateDismiss" class="btn btn-secondary">Plus tard</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Variables globales
         let deferredPrompt;
@@ -1714,12 +1731,51 @@
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(reg => {
                         console.log('Service Worker registered.', reg);
+                        // Listen for updates to the service worker
+                        if (reg.waiting) {
+                            notifyUpdateReady(reg);
+                        }
+
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        // New update available
+                                        notifyUpdateReady(reg);
+                                    }
+                                }
+                            });
+                        });
                     })
                     .catch(err => {
                         console.error('Service Worker registration failed:', err);
                     });
             });
         }
+
+        // Show update UI and wire actions
+        function notifyUpdateReady(reg) {
+            const banner = document.getElementById('updateBanner');
+            const reloadBtn = document.getElementById('updateReload');
+            const dismissBtn = document.getElementById('updateDismiss');
+            banner.style.display = 'block';
+
+            reloadBtn.onclick = () => {
+                if (!reg || !reg.waiting) return;
+                // Ask SW to skip waiting
+                reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            };
+
+            dismissBtn.onclick = () => {
+                banner.style.display = 'none';
+            };
+        }
+
+        // When the new service worker takes control, reload the page to apply the update
+        navigator.serviceWorker && navigator.serviceWorker.addEventListener && navigator.serviceWorker.addEventListener('controllerchange', function() {
+            window.location.reload();
+        });
     </script>
 </body>
 </html>
