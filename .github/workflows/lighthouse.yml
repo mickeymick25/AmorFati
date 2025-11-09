@@ -1,0 +1,26 @@
+name: Lighthouse Audit
+
+on:
+  push:
+    branches: [ 'feature/cleaning' ]
+  pull_request:
+    branches: [ 'feature/cleaning' ]
+
+jobs:
+  lighthouse:
+    name: Run Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Lighthouse (treosh/lighthouse-ci-action)
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          # URL to audit - GitHub Pages public URL for this repo
+          urls: 'https://mickeymick25.github.io/AmorFati'
+          # upload json/html artifacts for later inspection
+          uploadArtifacts: true
+          uploadReports: true
+          # post a comment on PR with summary (requires GITHUB_TOKEN)
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
