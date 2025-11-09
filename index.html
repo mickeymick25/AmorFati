@@ -9,6 +9,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="AmorFati">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-167.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="Évaluation personnelle Amor Fati - Suivi de ton évolution philosophique">
@@ -1068,6 +1071,18 @@
                     <div style="font-size:0.9em; color:#666">Recharge pour appliquer la mise à jour</div>
                 </div>
             </div>
+    
+                    <!-- Add-to-Home modal (first visit) -->
+                    <div id="addModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1200; align-items:center; justify-content:center;">
+                        <div style="background:white; padding:18px; border-radius:12px; width:90%; max-width:420px; box-shadow:0 12px 40px rgba(0,0,0,0.2);">
+                            <h3 style="margin:0 0 8px; color:var(--primary);">Ajouter Amor Fati à l'écran d'accueil</h3>
+                            <p style="color:#555; margin-bottom:12px;">Pour un accès rapide et une expérience hors-ligne, tu peux ajouter l'application à l'écran d'accueil de ton téléphone.</p>
+                            <div style="display:flex; gap:8px; justify-content:flex-end;">
+                                <button id="addModalDismiss" class="btn btn-secondary">Plus tard</button>
+                                <button id="addModalAction" class="btn">Installer</button>
+                            </div>
+                        </div>
+                    </div>
             <div style="display:flex; gap:8px;">
                 <button id="updateReload" class="btn">Recharger</button>
                 <button id="updateDismiss" class="btn btn-secondary">Plus tard</button>
@@ -1777,6 +1792,46 @@
                 banner.style.display = 'none';
             };
         }
+
+        // Add-to-home modal logic
+        (function() {
+            const modal = document.getElementById('addModal');
+            const btnAction = document.getElementById('addModalAction');
+            const btnDismiss = document.getElementById('addModalDismiss');
+
+            // Show modal on first visit (use localStorage flag)
+            const shown = localStorage.getItem('amorFati_addModalShown');
+            if (!shown) {
+                // Wait a bit to not interrupt initial load
+                setTimeout(() => {
+                    if (modal) modal.style.display = 'flex';
+                }, 1200);
+            }
+
+            btnDismiss && btnDismiss.addEventListener('click', () => {
+                if (modal) modal.style.display = 'none';
+                localStorage.setItem('amorFati_addModalShown', '1');
+            });
+
+            btnAction && btnAction.addEventListener('click', async () => {
+                // If we have deferredPrompt (Chrome) offer it
+                if (window.deferredPrompt) {
+                    window.deferredPrompt.prompt();
+                    try {
+                        await window.deferredPrompt.userChoice;
+                    } catch (e) {}
+                    window.deferredPrompt = null;
+                    if (modal) modal.style.display = 'none';
+                    localStorage.setItem('amorFati_addModalShown', '1');
+                    return;
+                }
+
+                // Otherwise show short instructions for iOS
+                alert('Sur iOS : ouvrir le menu Partager puis choisir "Ajouter à l\'écran d\'accueil".');
+                if (modal) modal.style.display = 'none';
+                localStorage.setItem('amorFati_addModalShown', '1');
+            });
+        })();
 
         // When the new service worker takes control, reload the page to apply the update
         navigator.serviceWorker && navigator.serviceWorker.addEventListener && navigator.serviceWorker.addEventListener('controllerchange', function() {
