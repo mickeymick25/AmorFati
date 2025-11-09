@@ -16,7 +16,8 @@
     <title>Amor Fati Tracker</title>
 </head>
 <body>
-    <header class="app-header">
+    <div class="container">
+    <header class="header">
         <h1>Amor Fati</h1>
         <nav class="nav-tabs">
             <button class="nav-tab active" data-tab="welcome">Accueil</button>
@@ -27,12 +28,12 @@
     </header>
 
     <main>
-        <section id="welcome" class="tab active">
+    <section id="welcome" class="tab-content active">
             <h2>Bienvenue</h2>
             <p>Suivez votre évolution avec Amor Fati.</p>
         </section>
 
-        <section id="assessment" class="tab">
+    <section id="assessment" class="tab-content">
             <h2>Nouvelle évaluation</h2>
             <form id="assessmentForm">
                 <div class="field">
@@ -82,7 +83,7 @@
             <div id="results" class="results"></div>
         </section>
 
-        <section id="history" class="tab">
+    <section id="history" class="tab-content">
             <h2>Historique</h2>
             <div id="historyContent"></div>
             <div class="history-actions">
@@ -92,7 +93,7 @@
             </div>
         </section>
 
-        <section id="settings" class="tab">
+    <section id="settings" class="tab-content">
             <h2>Paramètres</h2>
             <div>Priorité courante : <span id="currentPriority">Non définie</span></div>
             <div style="margin-top:10px">
@@ -100,6 +101,7 @@
             </div>
         </section>
     </main>
+    </div>
 
     <!-- Update banner shown when service worker update available -->
     <div id="updateBanner" style="display:none; position:fixed; bottom:16px; left:16px; right:16px; background:#fff; border:1px solid #ddd; padding:10px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08); z-index:1000;">
