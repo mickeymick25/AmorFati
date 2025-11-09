@@ -77,6 +77,26 @@ Conseils :
 	2. Mets ton navigateur en mode offline (DevTools > Network > Offline) et recharge. Le `offline.html` sera servi et montrera l'historique local.
 
 
+## Ajouter l'application sur l'écran d'accueil (iOS & Android)
+
+Les utilisateurs peuvent installer l'application sur leur téléphone comme une PWA. Voici comment :
+
+- Android (Chrome / Edge / autres navigateurs basés sur Chromium) :
+	1. Ouvre le site dans le navigateur.
+	2. Si la boîte d'installation automatique apparaît, confirme l'installation. Sinon ouvre le menu (⋮) et choisis "Installer l'application" ou "Ajouter à l'écran d'accueil".
+	3. Confirme l'installation. L'application apparaîtra dans le lanceur et se comportera comme une application standalone.
+
+- iOS (Safari) :
+	1. Ouvre le site dans Safari (les autres navigateurs iOS n'autorisent pas l'installation PWA complète).
+	2. Tape le bouton Partager (icône carré + flèche) en bas.
+	3. Choisis "Ajouter à l'écran d'accueil".
+	4. Confirme ; l'icône (apple-touch-icon) sera utilisée et l'application s'ouvrira en mode standalone.
+
+Remarques :
+- Sur iOS, la prise en charge des Service Workers est plus limitée que sur Android. Certaines fonctionnalités (background sync, push) peuvent être restreintes.
+- Notre manifeste et le `apple-touch-icon` (180×180) sont fournis pour améliorer la présentation sur l'écran d'accueil.
+
+
 ## Limitations et améliorations possibles
 
 - Pas de service worker/service-worker.js inclus : pour une PWA complète, ajouter et enregistrer un
