@@ -1,5 +1,7 @@
 # AmorFati
 
+[![Deployed on GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-blue?logo=github)](https://mickeymick25.github.io/AmorFati)
+
 Une petite application front-end (single file) pour suivre ton cheminement vers l'« Amor Fati »
 (acceptation de sa vie). L'interface est contenue dans `index.html` et fonctionne entièrement
 dans le navigateur sans serveur.
@@ -44,6 +46,17 @@ Notes :
 
 - `index.html` — application complète (UI + logique).
 - `README.md` — ce fichier.
+
+## Site public / Déploiement
+
+Le projet est automatiquement publié via GitHub Pages à chaque push sur la branche `main`.
+L'URL publique prévue est :
+
+[https://mickeymick25.github.io/AmorFati](https://mickeymick25.github.io/AmorFati)
+
+Note : si l'URL n'apparaît pas immédiatement, attends quelques minutes le temps que
+le workflow GitHub Actions (`Deploy to GitHub Pages`) termine et que Pages active le site.
+
 
 ## Tester la PWA localement
 
