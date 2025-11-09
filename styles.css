@@ -82,9 +82,9 @@ body {
 }
 
 .nav-tab.active {
-    color: var(--primary);
+    color: #1f2b6b; /* darker blue for better contrast against white */
     background: white;
-    border-bottom: 3px solid var(--primary);
+    border-bottom: 3px solid #1f2b6b;
 }
 
 .tab-content {
