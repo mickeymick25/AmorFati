@@ -45,6 +45,24 @@ Notes :
 - `index.html` — application complète (UI + logique).
 - `README.md` — ce fichier.
 
+## Tester la PWA localement
+
+Les Service Workers ne fonctionnent pas via le protocole file://. Pour tester la PWA et le Service Worker localement, démarre un simple serveur HTTP depuis le dossier du projet. Exemple rapide avec Python (port 8000) :
+
+```bash
+python3 -m http.server 8000
+```
+
+Ensuite ouvre dans ton navigateur : http://localhost:8000
+
+Conseils :
+- Ouvre les outils de développement (DevTools) > Application > Service Workers pour voir l'état et forcer l'installation/désinstallation.
+- Les Service Workers requièrent HTTPS en production ; localhost est considéré comme sécurisé pour le développement.
+- Pour tester la page offline :
+	1. Charge l'app une première fois en ligne pour que le service worker et le cache s'installent.
+	2. Mets ton navigateur en mode offline (DevTools > Network > Offline) et recharge. Le `offline.html` sera servi et montrera l'historique local.
+
+
 ## Limitations et améliorations possibles
 
 - Pas de service worker/service-worker.js inclus : pour une PWA complète, ajouter et enregistrer un

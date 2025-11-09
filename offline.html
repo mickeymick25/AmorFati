@@ -15,9 +15,77 @@
 <body>
   <div class="card">
     <h1>🔌 Hors ligne</h1>
-    <p>Tu es hors connexion. Tu peux toujours consulter tes dernières évaluations sauvegardées localement.</p>
-    <p>Lorsque tu seras de nouveau en ligne, recharge la page pour synchroniser et obtenir la dernière version.</p>
+    <p>Tu es hors connexion. Tu peux consulter tes dernières évaluations sauvegardées localement ci-dessous.</p>
+
+    <div id="historyContainer" style="margin-top:14px; text-align:left"></div>
+
+    <p style="margin-top:12px;">Lorsque tu seras de nouveau en ligne, recharge la page pour synchroniser et obtenir la dernière version.</p>
     <a class="button" href="/">Revenir à l'application</a>
   </div>
+  <script>
+    // Affiche l'historique depuis localStorage (clé: amorFatiData)
+    function renderHistory() {
+      const container = document.getElementById('historyContainer');
+      container.innerHTML = '';
+      try {
+        const raw = localStorage.getItem('amorFatiData');
+        if (!raw) {
+          container.innerHTML = '<p style="color:#666">Aucune évaluation sauvegardée localement.</p>';
+          return;
+        }
+        const data = JSON.parse(raw);
+        if (!data.assessments || data.assessments.length === 0) {
+          container.innerHTML = '<p style="color:#666">Aucune évaluation sauvegardée localement.</p>';
+          return;
+        }
+
+        const list = document.createElement('div');
+        list.style.display = 'flex';
+        list.style.flexDirection = 'column';
+        list.style.gap = '10px';
+
+        // Montrer les évaluations les plus récentes en premier
+        const sorted = data.assessments.slice().sort((a,b) => new Date(b.date) - new Date(a.date));
+        sorted.forEach(ass => {
+          const item = document.createElement('div');
+          item.style.background = '#fff';
+          item.style.padding = '10px';
+          item.style.borderRadius = '8px';
+          item.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)';
+
+          const d = new Date(ass.date);
+          const title = document.createElement('div');
+          title.style.fontWeight = '700';
+          title.style.color = '#333';
+          title.textContent = d.toLocaleString('fr-FR') + ' — ' + (ass.totalScore || 'N/A') + '/40';
+
+          const ctx = document.createElement('div');
+          ctx.style.color = '#666';
+          ctx.style.fontStyle = 'italic';
+          ctx.style.marginTop = '6px';
+          ctx.textContent = ass.context ? '"' + ass.context + '"' : '';
+
+          item.appendChild(title);
+          if (ass.priority) {
+            const p = document.createElement('div');
+            p.style.fontSize = '13px';
+            p.style.color = '#555';
+            p.style.marginTop = '6px';
+            p.textContent = 'Priorité : ' + (ass.priority || '—');
+            item.appendChild(p);
+          }
+          item.appendChild(ctx);
+          list.appendChild(item);
+        });
+
+        container.appendChild(list);
+      } catch (e) {
+        container.innerHTML = '<p style="color:#c00">Erreur lors de la lecture des données locales.</p>';
+        console.error(e);
+      }
+    }
+
+    renderHistory();
+  </script>
 </body>
 </html>
