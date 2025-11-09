@@ -1,11 +1,10 @@
 const CACHE_NAME = 'amor-fati-cache-v2';
 const PRECACHE_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/offline.html',
-  '/icons/icon-192.svg',
-  '/icons/icon-512.svg'
+  'index.html',
+  'manifest.json',
+  'offline.html',
+  'icons/icon-192.svg',
+  'icons/icon-512.svg'
 ];
 
 // Durations or limits could be added for runtime caches
@@ -55,14 +54,14 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
         return response;
       }).catch(() => {
-        return caches.match(req).then(cached => cached || caches.match('/offline.html'));
+  return caches.match(req).then(cached => cached || caches.match('offline.html'));
       })
     );
     return;
   }
 
   // For other requests, try cache first
-  event.respondWith(
+    event.respondWith(
     caches.match(req).then(cached => {
       if (cached) return cached;
       return fetch(req).then(response => {
@@ -74,7 +73,7 @@ self.addEventListener('fetch', event => {
         return response;
       }).catch(() => {
         // As a final fallback for images/scripts, try offline.html for navigations only
-        return caches.match('/offline.html');
+        return caches.match('offline.html');
       });
     })
   );
