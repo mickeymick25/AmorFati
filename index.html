@@ -1,1237 +1,1785 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#667eea">
-    <meta name="description" content="Évaluation personnelle Amor Fati - Suivi de ton évolution philosophique">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-180.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Amor Fati Tracker - Suivi Personnel</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary: #667eea;
-            --primary-dark: #5568d3;
-            --secondary: #764ba2;
-            --bg-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --card-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            --transition: all 0.3s ease;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            padding: 10px;
-            color: #333;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 1.8em;
-            margin-bottom: 8px;
-        }
-        
-        .header p {
-            font-style: italic;
-            opacity: 0.95;
-            font-size: 0.95em;
-        }
-        
-        .nav-tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e0e0e0;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .nav-tab {
-            flex: 1;
-            min-width: 120px;
-            padding: 15px 10px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.95em;
-            font-weight: 600;
-            color: #666;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-        
-        .nav-tab.active {
-            color: var(--primary);
-            background: white;
-            border-bottom: 3px solid var(--primary);
-        }
-        
-        .tab-content {
-            display: none;
-            padding: 20px;
-            animation: fadeIn 0.3s;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Onboarding */
-        .onboarding {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
-        
-        .onboarding h2 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-        
-        .onboarding p {
-            line-height: 1.8;
-            margin-bottom: 20px;
-            color: #555;
-        }
-        
-        .priority-selection {
-            margin: 30px 0;
-        }
-        
-        .priority-selection h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-        
-        .priority-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .priority-option {
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            background: white;
-        }
-        
-        .priority-option:hover {
-            border-color: var(--primary);
-            background: #f0f4ff;
-        }
-        
-        .priority-option.selected {
-            border-color: var(--primary);
-            background: #e8eeff;
-        }
-        
-        .priority-option input[type="radio"] {
-            margin-right: 10px;
-        }
-        
-        .priority-label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .priority-desc {
-            font-size: 0.9em;
-            color: #666;
-        }
-        
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.05em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 20px;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-        }
-        
-        .btn-danger {
-            background: #dc3545;
-        }
-        
-        /* Assessment */
-        .dimension {
-            margin-bottom: 35px;
-            border-left: 4px solid var(--primary);
-            padding-left: 15px;
-        }
-        
-        .dimension h2 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 1.3em;
-        }
-        
-        .dimension-description {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 15px;
-            line-height: 1.5;
-            font-size: 0.95em;
-        }
-        
-        .question {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        
-        .question-text {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #333;
-            font-size: 0.95em;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .option {
-            display: flex;
-            align-items: flex-start;
-            padding: 10px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .option:hover {
-            border-color: var(--primary);
-            background: #f0f4ff;
-        }
-        
-        .option.selected {
-            border-color: var(--primary);
-            background: #e8eeff;
-        }
-        
-        .option input[type="radio"] {
-            margin-right: 10px;
-            margin-top: 3px;
-            flex-shrink: 0;
-        }
-        
-        .option-label {
-            flex: 1;
-            line-height: 1.4;
-            font-size: 0.9em;
-        }
-        
-        .score-badge {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 0.8em;
-            margin-left: 6px;
-        }
-        
-        /* Context Note */
-        .context-note {
-            margin: 20px 0;
-            padding: 15px;
-            background: #fff9e6;
-            border-left: 4px solid #ffc107;
-            border-radius: 4px;
-        }
-        
-        .context-note label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #856404;
-        }
-        
-        .context-note textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ffc107;
-            border-radius: 6px;
-            resize: vertical;
-            min-height: 80px;
-            font-family: inherit;
-            font-size: 0.95em;
-        }
-        
-        /* Results */
-        .results {
-            display: none;
-        }
-        
-        .results.show {
-            display: block;
-        }
-        
-        .total-score {
-            text-align: center;
-            font-size: 2.2em;
-            color: var(--primary);
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        
-        .interpretation {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .interpretation h3 {
-            color: var(--primary);
-            margin-bottom: 12px;
-            font-size: 1.2em;
-        }
-        
-        .interpretation p {
-            line-height: 1.7;
-            color: #555;
-            margin-bottom: 10px;
-            font-size: 0.95em;
-        }
-        
-        .dimension-scores {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin: 20px 0;
-        }
-        
-        .dimension-score {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .dimension-score h4 {
-            color: var(--primary);
-            margin-bottom: 6px;
-            font-size: 0.9em;
-        }
-        
-        .dimension-score-value {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .score-bar {
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 6px;
-        }
-        
-        .score-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-            transition: width 0.5s ease;
-        }
-        
-        /* History */
-        .history-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-        }
-        
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .history-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .history-item:hover {
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transform: translateX(5px);
-        }
-        
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .history-date {
-            font-weight: 600;
-            color: #333;
-            font-size: 0.95em;
-        }
-        
-        .history-score {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        .history-context {
-            font-size: 0.9em;
-            color: #666;
-            font-style: italic;
-            margin-top: 5px;
-        }
-        
-        .history-priority {
-            font-size: 0.85em;
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        /* Chart */
-        .chart-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        .chart-title {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .chart {
-            width: 100%;
-            height: 250px;
-            position: relative;
-        }
-        
-        /* Settings */
-        .setting-item {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .setting-item h3 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-        
-        .setting-item p {
-            color: #666;
-            margin-bottom: 12px;
-            line-height: 1.6;
-            font-size: 0.9em;
-        }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 6px;
-            margin: 15px 0;
-            font-size: 0.9em;
-        }
-        
-        .alert-info {
-            background: #d1ecf1;
-            border-left: 4px solid #0c5460;
-            color: #0c5460;
-        }
-        
-        .alert-warning {
-            background: #fff3cd;
-            border-left: 4px solid #856404;
-            color: #856404;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            border-left: 4px solid #155724;
-            color: #155724;
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            body {
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#667eea" />
+        <meta
+            name="description"
+            content="Évaluation personnelle Amor Fati - Suivi de ton évolution philosophique"
+        />
+        <link rel="manifest" href="manifest.json" />
+        <link rel="icon" href="icons/icon-192.png" />
+        <link rel="apple-touch-icon" href="icons/icon-180.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>Amor Fati Tracker - Suivi Personnel</title>
+        <style>
+            * {
+                margin: 0;
                 padding: 0;
+                box-sizing: border-box;
             }
-            
+
+            :root {
+                --primary: #667eea;
+                --primary-dark: #5568d3;
+                --secondary: #764ba2;
+                --bg-gradient: linear-gradient(
+                    135deg,
+                    #1e3c72 0%,
+                    #2a5298 100%
+                );
+                --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+                --transition: all 0.3s ease;
+            }
+
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    Oxygen, Ubuntu, Cantarell, sans-serif;
+                background: var(--bg-gradient);
+                min-height: 100vh;
+                padding: 10px;
+                color: #333;
+                -webkit-font-smoothing: antialiased;
+            }
+
             .container {
-                border-radius: 0;
-                margin-bottom: 0;
+                max-width: 900px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 16px;
+                box-shadow: var(--card-shadow);
+                overflow: hidden;
+                margin-bottom: 20px;
             }
-            
+
+            .header {
+                background: linear-gradient(
+                    135deg,
+                    var(--primary) 0%,
+                    var(--secondary) 100%
+                );
+                color: white;
+                padding: 30px 20px;
+                text-align: center;
+            }
+
             .header h1 {
-                font-size: 1.5em;
-            }
-            
-            .nav-tab {
-                font-size: 0.85em;
-                padding: 12px 8px;
-                min-width: 100px;
-            }
-            
-            .tab-content {
-                padding: 15px;
-            }
-            
-            .dimension h2 {
-                font-size: 1.1em;
-            }
-            
-            .total-score {
                 font-size: 1.8em;
+                margin-bottom: 8px;
             }
-            
-            .dimension-scores {
-                grid-template-columns: 1fr;
+
+            .header p {
+                font-style: italic;
+                opacity: 0.95;
+                font-size: 0.95em;
             }
-        }
-        
-        /* Loading animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Install prompt */
-        .install-prompt {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            display: none;
-            z-index: 1000;
-        }
-        
-        .install-prompt.show {
-            display: block;
-            animation: slideUp 0.3s;
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .install-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .install-buttons button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🌟 Amor Fati Tracker</h1>
-            <p>"Ne rien vouloir d'autre que ce qui est" - Nietzsche</p>
-        </div>
-        
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('welcome')">Accueil</button>
-            <button class="nav-tab" onclick="switchTab('assessment')">Évaluation</button>
-            <button class="nav-tab" onclick="switchTab('history')">Historique</button>
-            <button class="nav-tab" onclick="switchTab('settings')">Paramètres</button>
-        </div>
-        
-        <!-- Welcome Tab -->
-        <div id="welcome" class="tab-content active">
-            <div class="onboarding">
-                <h2>Bienvenue dans ton suivi Amor Fati</h2>
-                <p>Cet outil te permet d'évaluer où tu te situes dans ton cheminement vers l'acceptation totale de ta vie (amor fati) et de suivre ton évolution dans le temps.</p>
-                
-                <div class="alert alert-info">
-                    <strong>🔒 100% Confidentiel :</strong> Toutes tes données restent dans ton appareil. Rien n'est envoyé en ligne. Tu peux même l'utiliser hors connexion.
-                </div>
-                
-                <div class="priority-selection" id="prioritySelection">
-                    <h3>Avant de commencer : Quelle dimension souhaites-tu voir évoluer en priorité ?</h3>
-                    <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Cette réflexion t'aidera à orienter ton travail sur toi-même. Tu pourras la modifier à tout moment.</p>
-                    
-                    <div class="priority-options">
-                        <label class="priority-option">
-                            <input type="radio" name="priority" value="ressentiment">
-                            <div>
-                                <span class="priority-label">🔥 Passé & Ressentiment</span>
-                                <span class="priority-desc">Me libérer du poids de mon passé, dépasser la colère et l'amertume</span>
-                            </div>
-                        </label>
-                        
-                        <label class="priority-option">
-                            <input type="radio" name="priority" value="souffrance">
-                            <div>
-                                <span class="priority-label">⚡ Souffrance présente</span>
-                                <span class="priority-desc">Mieux accepter et traverser les difficultés actuelles</span>
-                            </div>
-                        </label>
-                        
-                        <label class="priority-option">
-                            <input type="radio" name="priority" value="authenticite">
-                            <div>
-                                <span class="priority-label">🎭 Authenticité</span>
-                                <span class="priority-desc">Vivre selon mes propres valeurs, être vraiment moi-même</span>
-                            </div>
-                        </label>
-                        
-                        <label class="priority-option">
-                            <input type="radio" name="priority" value="creation">
-                            <div>
-                                <span class="priority-label">🎨 Création</span>
-                                <span class="priority-desc">Devenir un créateur actif de ma vie plutôt que subir</span>
-                            </div>
-                        </label>
-                        
-                        <label class="priority-option">
-                            <input type="radio" name="priority" value="eternel">
-                            <div>
-                                <span class="priority-label">♾️ Éternel Retour</span>
-                                <span class="priority-desc">Affirmer totalement ma vie, vouloir la revivre telle quelle</span>
-                            </div>
-                        </label>
-                        
-                        <label class="priority-option">
-                            <input type="radio" name="priority" value="none">
-                            <div>
-                                <span class="priority-label">🧭 Aucune priorité spécifique</span>
-                                <span class="priority-desc">Je veux juste observer mon évolution globale</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-                
-                <button class="btn" onclick="startAssessment()">Commencer ma première évaluation</button>
-            </div>
-        </div>
-        
-        <!-- Assessment Tab -->
-        <div id="assessment" class="tab-content">
-            <form id="assessmentForm">
-                <!-- Dimension 1 -->
-                <div class="dimension">
-                    <h2>1. Rapport au passé & Ressentiment</h2>
-                    <p class="dimension-description">Comment te situes-tu face à ton histoire personnelle et aux événements difficiles que tu as vécus ?</p>
-                    
-                    <div class="question">
-                        <div class="question-text">Quand tu repenses à des événements difficiles de ton passé, que ressens-tu principalement ?</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q1" value="0">
-                                <span class="option-label">Une colère vive, un sentiment d'injustice qui me consume régulièrement <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q1" value="1">
-                                <span class="option-label">De l'amertume, je me dis souvent "si seulement ça ne s'était pas passé" <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q1" value="2">
-                                <span class="option-label">De la tristesse parfois, mais je n'y pense plus constamment <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q1" value="3">
-                                <span class="option-label">Une acceptation tranquille, c'est mon histoire et elle fait partie de moi <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q1" value="4">
-                                <span class="option-label">Une affirmation complète : je ne voudrais pas que ça n'ait pas existé <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="question">
-                        <div class="question-text">Face aux personnes qui t'ont fait du mal dans le passé, quelle est ton attitude ?</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q2" value="0">
-                                <span class="option-label">Je leur en veux profondément, j'imagine parfois me venger <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q2" value="1">
-                                <span class="option-label">Je leur en veux encore beaucoup, j'évite d'y penser car ça me met en colère <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q2" value="2">
-                                <span class="option-label">Je travaille à leur pardonner, mais c'est difficile <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q2" value="3">
-                                <span class="option-label">Je ne leur en veux plus vraiment, j'ai tourné la page <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q2" value="4">
-                                <span class="option-label">Je les accepte comme faisant partie de mon histoire, sans ressentiment ni besoin de pardon <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Dimension 2 -->
-                <div class="dimension">
-                    <h2>2. Attitude face à la souffrance présente</h2>
-                    <p class="dimension-description">Comment réagis-tu face aux difficultés et souffrances actuelles de ta vie ?</p>
-                    
-                    <div class="question">
-                        <div class="question-text">Quand tu traverses une épreuve difficile (maladie, échec, perte), quelle est ta réaction dominante ?</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q3" value="0">
-                                <span class="option-label">"Pourquoi moi ? C'est injuste !" - Je me sens victime <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q3" value="1">
-                                <span class="option-label">"Il faut que je transforme ça en quelque chose de positif pour que ça ait un sens" <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q3" value="2">
-                                <span class="option-label">"C'est dur, mais ça fait partie de la vie, je vais m'en sortir" <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q3" value="3">
-                                <span class="option-label">"C'est une épreuve, je l'accepte et je vais la traverser avec dignité" <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q3" value="4">
-                                <span class="option-label">"Cette souffrance fait partie de ma vie, je dis oui même à cela" <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="question">
-                        <div class="question-text">Comment réagis-tu quand quelque chose échappe complètement à ton contrôle ?</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q4" value="0">
-                                <span class="option-label">Je m'énerve, je lutte contre la réalité, je refuse d'accepter <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q4" value="1">
-                                <span class="option-label">Je suis frustré mais je finis par me résigner à contrecœur <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q4" value="2">
-                                <span class="option-label">J'accepte relativement vite et je me concentre sur ce que je peux contrôler <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q4" value="3">
-                                <span class="option-label">J'accepte sereinement, je comprends que tout ne dépend pas de moi <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q4" value="4">
-                                <span class="option-label">J'accueille même cela comme faisant partie du flux de la vie <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dimension 3 -->
-                <div class="dimension">
-                    <h2>3. Rapport à soi-même & Authenticité</h2>
-                    <p class="dimension-description">Dans quelle mesure vis-tu selon tes propres valeurs plutôt que selon les attentes extérieures ?</p>
-                    
-                    <div class="question">
-                        <div class="question-text">Concernant tes choix de vie importants (travail, relations, projets), tu dirais qu'ils sont :</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q5" value="0">
-                                <span class="option-label">Principalement dictés par les attentes des autres (famille, société) <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q5" value="1">
-                                <span class="option-label">Un mélange, mais j'ai du mal à distinguer ce qui vient vraiment de moi <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q5" value="2">
-                                <span class="option-label">Plutôt alignés avec mes valeurs, même si je fais parfois des compromis <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q5" value="3">
-                                <span class="option-label">Clairement alignés avec mes valeurs personnelles, j'assume mes choix <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q5" value="4">
-                                <span class="option-label">Je crée mes propres valeurs et vis selon elles, indépendamment du jugement <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="question">
-                        <div class="question-text">Si tu devais être totalement honnête : acceptes-tu qui tu es vraiment (forces ET faiblesses) ?</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q6" value="0">
-                                <span class="option-label">Non, je me déteste ou je rejette des parties de moi-même <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q6" value="1">
-                                <span class="option-label">J'accepte mes forces mais je suis en lutte contre mes faiblesses <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q6" value="2">
-                                <span class="option-label">J'apprends à m'accepter, c'est un travail en cours <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q6" value="3">
-                                <span class="option-label">Oui, j'accepte qui je suis dans ma globalité <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q6" value="4">
-                                <span class="option-label">J'affirme totalement qui je suis, y compris mes parts d'ombre <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dimension 4 -->
-                <div class="dimension">
-                    <h2>4. Création vs Réaction</h2>
-                    <p class="dimension-description">Es-tu un créateur actif de ta vie ou réagis-tu principalement aux circonstances ?</p>
-                    
-                    <div class="question">
-                        <div class="question-text">Dans ta vie quotidienne, tu dirais que tu passes le plus de temps à :</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q7" value="0">
-                                <span class="option-label">Subir et me plaindre de ce qui m'arrive <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q7" value="1">
-                                <span class="option-label">Consommer (divertissements, réseaux sociaux, séries...) <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q7" value="2">
-                                <span class="option-label">Gérer mes obligations avec un peu de temps pour moi <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q7" value="3">
-                                <span class="option-label">Construire activement des projets qui me tiennent à cœur <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q7" value="4">
-                                <span class="option-label">Créer (art, pensée, relations, œuvres) avec passion et nécessité <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="question">
-                        <div class="question-text">Face à un échec ou une difficulté, tu as tendance à :</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q8" value="0">
-                                <span class="option-label">T'effondrer et abandonner, rester paralysé <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q8" value="1">
-                                <span class="option-label">Chercher qui blâmer (les autres, les circonstances, toi-même) <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q8" value="2">
-                                <span class="option-label">Prendre du recul, apprendre et réessayer <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q8" value="3">
-                                <span class="option-label">Utiliser l'échec comme matériau pour créer quelque chose de nouveau <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q8" value="4">
-                                <span class="option-label">L'accepter totalement et créer à partir de cette nouvelle réalité <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dimension 5 -->
-                <div class="dimension">
-                    <h2>5. Le test de l'Éternel Retour</h2>
-                    <p class="dimension-description">La question ultime de Nietzsche : voudrais-tu revivre ta vie exactement comme elle a été ?</p>
-                    
-                    <div class="question">
-                        <div class="question-text">Si tu devais revivre ta vie EXACTEMENT à l'identique (même joies, même souffrances, même erreurs), que répondrais-tu ?</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q9" value="0">
-                                <span class="option-label">Non, surtout pas ! Ma vie a trop de souffrance et d'échecs <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q9" value="1">
-                                <span class="option-label">Non, je voudrais changer beaucoup de choses <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q9" value="2">
-                                <span class="option-label">Peut-être... si je pouvais changer quelques événements clés <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q9" value="3">
-                                <span class="option-label">Probablement oui, même si certains moments ont été très durs <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q9" value="4">
-                                <span class="option-label">Oui, absolument, sans changer une seule chose <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="question">
-                        <div class="question-text">Honnêtement, pourquoi accepterais-tu (ou pas) de revivre ta vie ?</div>
-                        <div class="options">
-                            <label class="option">
-                                <input type="radio" name="q10" value="0">
-                                <span class="option-label">Je ne l'accepterais pas, il y a eu trop de souffrance inutile <span class="score-badge">0 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q10" value="1">
-                                <span class="option-label">Seulement si la souffrance m'a "servi" à quelque chose <span class="score-badge">1 pt</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q10" value="2">
-                                <span class="option-label">Parce que les bons moments compensent les mauvais <span class="score-badge">2 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q10" value="3">
-                                <span class="option-label">Parce que c'est ma vie, avec tout ce qu'elle comporte <span class="score-badge">3 pts</span></span>
-                            </label>
-                            <label class="option">
-                                <input type="radio" name="q10" value="4">
-                                <span class="option-label">Parce que j'affirme la totalité de l'existence, même le tragique <span class="score-badge">4 pts</span></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Context Note -->
-                <div class="context-note">
-                    <label for="contextNote">📝 Note de contexte (optionnel)</label>
-                    <textarea id="contextNote" placeholder="Que se passe-t-il dans ta vie en ce moment ? (ex: semaine difficile au travail, période de calme, événement marquant...)"></textarea>
-                </div>
-
-                <button type="button" class="btn" onclick="calculateResults()">📊 Calculer mon score</button>
-            </form>
-
-            <div id="results" class="results"></div>
-        </div>
-        
-        <!-- History Tab -->
-        <div id="history" class="tab-content">
-            <div id="historyContent"></div>
-        </div>
-        
-        <!-- Settings Tab -->
-        <div id="settings" class="tab-content">
-            <div class="setting-item">
-                <h3>🎯 Ta priorité actuelle</h3>
-                <p id="currentPriority"></p>
-                <button class="btn btn-secondary" onclick="changePriority()">Modifier ma priorité</button>
-            </div>
-            
-            <div class="setting-item">
-                <h3>📊 Exporter mes données</h3>
-                <p>Télécharge toutes tes évaluations en format JSON pour les sauvegarder ou les transférer sur un autre appareil.</p>
-                <button class="btn btn-secondary" onclick="exportData()">Télécharger mes données</button>
-            </div>
-            
-            <div class="setting-item">
-                <h3>📥 Importer des données</h3>
-                <p>Restaure tes évaluations depuis un fichier de sauvegarde.</p>
-                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Importer un fichier</button>
-            </div>
-            
-            <div class="alert alert-info">
-                <strong>💡 Conseil :</strong> Il est recommandé de faire une évaluation une fois par semaine, toujours le même jour (ex: dimanche soir) pour une meilleure comparabilité.
-            </div>
-            
-            <div class="setting-item">
-                <h3>🗑️ Supprimer toutes mes données</h3>
-                <p style="color: #dc3545;"><strong>⚠️ Attention :</strong> Cette action est irréversible. Toutes tes évaluations seront définitivement supprimées.</p>
-                <button class="btn btn-danger" onclick="deleteAllData()">Tout supprimer</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Install Prompt -->
-    <div id="installPrompt" class="install-prompt">
-        <h3 style="margin-bottom: 10px;">📱 Installer l'application</h3>
-        <p style="font-size: 0.9em; color: #666;">Installe Amor Fati Tracker sur ton appareil pour y accéder rapidement et l'utiliser hors ligne.</p>
-        <div class="install-buttons">
-            <button onclick="installApp()" style="background: var(--primary); color: white;">Installer</button>
-            <button onclick="dismissInstall()" style="background: #6c757d; color: white;">Plus tard</button>
-        </div>
-    </div>
-
-    <script>
-        // Variables globales
-        let deferredPrompt;
-        const STORAGE_KEY = 'amorFatiData';
-        
-        // Données de l'application
-        let appData = {
-            priority: null,
-            assessments: [],
-            settings: {
-                lastAssessment: null
+            .nav-tabs {
+                display: flex;
+                background: #f8f9fa;
+                border-bottom: 2px solid #e0e0e0;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
             }
-        };
-        
-        // Charger les données au démarrage
-        loadData();
-        
-        // Gestion de l'installation PWA
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installPrompt').classList.add('show');
-        });
-        
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    deferredPrompt = null;
-                    dismissInstall();
-                });
+
+            .nav-tab {
+                flex: 1;
+                min-width: 120px;
+                padding: 15px 10px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 0.95em;
+                font-weight: 600;
+                color: #666;
+                transition: var(--transition);
+                white-space: nowrap;
             }
-        }
-        
-        function dismissInstall() {
-            document.getElementById('installPrompt').classList.remove('show');
-        }
-        
-        // Gestion des onglets
-        function switchTab(tabName) {
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-            
-            if (tabName === 'history') {
-                displayHistory();
-            } else if (tabName === 'settings') {
-                displaySettings();
+
+            .nav-tab.active {
+                color: var(--primary);
+                background: white;
+                border-bottom: 3px solid var(--primary);
             }
-        }
-        
-        // Gestion de la sélection des options
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const radio = this.querySelector('input[type="radio"]');
-                const name = radio.name;
-                
-                document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
-                    r.parentElement.classList.remove('selected');
-                });
-                
-                radio.checked = true;
-                this.classList.add('selected');
-            });
-        });
-        
-        // Gestion des priorités
-        document.querySelectorAll('.priority-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const radio = this.querySelector('input[type="radio"]');
-                document.querySelectorAll('.priority-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                radio.checked = true;
-                this.classList.add('selected');
-            });
-        });
-        
-        // Démarrer l'évaluation
-        function startAssessment() {
-            const selectedPriority = document.querySelector('input[name="priority"]:checked');
-            if (!selectedPriority) {
-                alert('Merci de sélectionner une priorité avant de commencer.');
-                return;
+
+            .tab-content {
+                display: none;
+                padding: 20px;
+                animation: fadeIn 0.3s;
             }
-            
-            appData.priority = selectedPriority.value;
-            saveData();
-            switchTab('assessment');
-            document.querySelector('.nav-tab:nth-child(2)').click();
-        }
-        
-        // Calculer les résultats
-        function calculateResults() {
-            const form = document.getElementById('assessmentForm');
-            const formData = new FormData(form);
-            
-            // Vérifier que toutes les questions sont répondues
-            const totalQuestions = 10;
-            let answeredQuestions = 0;
-            for (let i = 1; i <= totalQuestions; i++) {
-                if (formData.get(`q${i}`)) {
-                    answeredQuestions++;
+
+            .tab-content.active {
+                display: block;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
                 }
             }
-            
-            if (answeredQuestions < totalQuestions) {
-                alert(`Merci de répondre à toutes les questions (${answeredQuestions}/${totalQuestions} répondues)`);
-                return;
+
+            /* Onboarding */
+            .onboarding {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 30px 20px;
             }
-            
-            // Calculer les scores par dimension
-            const dimensions = {
-                'Passé & Ressentiment': [1, 2],
-                'Souffrance présente': [3, 4],
-                'Authenticité': [5, 6],
-                'Création': [7, 8],
-                'Éternel Retour': [9, 10]
+
+            .onboarding h2 {
+                color: var(--primary);
+                margin-bottom: 20px;
+                font-size: 1.5em;
+            }
+
+            .onboarding p {
+                line-height: 1.8;
+                margin-bottom: 20px;
+                color: #555;
+            }
+
+            .priority-selection {
+                margin: 30px 0;
+            }
+
+            .priority-selection h3 {
+                color: var(--primary);
+                margin-bottom: 15px;
+                font-size: 1.2em;
+            }
+
+            .priority-options {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .priority-option {
+                padding: 15px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: var(--transition);
+                background: white;
+            }
+
+            .priority-option:hover {
+                border-color: var(--primary);
+                background: #f0f4ff;
+            }
+
+            .priority-option.selected {
+                border-color: var(--primary);
+                background: #e8eeff;
+            }
+
+            .priority-option input[type="radio"] {
+                margin-right: 10px;
+            }
+
+            .priority-label {
+                font-weight: 600;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .priority-desc {
+                font-size: 0.9em;
+                color: #666;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                padding: 15px;
+                background: linear-gradient(
+                    135deg,
+                    var(--primary) 0%,
+                    var(--secondary) 100%
+                );
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 1.05em;
+                font-weight: bold;
+                cursor: pointer;
+                transition: var(--transition);
+                margin-top: 20px;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+            .btn-secondary {
+                background: #6c757d;
+            }
+
+            .btn-danger {
+                background: #dc3545;
+            }
+
+            /* Assessment */
+            .dimension {
+                margin-bottom: 35px;
+                border-left: 4px solid var(--primary);
+                padding-left: 15px;
+            }
+
+            .dimension h2 {
+                color: var(--primary);
+                margin-bottom: 8px;
+                font-size: 1.3em;
+            }
+
+            .dimension-description {
+                color: #666;
+                font-style: italic;
+                margin-bottom: 15px;
+                line-height: 1.5;
+                font-size: 0.95em;
+            }
+
+            .question {
+                margin-bottom: 20px;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+
+            .question-text {
+                font-weight: 600;
+                margin-bottom: 12px;
+                color: #333;
+                font-size: 0.95em;
+            }
+
+            .options {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .option {
+                display: flex;
+                align-items: flex-start;
+                padding: 10px;
+                background: white;
+                border: 2px solid #e0e0e0;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .option:hover {
+                border-color: var(--primary);
+                background: #f0f4ff;
+            }
+
+            .option.selected {
+                border-color: var(--primary);
+                background: #e8eeff;
+            }
+
+            .option input[type="radio"] {
+                margin-right: 10px;
+                margin-top: 3px;
+                flex-shrink: 0;
+            }
+
+            .option-label {
+                flex: 1;
+                line-height: 1.4;
+                font-size: 0.9em;
+            }
+
+            .score-badge {
+                display: inline-block;
+                background: var(--primary);
+                color: white;
+                padding: 2px 6px;
+                border-radius: 10px;
+                font-size: 0.8em;
+                margin-left: 6px;
+            }
+
+            /* Context Note */
+            .context-note {
+                margin: 20px 0;
+                padding: 15px;
+                background: #fff9e6;
+                border-left: 4px solid #ffc107;
+                border-radius: 4px;
+            }
+
+            .context-note label {
+                display: block;
+                font-weight: 600;
+                margin-bottom: 8px;
+                color: #856404;
+            }
+
+            .context-note textarea {
+                width: 100%;
+                padding: 10px;
+                border: 2px solid #ffc107;
+                border-radius: 6px;
+                resize: vertical;
+                min-height: 80px;
+                font-family: inherit;
+                font-size: 0.95em;
+            }
+
+            /* Results */
+            .results {
+                display: none;
+            }
+
+            .results.show {
+                display: block;
+            }
+
+            .total-score {
+                text-align: center;
+                font-size: 2.2em;
+                color: var(--primary);
+                font-weight: bold;
+                margin: 20px 0;
+            }
+
+            .interpretation {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                border-left: 4px solid var(--primary);
+            }
+
+            .interpretation h3 {
+                color: var(--primary);
+                margin-bottom: 12px;
+                font-size: 1.2em;
+            }
+
+            .interpretation p {
+                line-height: 1.7;
+                color: #555;
+                margin-bottom: 10px;
+                font-size: 0.95em;
+            }
+
+            .dimension-scores {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 12px;
+                margin: 20px 0;
+            }
+
+            .dimension-score {
+                background: white;
+                padding: 12px;
+                border-radius: 8px;
+                border-left: 4px solid var(--primary);
+            }
+
+            .dimension-score h4 {
+                color: var(--primary);
+                margin-bottom: 6px;
+                font-size: 0.9em;
+            }
+
+            .dimension-score-value {
+                font-size: 1.3em;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .score-bar {
+                height: 6px;
+                background: #e0e0e0;
+                border-radius: 3px;
+                overflow: hidden;
+                margin-top: 6px;
+            }
+
+            .score-fill {
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    var(--primary) 0%,
+                    var(--secondary) 100%
+                );
+                transition: width 0.5s ease;
+            }
+
+            /* History */
+            .history-empty {
+                text-align: center;
+                padding: 40px 20px;
+                color: #666;
+            }
+
+            .history-list {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .history-item {
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                border-left: 4px solid var(--primary);
+                cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .history-item:hover {
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+                transform: translateX(5px);
+            }
+
+            .history-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .history-date {
+                font-weight: 600;
+                color: #333;
+                font-size: 0.95em;
+            }
+
+            .history-score {
+                font-size: 1.3em;
+                font-weight: bold;
+                color: var(--primary);
+            }
+
+            .history-context {
+                font-size: 0.9em;
+                color: #666;
+                font-style: italic;
+                margin-top: 5px;
+            }
+
+            .history-priority {
+                font-size: 0.85em;
+                color: #666;
+                margin-top: 5px;
+            }
+
+            /* Chart */
+            .chart-container {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                margin: 20px 0;
+            }
+
+            .chart-title {
+                font-size: 1.1em;
+                font-weight: 600;
+                color: var(--primary);
+                margin-bottom: 15px;
+            }
+
+            .chart {
+                width: 100%;
+                height: 250px;
+                position: relative;
+            }
+
+            /* Settings */
+            .setting-item {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                border-left: 4px solid var(--primary);
+            }
+
+            .setting-item h3 {
+                color: var(--primary);
+                margin-bottom: 8px;
+                font-size: 1.1em;
+            }
+
+            .setting-item p {
+                color: #666;
+                margin-bottom: 12px;
+                line-height: 1.6;
+                font-size: 0.9em;
+            }
+
+            .alert {
+                padding: 15px;
+                border-radius: 6px;
+                margin: 15px 0;
+                font-size: 0.9em;
+            }
+
+            .alert-info {
+                background: #d1ecf1;
+                border-left: 4px solid #0c5460;
+                color: #0c5460;
+            }
+
+            .alert-warning {
+                background: #fff3cd;
+                border-left: 4px solid #856404;
+                color: #856404;
+            }
+
+            .alert-success {
+                background: #d4edda;
+                border-left: 4px solid #155724;
+                color: #155724;
+            }
+
+            /* Mobile optimizations */
+            @media (max-width: 768px) {
+                body {
+                    padding: 0;
+                }
+
+                .container {
+                    border-radius: 0;
+                    margin-bottom: 0;
+                }
+
+                .header h1 {
+                    font-size: 1.5em;
+                }
+
+                .nav-tab {
+                    font-size: 0.85em;
+                    padding: 12px 8px;
+                    min-width: 100px;
+                }
+
+                .tab-content {
+                    padding: 15px;
+                }
+
+                .dimension h2 {
+                    font-size: 1.1em;
+                }
+
+                .total-score {
+                    font-size: 1.8em;
+                }
+
+                .dimension-scores {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Loading animation */
+            .loading {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                border-top-color: white;
+                animation: spin 1s ease-in-out infinite;
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* Install prompt */
+            .install-prompt {
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                display: none;
+                z-index: 1000;
+            }
+
+            .install-prompt.show {
+                display: block;
+                animation: slideUp 0.3s;
+            }
+
+            @keyframes slideUp {
+                from {
+                    transform: translateY(100px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            .install-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .install-buttons button {
+                flex: 1;
+                padding: 10px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🌟 Amor Fati Tracker</h1>
+                <p>"Ne rien vouloir d'autre que ce qui est" - Nietzsche</p>
+            </div>
+
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('welcome')">
+                    Accueil
+                </button>
+                <button class="nav-tab" onclick="switchTab('assessment')">
+                    Évaluation
+                </button>
+                <button class="nav-tab" onclick="switchTab('history')">
+                    Historique
+                </button>
+                <button class="nav-tab" onclick="switchTab('settings')">
+                    Paramètres
+                </button>
+            </div>
+
+            <!-- Welcome Tab -->
+            <div id="welcome" class="tab-content active">
+                <div class="onboarding">
+                    <h2>Bienvenue dans ton suivi Amor Fati</h2>
+                    <p>
+                        Cet outil te permet d'évaluer où tu te situes dans ton
+                        cheminement vers l'acceptation totale de ta vie (amor
+                        fati) et de suivre ton évolution dans le temps.
+                    </p>
+
+                    <div class="alert alert-info">
+                        <strong>🔒 100% Confidentiel :</strong> Toutes tes
+                        données restent dans ton appareil. Rien n'est envoyé en
+                        ligne. Tu peux même l'utiliser hors connexion.
+                    </div>
+
+                    <div class="priority-selection" id="prioritySelection">
+                        <h3>
+                            Avant de commencer : Quelle dimension souhaites-tu
+                            voir évoluer en priorité ?
+                        </h3>
+                        <p
+                            style="
+                                color: #666;
+                                font-size: 0.9em;
+                                margin-bottom: 15px;
+                            "
+                        >
+                            Cette réflexion t'aidera à orienter ton travail sur
+                            toi-même. Tu pourras la modifier à tout moment.
+                        </p>
+
+                        <div class="priority-options">
+                            <label class="priority-option">
+                                <input
+                                    type="radio"
+                                    name="priority"
+                                    value="ressentiment"
+                                />
+                                <div>
+                                    <span class="priority-label"
+                                        >🔥 Passé & Ressentiment</span
+                                    >
+                                    <span class="priority-desc"
+                                        >Me libérer du poids de mon passé,
+                                        dépasser la colère et l'amertume</span
+                                    >
+                                </div>
+                            </label>
+
+                            <label class="priority-option">
+                                <input
+                                    type="radio"
+                                    name="priority"
+                                    value="souffrance"
+                                />
+                                <div>
+                                    <span class="priority-label"
+                                        >⚡ Souffrance présente</span
+                                    >
+                                    <span class="priority-desc"
+                                        >Mieux accepter et traverser les
+                                        difficultés actuelles</span
+                                    >
+                                </div>
+                            </label>
+
+                            <label class="priority-option">
+                                <input
+                                    type="radio"
+                                    name="priority"
+                                    value="authenticite"
+                                />
+                                <div>
+                                    <span class="priority-label"
+                                        >🎭 Authenticité</span
+                                    >
+                                    <span class="priority-desc"
+                                        >Vivre selon mes propres valeurs, être
+                                        vraiment moi-même</span
+                                    >
+                                </div>
+                            </label>
+
+                            <label class="priority-option">
+                                <input
+                                    type="radio"
+                                    name="priority"
+                                    value="creation"
+                                />
+                                <div>
+                                    <span class="priority-label"
+                                        >🎨 Création</span
+                                    >
+                                    <span class="priority-desc"
+                                        >Devenir un créateur actif de ma vie
+                                        plutôt que subir</span
+                                    >
+                                </div>
+                            </label>
+
+                            <label class="priority-option">
+                                <input
+                                    type="radio"
+                                    name="priority"
+                                    value="eternel"
+                                />
+                                <div>
+                                    <span class="priority-label"
+                                        >♾️ Éternel Retour</span
+                                    >
+                                    <span class="priority-desc"
+                                        >Affirmer totalement ma vie, vouloir la
+                                        revivre telle quelle</span
+                                    >
+                                </div>
+                            </label>
+
+                            <label class="priority-option">
+                                <input
+                                    type="radio"
+                                    name="priority"
+                                    value="none"
+                                />
+                                <div>
+                                    <span class="priority-label"
+                                        >🧭 Aucune priorité spécifique</span
+                                    >
+                                    <span class="priority-desc"
+                                        >Je veux juste observer mon évolution
+                                        globale</span
+                                    >
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="startAssessment()">
+                        Commencer ma première évaluation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Assessment Tab -->
+            <div id="assessment" class="tab-content">
+                <form id="assessmentForm">
+                    <!-- Dimension 1 -->
+                    <div class="dimension">
+                        <h2>1. Rapport au passé & Ressentiment</h2>
+                        <p class="dimension-description">
+                            Comment te situes-tu face à ton histoire personnelle
+                            et aux événements difficiles que tu as vécus ?
+                        </p>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Quand tu repenses à des événements difficiles de
+                                ton passé, que ressens-tu principalement ?
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q1" value="0" />
+                                    <span class="option-label"
+                                        >Une colère vive, un sentiment
+                                        d'injustice qui me consume régulièrement
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q1" value="1" />
+                                    <span class="option-label"
+                                        >De l'amertume, je me dis souvent "si
+                                        seulement ça ne s'était pas passé"
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q1" value="2" />
+                                    <span class="option-label"
+                                        >De la tristesse parfois, mais je n'y
+                                        pense plus constamment
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q1" value="3" />
+                                    <span class="option-label"
+                                        >Une acceptation tranquille, c'est mon
+                                        histoire et elle fait partie de moi
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q1" value="4" />
+                                    <span class="option-label"
+                                        >Une affirmation complète : je ne
+                                        voudrais pas que ça n'ait pas existé
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Face aux personnes qui t'ont fait du mal dans le
+                                passé, quelle est ton attitude ?
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q2" value="0" />
+                                    <span class="option-label"
+                                        >Je leur en veux profondément, j'imagine
+                                        parfois me venger
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q2" value="1" />
+                                    <span class="option-label"
+                                        >Je leur en veux encore beaucoup,
+                                        j'évite d'y penser car ça me met en
+                                        colère
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q2" value="2" />
+                                    <span class="option-label"
+                                        >Je travaille à leur pardonner, mais
+                                        c'est difficile
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q2" value="3" />
+                                    <span class="option-label"
+                                        >Je ne leur en veux plus vraiment, j'ai
+                                        tourné la page
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q2" value="4" />
+                                    <span class="option-label"
+                                        >Je les accepte comme faisant partie de
+                                        mon histoire, sans ressentiment ni
+                                        besoin de pardon
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dimension 2 -->
+                    <div class="dimension">
+                        <h2>2. Attitude face à la souffrance présente</h2>
+                        <p class="dimension-description">
+                            Comment réagis-tu face aux difficultés et
+                            souffrances actuelles de ta vie ?
+                        </p>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Quand tu traverses une épreuve difficile
+                                (maladie, échec, perte), quelle est ta réaction
+                                dominante ?
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q3" value="0" />
+                                    <span class="option-label"
+                                        >"Pourquoi moi ? C'est injuste !" - Je
+                                        me sens victime
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q3" value="1" />
+                                    <span class="option-label"
+                                        >"Il faut que je transforme ça en
+                                        quelque chose de positif pour que ça ait
+                                        un sens"
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q3" value="2" />
+                                    <span class="option-label"
+                                        >"C'est dur, mais ça fait partie de la
+                                        vie, je vais m'en sortir"
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q3" value="3" />
+                                    <span class="option-label"
+                                        >"C'est une épreuve, je l'accepte et je
+                                        vais la traverser avec dignité"
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q3" value="4" />
+                                    <span class="option-label"
+                                        >"Cette souffrance fait partie de ma
+                                        vie, je dis oui même à cela"
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Comment réagis-tu quand quelque chose échappe
+                                complètement à ton contrôle ?
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q4" value="0" />
+                                    <span class="option-label"
+                                        >Je m'énerve, je lutte contre la
+                                        réalité, je refuse d'accepter
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q4" value="1" />
+                                    <span class="option-label"
+                                        >Je suis frustré mais je finis par me
+                                        résigner à contrecœur
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q4" value="2" />
+                                    <span class="option-label"
+                                        >J'accepte relativement vite et je me
+                                        concentre sur ce que je peux contrôler
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q4" value="3" />
+                                    <span class="option-label"
+                                        >J'accepte sereinement, je comprends que
+                                        tout ne dépend pas de moi
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q4" value="4" />
+                                    <span class="option-label"
+                                        >J'accueille même cela comme faisant
+                                        partie du flux de la vie
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dimension 3 -->
+                    <div class="dimension">
+                        <h2>3. Rapport à soi-même & Authenticité</h2>
+                        <p class="dimension-description">
+                            Dans quelle mesure vis-tu selon tes propres valeurs
+                            plutôt que selon les attentes extérieures ?
+                        </p>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Concernant tes choix de vie importants (travail,
+                                relations, projets), tu dirais qu'ils sont :
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q5" value="0" />
+                                    <span class="option-label"
+                                        >Principalement dictés par les attentes
+                                        des autres (famille, société)
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q5" value="1" />
+                                    <span class="option-label"
+                                        >Un mélange, mais j'ai du mal à
+                                        distinguer ce qui vient vraiment de moi
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q5" value="2" />
+                                    <span class="option-label"
+                                        >Plutôt alignés avec mes valeurs, même
+                                        si je fais parfois des compromis
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q5" value="3" />
+                                    <span class="option-label"
+                                        >Clairement alignés avec mes valeurs
+                                        personnelles, j'assume mes choix
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q5" value="4" />
+                                    <span class="option-label"
+                                        >Je crée mes propres valeurs et vis
+                                        selon elles, indépendamment du jugement
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Si tu devais être totalement honnête :
+                                acceptes-tu qui tu es vraiment (forces ET
+                                faiblesses) ?
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q6" value="0" />
+                                    <span class="option-label"
+                                        >Non, je me déteste ou je rejette des
+                                        parties de moi-même
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q6" value="1" />
+                                    <span class="option-label"
+                                        >J'accepte mes forces mais je suis en
+                                        lutte contre mes faiblesses
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q6" value="2" />
+                                    <span class="option-label"
+                                        >J'apprends à m'accepter, c'est un
+                                        travail en cours
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q6" value="3" />
+                                    <span class="option-label"
+                                        >Oui, j'accepte qui je suis dans ma
+                                        globalité
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q6" value="4" />
+                                    <span class="option-label"
+                                        >J'affirme totalement qui je suis, y
+                                        compris mes parts d'ombre
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dimension 4 -->
+                    <div class="dimension">
+                        <h2>4. Création vs Réaction</h2>
+                        <p class="dimension-description">
+                            Es-tu un créateur actif de ta vie ou réagis-tu
+                            principalement aux circonstances ?
+                        </p>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Dans ta vie quotidienne, tu dirais que tu passes
+                                le plus de temps à :
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q7" value="0" />
+                                    <span class="option-label"
+                                        >Subir et me plaindre de ce qui m'arrive
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q7" value="1" />
+                                    <span class="option-label"
+                                        >Consommer (divertissements, réseaux
+                                        sociaux, séries...)
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q7" value="2" />
+                                    <span class="option-label"
+                                        >Gérer mes obligations avec un peu de
+                                        temps pour moi
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q7" value="3" />
+                                    <span class="option-label"
+                                        >Construire activement des projets qui
+                                        me tiennent à cœur
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q7" value="4" />
+                                    <span class="option-label"
+                                        >Créer (art, pensée, relations, œuvres)
+                                        avec passion et nécessité
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Face à un échec ou une difficulté, tu as
+                                tendance à :
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q8" value="0" />
+                                    <span class="option-label"
+                                        >T'effondrer et abandonner, rester
+                                        paralysé
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q8" value="1" />
+                                    <span class="option-label"
+                                        >Chercher qui blâmer (les autres, les
+                                        circonstances, toi-même)
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q8" value="2" />
+                                    <span class="option-label"
+                                        >Prendre du recul, apprendre et
+                                        réessayer
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q8" value="3" />
+                                    <span class="option-label"
+                                        >Utiliser l'échec comme matériau pour
+                                        créer quelque chose de nouveau
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q8" value="4" />
+                                    <span class="option-label"
+                                        >L'accepter totalement et créer à partir
+                                        de cette nouvelle réalité
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dimension 5 -->
+                    <div class="dimension">
+                        <h2>5. Le test de l'Éternel Retour</h2>
+                        <p class="dimension-description">
+                            La question ultime de Nietzsche : voudrais-tu
+                            revivre ta vie exactement comme elle a été ?
+                        </p>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Si tu devais revivre ta vie EXACTEMENT à
+                                l'identique (même joies, même souffrances, même
+                                erreurs), que répondrais-tu ?
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q9" value="0" />
+                                    <span class="option-label"
+                                        >Non, surtout pas ! Ma vie a trop de
+                                        souffrance et d'échecs
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q9" value="1" />
+                                    <span class="option-label"
+                                        >Non, je voudrais changer beaucoup de
+                                        choses
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q9" value="2" />
+                                    <span class="option-label"
+                                        >Peut-être... si je pouvais changer
+                                        quelques événements clés
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q9" value="3" />
+                                    <span class="option-label"
+                                        >Probablement oui, même si certains
+                                        moments ont été très durs
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q9" value="4" />
+                                    <span class="option-label"
+                                        >Oui, absolument, sans changer une seule
+                                        chose
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="question">
+                            <div class="question-text">
+                                Honnêtement, pourquoi accepterais-tu (ou pas) de
+                                revivre ta vie ?
+                            </div>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="q10" value="0" />
+                                    <span class="option-label"
+                                        >Je ne l'accepterais pas, il y a eu trop
+                                        de souffrance inutile
+                                        <span class="score-badge"
+                                            >0 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q10" value="1" />
+                                    <span class="option-label"
+                                        >Seulement si la souffrance m'a "servi"
+                                        à quelque chose
+                                        <span class="score-badge"
+                                            >1 pt</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q10" value="2" />
+                                    <span class="option-label"
+                                        >Parce que les bons moments compensent
+                                        les mauvais
+                                        <span class="score-badge"
+                                            >2 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q10" value="3" />
+                                    <span class="option-label"
+                                        >Parce que c'est ma vie, avec tout ce
+                                        qu'elle comporte
+                                        <span class="score-badge"
+                                            >3 pts</span
+                                        ></span
+                                    >
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="q10" value="4" />
+                                    <span class="option-label"
+                                        >Parce que j'affirme la totalité de
+                                        l'existence, même le tragique
+                                        <span class="score-badge"
+                                            >4 pts</span
+                                        ></span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Context Note -->
+                    <div class="context-note">
+                        <label for="contextNote"
+                            >📝 Note de contexte (optionnel)</label
+                        >
+                        <textarea
+                            id="contextNote"
+                            placeholder="Que se passe-t-il dans ta vie en ce moment ? (ex: semaine difficile au travail, période de calme, événement marquant...)"
+                        ></textarea>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn"
+                        onclick="calculateResults()"
+                    >
+                        📊 Calculer mon score
+                    </button>
+                </form>
+
+                <div id="results" class="results"></div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="history" class="tab-content">
+                <div id="historyContent"></div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="setting-item">
+                    <h3>🎯 Ta priorité actuelle</h3>
+                    <p id="currentPriority"></p>
+                    <button
+                        class="btn btn-secondary"
+                        onclick="changePriority()"
+                    >
+                        Modifier ma priorité
+                    </button>
+                </div>
+
+                <div class="setting-item">
+                    <h3>📊 Exporter mes données</h3>
+                    <p>
+                        Télécharge toutes tes évaluations en format JSON pour
+                        les sauvegarder ou les transférer sur un autre appareil.
+                    </p>
+                    <button class="btn btn-secondary" onclick="exportData()">
+                        Télécharger mes données
+                    </button>
+                </div>
+
+                <div class="setting-item">
+                    <h3>📥 Importer des données</h3>
+                    <p>
+                        Restaure tes évaluations depuis un fichier de
+                        sauvegarde.
+                    </p>
+                    <input
+                        type="file"
+                        id="importFile"
+                        accept=".json"
+                        style="display: none"
+                        onchange="importData(event)"
+                    />
+                    <button
+                        class="btn btn-secondary"
+                        onclick="document.getElementById('importFile').click()"
+                    >
+                        Importer un fichier
+                    </button>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>💡 Conseil :</strong> Il est recommandé de faire une
+                    évaluation une fois par semaine, toujours le même jour (ex:
+                    dimanche soir) pour une meilleure comparabilité.
+                </div>
+
+                <div class="setting-item">
+                    <h3>🗑️ Supprimer toutes mes données</h3>
+                    <p style="color: #dc3545">
+                        <strong>⚠️ Attention :</strong> Cette action est
+                        irréversible. Toutes tes évaluations seront
+                        définitivement supprimées.
+                    </p>
+                    <button class="btn btn-danger" onclick="deleteAllData()">
+                        Tout supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Install Prompt -->
+        <div id="installPrompt" class="install-prompt">
+            <h3 style="margin-bottom: 10px">📱 Installer l'application</h3>
+            <p style="font-size: 0.9em; color: #666">
+                Installe Amor Fati Tracker sur ton appareil pour y accéder
+                rapidement et l'utiliser hors ligne.
+            </p>
+            <div class="install-buttons">
+                <button
+                    onclick="installApp()"
+                    style="background: var(--primary); color: white"
+                >
+                    Installer
+                </button>
+                <button
+                    onclick="dismissInstall()"
+                    style="background: #6c757d; color: white"
+                >
+                    Plus tard
+                </button>
+            </div>
+        </div>
+
+        <script>
+            // Variables globales
+            let deferredPrompt;
+            const STORAGE_KEY = "amorFatiData";
+
+            // Données de l'application
+            let appData = {
+                priority: null,
+                assessments: [],
+                settings: {
+                    lastAssessment: null,
+                },
             };
-            
-            let totalScore = 0;
-            let dimensionScores = {};
-            let answers = {};
-            
-            for (const [dimension, questions] of Object.entries(dimensions)) {
-                let dimScore = 0;
-                questions.forEach(q => {
-                    const score = parseInt(formData.get(`q${q}`));
-                    dimScore += score;
-                    answers[`q${q}`] = score;
+
+            // Charger les données au démarrage
+            loadData();
+
+            // Gestion de l'installation PWA
+            window.addEventListener("beforeinstallprompt", (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                document.getElementById("installPrompt").classList.add("show");
+            });
+
+            function installApp() {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        deferredPrompt = null;
+                        dismissInstall();
+                    });
+                }
+            }
+
+            function dismissInstall() {
+                document
+                    .getElementById("installPrompt")
+                    .classList.remove("show");
+            }
+
+            // Gestion des onglets
+            function switchTab(tabName) {
+                document
+                    .querySelectorAll(".nav-tab")
+                    .forEach((tab) => tab.classList.remove("active"));
+                document
+                    .querySelectorAll(".tab-content")
+                    .forEach((content) => content.classList.remove("active"));
+
+                event.target.classList.add("active");
+                document.getElementById(tabName).classList.add("active");
+
+                if (tabName === "history") {
+                    displayHistory();
+                } else if (tabName === "settings") {
+                    displaySettings();
+                }
+            }
+
+            // Gestion de la sélection des options
+            document.querySelectorAll(".option").forEach((option) => {
+                option.addEventListener("click", function () {
+                    const radio = this.querySelector('input[type="radio"]');
+                    const name = radio.name;
+
+                    document
+                        .querySelectorAll(`input[name="${name}"]`)
+                        .forEach((r) => {
+                            r.parentElement.classList.remove("selected");
+                        });
+
+                    radio.checked = true;
+                    this.classList.add("selected");
                 });
-                dimensionScores[dimension] = dimScore;
-                totalScore += dimScore;
+            });
+
+            // Gestion des priorités
+            document.querySelectorAll(".priority-option").forEach((option) => {
+                option.addEventListener("click", function () {
+                    const radio = this.querySelector('input[type="radio"]');
+                    document
+                        .querySelectorAll(".priority-option")
+                        .forEach((opt) => {
+                            opt.classList.remove("selected");
+                        });
+                    radio.checked = true;
+                    this.classList.add("selected");
+                });
+            });
+
+            // Démarrer l'évaluation
+            function startAssessment() {
+                const selectedPriority = document.querySelector(
+                    'input[name="priority"]:checked',
+                );
+                if (!selectedPriority) {
+                    alert(
+                        "Merci de sélectionner une priorité avant de commencer.",
+                    );
+                    return;
+                }
+
+                appData.priority = selectedPriority.value;
+                saveData();
+                switchTab("assessment");
+                document.querySelector(".nav-tab:nth-child(2)").click();
             }
-            
-            // Sauvegarder l'évaluation
-            const assessment = {
-                date: new Date().toISOString(),
-                totalScore: totalScore,
-                dimensionScores: dimensionScores,
-                answers: answers,
-                context: document.getElementById('contextNote').value,
-                priority: appData.priority
-            };
-            
-            appData.assessments.push(assessment);
-            appData.settings.lastAssessment = assessment.date;
-            saveData();
-            
+
+            // Calculer les résultats
+            function calculateResults() {
+                const form = document.getElementById("assessmentForm");
+                const formData = new FormData(form);
+
+                // Vérifier que toutes les questions sont répondues
+                const totalQuestions = 10;
+                let answeredQuestions = 0;
+                for (let i = 1; i <= totalQuestions; i++) {
+                    if (formData.get(`q${i}`)) {
+                        answeredQuestions++;
+                    }
+                }
+
+                if (answeredQuestions < totalQuestions) {
+                    alert(
+                        `Merci de répondre à toutes les questions (${answeredQuestions}/${totalQuestions} répondues)`,
+                    );
+                    return;
+                }
+
+                // Calculer les scores par dimension
+                const dimensions = {
+                    "Passé & Ressentiment": [1, 2],
+                    "Souffrance présente": [3, 4],
+                    Authenticité: [5, 6],
+                    Création: [7, 8],
+                    "Éternel Retour": [9, 10],
+                };
+
+                let totalScore = 0;
+                let dimensionScores = {};
+                let answers = {};
+
+                for (const [dimension, questions] of Object.entries(
+                    dimensions,
+                )) {
+                    let dimScore = 0;
+                    questions.forEach((q) => {
+                        const score = parseInt(formData.get(`q${q}`));
+                        dimScore += score;
+                        answers[`q${q}`] = score;
+                    });
+                    dimensionScores[dimension] = dimScore;
+                    totalScore += dimScore;
+                }
+
+                // Sauvegarder l'évaluation
+                const assessment = {
+                    date: new Date().toISOString(),
+                    totalScore: totalScore,
+                    dimensionScores: dimensionScores,
+                    answers: answers,
+                    context: document.getElementById("contextNote").value,
+                    priority: appData.priority,
+                };
+
+                appData.assessments.push(assessment);
+                appData.settings.lastAssessment = assessment.date;
+                saveData();
+
+                // Afficher les résultats
+                displayResults(assessment);
+
+                // Scroller vers les résultats
+                document
+                    .getElementById("results")
+                    .scrollIntoView({ behavior: "smooth" });
+            }
+
             // Afficher les résultats
-            displayResults(assessment);
-            
-            // Scroller vers les résultats
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Afficher les résultats
-        function displayResults(assessment) {
-            const resultsDiv = document.getElementById('results');
-            const interpretation = getInterpretation(assessment.totalScore);
-            const recommendations = getRecommendations(assessment.dimensionScores, appData.priority);
-            
-            let html = `
+            function displayResults(assessment) {
+                const resultsDiv = document.getElementById("results");
+                const interpretation = getInterpretation(assessment.totalScore);
+                const recommendations = getRecommendations(
+                    assessment.dimensionScores,
+                    appData.priority,
+                );
+
+                let html = `
                 <div class="total-score">Score total : ${assessment.totalScore}/40</div>
-                
+
                 <div class="interpretation">
                     <h3>${interpretation.title}</h3>
-                    ${interpretation.text.map(p => `<p>${p}</p>`).join('')}
+                    ${interpretation.text.map((p) => `<p>${p}</p>`).join("")}
                 </div>
-                
+
                 <div class="dimension-scores">
             `;
-            
-            for (const [dimension, score] of Object.entries(assessment.dimensionScores)) {
-                const percentage = (score / 8) * 100;
-                html += `
+
+                for (const [dimension, score] of Object.entries(
+                    assessment.dimensionScores,
+                )) {
+                    const percentage = (score / 8) * 100;
+                    html += `
                     <div class="dimension-score">
                         <h4>${dimension}</h4>
                         <div class="dimension-score-value">${score}/8</div>
@@ -1240,168 +1788,186 @@
                         </div>
                     </div>
                 `;
-            }
-            
-            html += `
+                }
+
+                html += `
                 </div>
-                
+
                 ${getEvolutionComparison()}
-                
+
                 <div class="interpretation">
                     <h3>🎯 Recommandations personnalisées</h3>
-                    ${recommendations.map(r => `<p>→ ${r}</p>`).join('')}
+                    ${recommendations.map((r) => `<p>→ ${r}</p>`).join("")}
                 </div>
-                
+
                 <button class="btn" onclick="resetForm()">Nouvelle évaluation</button>
             `;
-            
-            resultsDiv.innerHTML = html;
-            resultsDiv.classList.add('show');
-        }
-        
-        // Obtenir l'interprétation du score
-        function getInterpretation(score) {
-            const interpretations = [
-                {
-                    min: 0, max: 8,
-                    title: "🌑 Nihilisme & Ressentiment (0-8 points)",
-                    text: [
-                        "Tu es actuellement dans une phase de forte réactivité face à ta vie. Le ressentiment et le refus de ce qui est consomment beaucoup de ton énergie.",
-                        "C'est normal et humain. Beaucoup de gens passent par là. L'important est de reconnaître où tu en es pour pouvoir avancer.",
-                        "Commence par identifier une seule chose dans ta vie que tu pourrais accepter cette semaine, sans chercher à la justifier ou à la changer."
-                    ]
-                },
-                {
-                    min: 9, max: 16,
-                    title: "🌘 Résignation & Lutte (9-16 points)",
-                    text: [
-                        "Tu oscilles entre acceptation forcée et lutte intérieure. Une partie de toi veut lâcher prise, une autre résiste encore.",
-                        "Cette phase de transition est courageuse. Tu commences à voir qu'il pourrait y avoir une autre façon de vivre.",
-                        "Concentre-toi sur les dimensions où ton score est le plus bas - c'est là que le travail sera le plus transformateur."
-                    ]
-                },
-                {
-                    min: 17, max: 24,
-                    title: "🌗 Acceptation en Construction (17-24 points)",
-                    text: [
-                        "Tu es sur un bon chemin. Tu as déjà intégré certaines formes d'acceptation, même si ce n'est pas toujours facile.",
-                        "L'amor fati n'est pas encore pleinement vécu, mais tu en comprends déjà la logique et tu l'appliques par moments.",
-                        "Continue ce travail. Observe dans quelles situations tu retombes dans le ressentiment, et pourquoi."
-                    ]
-                },
-                {
-                    min: 25, max: 32,
-                    title: "🌖 Affirmation Avancée (25-32 points)",
-                    text: [
-                        "Tu as atteint un niveau significatif d'amor fati. Tu acceptes une grande partie de ta vie sans chercher à la justifier.",
-                        "Il reste peut-être quelques zones de résistance - c'est normal. L'important est que tu créés activement plutôt que de réagir.",
-                        "Tu es probablement déjà une inspiration pour d'autres, même sans le savoir. Continue à approfondir."
-                    ]
-                },
-                {
-                    min: 33, max: 40,
-                    title: "🌕 Amor Fati Accompli (33-40 points)",
-                    text: [
-                        "Tu incarnes l'amor fati à un niveau rare. Tu affirmes ta vie totalement, même dans ses aspects les plus difficiles.",
-                        "Attention à ne pas tomber dans l'orgueil ou la performance de 'l'homme fort'. Le vrai amor fati reste humble.",
-                        "Ta présence même peut aider les autres à voir qu'un autre rapport à la vie est possible. Partage ce que tu vis, sans prosélytisme."
-                    ]
+
+                resultsDiv.innerHTML = html;
+                resultsDiv.classList.add("show");
+            }
+
+            // Obtenir l'interprétation du score
+            function getInterpretation(score) {
+                const interpretations = [
+                    {
+                        min: 0,
+                        max: 8,
+                        title: "🌑 Nihilisme & Ressentiment (0-8 points)",
+                        text: [
+                            "Tu es actuellement dans une phase de forte réactivité face à ta vie. Le ressentiment et le refus de ce qui est consomment beaucoup de ton énergie.",
+                            "C'est normal et humain. Beaucoup de gens passent par là. L'important est de reconnaître où tu en es pour pouvoir avancer.",
+                            "Commence par identifier une seule chose dans ta vie que tu pourrais accepter cette semaine, sans chercher à la justifier ou à la changer.",
+                        ],
+                    },
+                    {
+                        min: 9,
+                        max: 16,
+                        title: "🌘 Résignation & Lutte (9-16 points)",
+                        text: [
+                            "Tu oscilles entre acceptation forcée et lutte intérieure. Une partie de toi veut lâcher prise, une autre résiste encore.",
+                            "Cette phase de transition est courageuse. Tu commences à voir qu'il pourrait y avoir une autre façon de vivre.",
+                            "Concentre-toi sur les dimensions où ton score est le plus bas - c'est là que le travail sera le plus transformateur.",
+                        ],
+                    },
+                    {
+                        min: 17,
+                        max: 24,
+                        title: "🌗 Acceptation en Construction (17-24 points)",
+                        text: [
+                            "Tu es sur un bon chemin. Tu as déjà intégré certaines formes d'acceptation, même si ce n'est pas toujours facile.",
+                            "L'amor fati n'est pas encore pleinement vécu, mais tu en comprends déjà la logique et tu l'appliques par moments.",
+                            "Continue ce travail. Observe dans quelles situations tu retombes dans le ressentiment, et pourquoi.",
+                        ],
+                    },
+                    {
+                        min: 25,
+                        max: 32,
+                        title: "🌖 Affirmation Avancée (25-32 points)",
+                        text: [
+                            "Tu as atteint un niveau significatif d'amor fati. Tu acceptes une grande partie de ta vie sans chercher à la justifier.",
+                            "Il reste peut-être quelques zones de résistance - c'est normal. L'important est que tu créés activement plutôt que de réagir.",
+                            "Tu es probablement déjà une inspiration pour d'autres, même sans le savoir. Continue à approfondir.",
+                        ],
+                    },
+                    {
+                        min: 33,
+                        max: 40,
+                        title: "🌕 Amor Fati Accompli (33-40 points)",
+                        text: [
+                            "Tu incarnes l'amor fati à un niveau rare. Tu affirmes ta vie totalement, même dans ses aspects les plus difficiles.",
+                            "Attention à ne pas tomber dans l'orgueil ou la performance de 'l'homme fort'. Le vrai amor fati reste humble.",
+                            "Ta présence même peut aider les autres à voir qu'un autre rapport à la vie est possible. Partage ce que tu vis, sans prosélytisme.",
+                        ],
+                    },
+                ];
+
+                return interpretations.find(
+                    (i) => score >= i.min && score <= i.max,
+                );
+            }
+
+            // Obtenir des recommandations personnalisées
+            function getRecommendations(dimensionScores, priority) {
+                const recommendations = [];
+                const dimensionNames = {
+                    "Passé & Ressentiment": "ressentiment",
+                    "Souffrance présente": "souffrance",
+                    Authenticité: "authenticite",
+                    Création: "creation",
+                    "Éternel Retour": "eternel",
+                };
+
+                // Identifier la dimension la plus faible
+                let lowestDimension = null;
+                let lowestScore = 8;
+
+                for (const [dimension, score] of Object.entries(
+                    dimensionScores,
+                )) {
+                    if (score < lowestScore) {
+                        lowestScore = score;
+                        lowestDimension = dimension;
+                    }
                 }
-            ];
-            
-            return interpretations.find(i => score >= i.min && score <= i.max);
-        }
-        
-        // Obtenir des recommandations personnalisées
-        function getRecommendations(dimensionScores, priority) {
-            const recommendations = [];
-            const dimensionNames = {
-                'Passé & Ressentiment': 'ressentiment',
-                'Souffrance présente': 'souffrance',
-                'Authenticité': 'authenticite',
-                'Création': 'creation',
-                'Éternel Retour': 'eternel'
-            };
-            
-            // Identifier la dimension la plus faible
-            let lowestDimension = null;
-            let lowestScore = 8;
-            
-            for (const [dimension, score] of Object.entries(dimensionScores)) {
-                if (score < lowestScore) {
-                    lowestScore = score;
-                    lowestDimension = dimension;
+
+                // Recommandations basées sur la priorité de l'utilisateur
+                const priorityRecommendations = {
+                    ressentiment: [
+                        "Écris une lettre (que tu n'enverras pas) à quelqu'un qui t'a fait du mal. Puis brûle-la symboliquement.",
+                        "Pratique l'exercice : 'Et si cette personne avait fait exactement ce qu'elle devait faire pour que je devienne qui je suis ?'",
+                        "Journal : chaque soir, note un événement passé douloureux et écris : 'Je dis oui à cette partie de mon histoire.'",
+                    ],
+                    souffrance: [
+                        "Face à une difficulté cette semaine, demande-toi : 'Comment puis-je créer quelque chose à partir de cela ?'",
+                        "Pratique la distinction stoïcienne : liste ce qui dépend de toi vs ce qui n'en dépend pas.",
+                        "Méditation sur l'impermanence : tout passe, même cette souffrance. Peux-tu l'accepter le temps qu'elle dure ?",
+                    ],
+                    authenticite: [
+                        "Identifie une décision que tu prends par peur du jugement. Peux-tu faire autrement cette semaine ?",
+                        "Liste 5 valeurs qui te définissent vraiment. Tes choix de vie les reflètent-ils ?",
+                        "Exercice : pendant une journée, observe combien de fois tu te censures ou joues un rôle.",
+                    ],
+                    creation: [
+                        "Remplace une heure de consommation par une heure de création (peu importe quoi).",
+                        "Face à un problème, demande-toi : 'Que puis-je créer à partir de cette contrainte ?'",
+                        "Lance un micro-projet créatif cette semaine, sans attendre qu'il soit parfait.",
+                    ],
+                    eternel: [
+                        "Pratique l'exercice de l'éternel retour : visualise ta vie qui se répète. Qu'est-ce qui te fait dire non ? Pourquoi ?",
+                        "Liste 3 aspects de ta vie que tu voudrais revivre éternellement. Puis 3 que tu refuserais. Explore le pourquoi.",
+                        "Chaque soir : 'Voudrais-je revivre cette journée éternellement ?' Si non, qu'est-ce qui devrait changer ?",
+                    ],
+                    none: [
+                        "Observe simplement ton évolution sans te juger. Le chemin est aussi important que la destination.",
+                        "Concentre-toi sur ta dimension la plus faible (voir ci-dessus).",
+                    ],
+                };
+
+                // Ajouter les recommandations liées à la priorité
+                if (priority && priorityRecommendations[priority]) {
+                    recommendations.push(...priorityRecommendations[priority]);
                 }
+
+                // Ajouter une recommandation pour la dimension la plus faible
+                if (lowestDimension && lowestScore < 4) {
+                    recommendations.push(
+                        `<strong>Focus sur "${lowestDimension}"</strong> : C'est ta dimension la plus faible (${lowestScore}/8). C'est là que le travail aura le plus d'impact.`,
+                    );
+                }
+
+                // Recommandations générales
+                if (dimensionScores["Création"] < 4) {
+                    recommendations.push(
+                        "Tu sembles plus dans la réaction que dans la création. Commence par 15 minutes de création par jour.",
+                    );
+                }
+
+                return recommendations.slice(0, 5); // Maximum 5 recommandations
             }
-            
-            // Recommandations basées sur la priorité de l'utilisateur
-            const priorityRecommendations = {
-                'ressentiment': [
-                    "Écris une lettre (que tu n'enverras pas) à quelqu'un qui t'a fait du mal. Puis brûle-la symboliquement.",
-                    "Pratique l'exercice : 'Et si cette personne avait fait exactement ce qu'elle devait faire pour que je devienne qui je suis ?'",
-                    "Journal : chaque soir, note un événement passé douloureux et écris : 'Je dis oui à cette partie de mon histoire.'"
-                ],
-                'souffrance': [
-                    "Face à une difficulté cette semaine, demande-toi : 'Comment puis-je créer quelque chose à partir de cela ?'",
-                    "Pratique la distinction stoïcienne : liste ce qui dépend de toi vs ce qui n'en dépend pas.",
-                    "Méditation sur l'impermanence : tout passe, même cette souffrance. Peux-tu l'accepter le temps qu'elle dure ?"
-                ],
-                'authenticite': [
-                    "Identifie une décision que tu prends par peur du jugement. Peux-tu faire autrement cette semaine ?",
-                    "Liste 5 valeurs qui te définissent vraiment. Tes choix de vie les reflètent-ils ?",
-                    "Exercice : pendant une journée, observe combien de fois tu te censures ou joues un rôle."
-                ],
-                'creation': [
-                    "Remplace une heure de consommation par une heure de création (peu importe quoi).",
-                    "Face à un problème, demande-toi : 'Que puis-je créer à partir de cette contrainte ?'",
-                    "Lance un micro-projet créatif cette semaine, sans attendre qu'il soit parfait."
-                ],
-                'eternel': [
-                    "Pratique l'exercice de l'éternel retour : visualise ta vie qui se répète. Qu'est-ce qui te fait dire non ? Pourquoi ?",
-                    "Liste 3 aspects de ta vie que tu voudrais revivre éternellement. Puis 3 que tu refuserais. Explore le pourquoi.",
-                    "Chaque soir : 'Voudrais-je revivre cette journée éternellement ?' Si non, qu'est-ce qui devrait changer ?"
-                ],
-                'none': [
-                    "Observe simplement ton évolution sans te juger. Le chemin est aussi important que la destination.",
-                    "Concentre-toi sur ta dimension la plus faible (voir ci-dessus)."
-                ]
-            };
-            
-            // Ajouter les recommandations liées à la priorité
-            if (priority && priorityRecommendations[priority]) {
-                recommendations.push(...priorityRecommendations[priority]);
-            }
-            
-            // Ajouter une recommandation pour la dimension la plus faible
-            if (lowestDimension && lowestScore < 4) {
-                recommendations.push(`<strong>Focus sur "${lowestDimension}"</strong> : C'est ta dimension la plus faible (${lowestScore}/8). C'est là que le travail aura le plus d'impact.`);
-            }
-            
-            // Recommandations générales
-            if (dimensionScores['Création'] < 4) {
-                recommendations.push("Tu sembles plus dans la réaction que dans la création. Commence par 15 minutes de création par jour.");
-            }
-            
-            return recommendations.slice(0, 5); // Maximum 5 recommandations
-        }
-        
-        // Obtenir la comparaison avec l'évaluation précédente
-        function getEvolutionComparison() {
-            if (appData.assessments.length < 2) {
-                return '<div class="alert alert-info">Continue à t\'évaluer régulièrement pour voir ton évolution dans le temps.</div>';
-            }
-            
-            const current = appData.assessments[appData.assessments.length - 1];
-            const previous = appData.assessments[appData.assessments.length - 2];
-            
-            const diff = current.totalScore - previous.totalScore;
-            const diffText = diff > 0 ? `+${diff}` : diff;
-            const diffColor = diff > 0 ? '#28a745' : (diff < 0 ? '#dc3545' : '#6c757d');
-            const emoji = diff > 0 ? '📈' : (diff < 0 ? '📉' : '➡️');
-            
-            const previousDate = new Date(previous.date).toLocaleDateString('fr-FR');
-            
-            let html = `
+
+            // Obtenir la comparaison avec l'évaluation précédente
+            function getEvolutionComparison() {
+                if (appData.assessments.length < 2) {
+                    return '<div class="alert alert-info">Continue à t\'évaluer régulièrement pour voir ton évolution dans le temps.</div>';
+                }
+
+                const current =
+                    appData.assessments[appData.assessments.length - 1];
+                const previous =
+                    appData.assessments[appData.assessments.length - 2];
+
+                const diff = current.totalScore - previous.totalScore;
+                const diffText = diff > 0 ? `+${diff}` : diff;
+                const diffColor =
+                    diff > 0 ? "#28a745" : diff < 0 ? "#dc3545" : "#6c757d";
+                const emoji = diff > 0 ? "📈" : diff < 0 ? "📉" : "➡️";
+
+                const previousDate = new Date(previous.date).toLocaleDateString(
+                    "fr-FR",
+                );
+
+                let html = `
                 <div class="alert alert-info">
                     <strong>${emoji} Évolution depuis le ${previousDate}</strong><br>
                     Score précédent : ${previous.totalScore}/40<br>
@@ -1409,19 +1975,25 @@
                     Évolution : <span style="color: ${diffColor}; font-weight: bold;">${diffText} points</span>
                 </div>
             `;
-            
-            // Comparaison par dimension
-            html += '<div style="margin-top: 15px;"><strong>Évolution par dimension :</strong></div>';
-            html += '<div class="dimension-scores">';
-            
-            for (const dimension in current.dimensionScores) {
-                const currentScore = current.dimensionScores[dimension];
-                const previousScore = previous.dimensionScores[dimension];
-                const dimDiff = currentScore - previousScore;
-                const dimDiffText = dimDiff > 0 ? `+${dimDiff}` : dimDiff;
-                const dimDiffColor = dimDiff > 0 ? '#28a745' : (dimDiff < 0 ? '#dc3545' : '#6c757d');
-                
-                html += `
+
+                // Comparaison par dimension
+                html +=
+                    '<div style="margin-top: 15px;"><strong>Évolution par dimension :</strong></div>';
+                html += '<div class="dimension-scores">';
+
+                for (const dimension in current.dimensionScores) {
+                    const currentScore = current.dimensionScores[dimension];
+                    const previousScore = previous.dimensionScores[dimension];
+                    const dimDiff = currentScore - previousScore;
+                    const dimDiffText = dimDiff > 0 ? `+${dimDiff}` : dimDiff;
+                    const dimDiffColor =
+                        dimDiff > 0
+                            ? "#28a745"
+                            : dimDiff < 0
+                              ? "#dc3545"
+                              : "#6c757d";
+
+                    html += `
                     <div class="dimension-score">
                         <h4>${dimension}</h4>
                         <div class="dimension-score-value">${currentScore}/8 <span style="font-size: 0.8em; color: ${dimDiffColor};">(${dimDiffText})</span></div>
@@ -1430,127 +2002,151 @@
                         </div>
                     </div>
                 `;
+                }
+
+                html += "</div>";
+
+                return html;
             }
-            
-            html += '</div>';
-            
-            return html;
-        }
-        
-        // Afficher l'historique
-        function displayHistory() {
-            const historyContent = document.getElementById('historyContent');
-            
-            if (appData.assessments.length === 0) {
-                historyContent.innerHTML = `
+
+            // Afficher l'historique
+            function displayHistory() {
+                const historyContent =
+                    document.getElementById("historyContent");
+
+                if (appData.assessments.length === 0) {
+                    historyContent.innerHTML = `
                     <div class="history-empty">
                         <h3>📊 Aucune évaluation pour le moment</h3>
                         <p style="margin-top: 15px;">Commence ta première évaluation pour suivre ton évolution.</p>
                         <button class="btn" onclick="switchTab('assessment'); document.querySelector('.nav-tab:nth-child(2)').click();">Faire une évaluation</button>
                     </div>
                 `;
-                return;
-            }
-            
-            // Trier les évaluations par date (plus récente en premier)
-            const sortedAssessments = [...appData.assessments].sort((a, b) => 
-                new Date(b.date) - new Date(a.date)
-            );
-            
-            // Créer le graphique d'évolution
-            let html = '<div class="chart-container">';
-            html += '<div class="chart-title">📈 Évolution de ton score Amor Fati</div>';
-            html += createChart(sortedAssessments.reverse());
-            html += '</div>';
-            
-            // Afficher la liste des évaluations
-            html += '<div class="history-list">';
-            
-            sortedAssessments.reverse().forEach((assessment, index) => {
-                const date = new Date(assessment.date);
-                const dateStr = date.toLocaleDateString('fr-FR', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-                const timeStr = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-                
-                const priorityLabels = {
-                    'ressentiment': '🔥 Passé & Ressentiment',
-                    'souffrance': '⚡ Souffrance présente',
-                    'authenticite': '🎭 Authenticité',
-                    'creation': '🎨 Création',
-                    'eternel': '♾️ Éternel Retour',
-                    'none': '🧭 Aucune priorité'
-                };
-                
-                html += `
+                    return;
+                }
+
+                // Trier les évaluations par date (plus récente en premier)
+                const sortedAssessments = [...appData.assessments].sort(
+                    (a, b) => new Date(b.date) - new Date(a.date),
+                );
+
+                // Créer le graphique d'évolution
+                let html = '<div class="chart-container">';
+                html +=
+                    '<div class="chart-title">📈 Évolution de ton score Amor Fati</div>';
+                html += createChart(sortedAssessments.reverse());
+                html += "</div>";
+
+                // Afficher la liste des évaluations
+                html += '<div class="history-list">';
+
+                sortedAssessments.reverse().forEach((assessment, index) => {
+                    const date = new Date(assessment.date);
+                    const dateStr = date.toLocaleDateString("fr-FR", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    });
+                    const timeStr = date.toLocaleTimeString("fr-FR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    });
+
+                    const priorityLabels = {
+                        ressentiment: "🔥 Passé & Ressentiment",
+                        souffrance: "⚡ Souffrance présente",
+                        authenticite: "🎭 Authenticité",
+                        creation: "🎨 Création",
+                        eternel: "♾️ Éternel Retour",
+                        none: "🧭 Aucune priorité",
+                    };
+
+                    html += `
                     <div class="history-item" onclick="viewAssessmentDetails(${appData.assessments.length - 1 - index})">
                         <div class="history-header">
                             <div class="history-date">${dateStr} à ${timeStr}</div>
                             <div class="history-score">${assessment.totalScore}/40</div>
                         </div>
-                        ${assessment.context ? `<div class="history-context">"${assessment.context}"</div>` : ''}
-                        <div class="history-priority">Priorité : ${priorityLabels[assessment.priority] || 'Non définie'}</div>
+                        ${assessment.context ? `<div class="history-context">"${assessment.context}"</div>` : ""}
+                        <div class="history-priority">Priorité : ${priorityLabels[assessment.priority] || "Non définie"}</div>
                     </div>
                 `;
-            });
-            
-            html += '</div>';
-            
-            historyContent.innerHTML = html;
-        }
-        
-        // Créer un graphique simple en SVG
-        function createChart(assessments) {
-            if (assessments.length < 2) {
-                return '<p style="text-align: center; color: #666;">Effectue au moins 2 évaluations pour voir ton évolution.</p>';
+                });
+
+                html += "</div>";
+
+                historyContent.innerHTML = html;
             }
-            
-            const width = 100; // pourcentage
-            const height = 200;
-            const padding = 30;
-            const maxScore = 40;
-            
-            // Calculer les points
-            const points = assessments.map((a, i) => {
-                const x = padding + (i / (assessments.length - 1)) * (100 - 2 * padding);
-                const y = height - padding - ((a.totalScore / maxScore) * (height - 2 * padding));
-                return { x, y, score: a.totalScore, date: new Date(a.date) };
-            });
-            
-            // Créer le chemin SVG
-            let pathD = `M ${points[0].x} ${points[0].y}`;
-            for (let i = 1; i < points.length; i++) {
-                pathD += ` L ${points[i].x} ${points[i].y}`;
-            }
-            
-            // Créer le SVG
-            let svg = `
+
+            // Créer un graphique simple en SVG
+            function createChart(assessments) {
+                if (assessments.length < 2) {
+                    return '<p style="text-align: center; color: #666;">Effectue au moins 2 évaluations pour voir ton évolution.</p>';
+                }
+
+                const width = 100; // pourcentage
+                const height = 200;
+                const padding = 30;
+                const maxScore = 40;
+
+                // Calculer les points
+                const points = assessments.map((a, i) => {
+                    const x =
+                        padding +
+                        (i / (assessments.length - 1)) * (100 - 2 * padding);
+                    const y =
+                        height -
+                        padding -
+                        (a.totalScore / maxScore) * (height - 2 * padding);
+                    return {
+                        x,
+                        y,
+                        score: a.totalScore,
+                        date: new Date(a.date),
+                    };
+                });
+
+                // Créer le chemin SVG
+                let pathD = `M ${points[0].x} ${points[0].y}`;
+                for (let i = 1; i < points.length; i++) {
+                    pathD += ` L ${points[i].x} ${points[i].y}`;
+                }
+
+                // Créer le SVG
+                let svg = `
                 <svg viewBox="0 0 100 ${height}" style="width: 100%; height: ${height}px; background: #f8f9fa; border-radius: 8px;">
                     <!-- Grille -->
                     <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="#ddd" stroke-width="0.5"/>
                     <line x1="${padding}" y1="${height - padding}" x2="${100 - padding}" y2="${height - padding}" stroke="#ddd" stroke-width="0.5"/>
-                    
+
                     <!-- Lignes de référence -->
-                    ${[0, 10, 20, 30, 40].map(score => {
-                        const y = height - padding - ((score / maxScore) * (height - 2 * padding));
-                        return `
+                    ${[0, 10, 20, 30, 40]
+                        .map((score) => {
+                            const y =
+                                height -
+                                padding -
+                                (score / maxScore) * (height - 2 * padding);
+                            return `
                             <line x1="${padding}" y1="${y}" x2="${100 - padding}" y2="${y}" stroke="#e0e0e0" stroke-width="0.3" stroke-dasharray="2,2"/>
                             <text x="${padding - 3}" y="${y + 1}" font-size="3" fill="#666" text-anchor="end">${score}</text>
                         `;
-                    }).join('')}
-                    
+                        })
+                        .join("")}
+
                     <!-- Ligne d'évolution -->
                     <path d="${pathD}" fill="none" stroke="url(#gradient)" stroke-width="1" stroke-linecap="round"/>
-                    
+
                     <!-- Points -->
-                    ${points.map((p, i) => `
+                    ${points
+                        .map(
+                            (p, i) => `
                         <circle cx="${p.x}" cy="${p.y}" r="1.5" fill="#667eea"/>
-                        <title>${p.date.toLocaleDateString('fr-FR')} : ${p.score}/40</title>
-                    `).join('')}
-                    
+                        <title>${p.date.toLocaleDateString("fr-FR")} : ${p.score}/40</title>
+                    `,
+                        )
+                        .join("")}
+
                     <!-- Gradient -->
                     <defs>
                         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -1560,322 +2156,246 @@
                     </defs>
                 </svg>
             `;
-            
-            return svg;
-        }
-        
-        // Voir les détails d'une évaluation
-        function viewAssessmentDetails(index) {
-            const assessment = appData.assessments[index];
-            displayResults(assessment);
-            switchTab('assessment');
-            document.querySelector('.nav-tab:nth-child(2)').click();
-        }
-        
-        // Afficher les paramètres
-        function displaySettings() {
-            const priorityLabels = {
-                'ressentiment': '🔥 Passé & Ressentiment - Me libérer du poids de mon passé',
-                'souffrance': '⚡ Souffrance présente - Mieux accepter les difficultés actuelles',
-                'authenticite': '🎭 Authenticité - Vivre selon mes propres valeurs',
-                'creation': '🎨 Création - Devenir un créateur actif de ma vie',
-                'eternel': '♾️ Éternel Retour - Affirmer totalement ma vie',
-                'none': '🧭 Aucune priorité spécifique - Observer mon évolution globale'
-            };
-            
-            document.getElementById('currentPriority').textContent = 
-                priorityLabels[appData.priority] || 'Non définie';
-        }
-        
-        // Changer la priorité
-        function changePriority() {
-            const newPriority = prompt(
-                "Quelle dimension veux-tu prioriser ?\n\n" +
-                "1 - Passé & Ressentiment\n" +
-                "2 - Souffrance présente\n" +
-                "3 - Authenticité\n" +
-                "4 - Création\n" +
-                "5 - Éternel Retour\n" +
-                "6 - Aucune priorité\n\n" +
-                "Entre le numéro (1-6) :"
-            );
-            
-            const priorities = ['ressentiment', 'souffrance', 'authenticite', 'creation', 'eternel', 'none'];
-            const index = parseInt(newPriority) - 1;
-            
-            if (index >= 0 && index < priorities.length) {
-                appData.priority = priorities[index];
-                saveData();
-                displaySettings();
-                alert('✅ Ta priorité a été mise à jour !');
+
+                return svg;
             }
-        }
-        
-        // Réinitialiser le formulaire
-        function resetForm() {
-            document.getElementById('assessmentForm').reset();
-            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById('contextNote').value = '';
-            document.getElementById('results').classList.remove('show');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Exporter les données
-        function exportData() {
-            const dataStr = JSON.stringify(appData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `amor-fati-export-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-        }
-        
-        // Importer les données
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    
-                    // Valider les données
-                    if (!importedData.assessments || !Array.isArray(importedData.assessments)) {
-                        throw new Error('Format de fichier invalide');
-                    }
-                    
-                    // Confirmer l'import
-                    if (confirm(`Voulez-vous importer ${importedData.assessments.length} évaluation(s) ?\n\nCela remplacera vos données actuelles.`)) {
-                        appData = importedData;
-                        saveData();
-                        alert('✅ Données importées avec succès !');
-                        displayHistory();
-                        switchTab('history');
-                        document.querySelector('.nav-tab:nth-child(3)').click();
-                    }
-                } catch (error) {
-                    alert('❌ Erreur lors de l\'import : ' + error.message);
-                }
-            };
-            reader.readAsText(file);
-            
-            // Réinitialiser l'input
-            event.target.value = '';
-        }
-        
-        // Supprimer toutes les données
-        function deleteAllData() {
-            if (confirm('⚠️ Es-tu sûr(e) de vouloir supprimer TOUTES tes données ?\n\nCette action est irréversible !')) {
-                if (confirm('Dernière confirmation : toutes tes évaluations seront perdues définitivement.')) {
-                    appData = {
-                        priority: null,
-                        assessments: [],
-                        settings: { lastAssessment: null }
-                    };
+
+            // Voir les détails d'une évaluation
+            function viewAssessmentDetails(index) {
+                const assessment = appData.assessments[index];
+                displayResults(assessment);
+                switchTab("assessment");
+                document.querySelector(".nav-tab:nth-child(2)").click();
+            }
+
+            // Afficher les paramètres
+            function displaySettings() {
+                const priorityLabels = {
+                    ressentiment:
+                        "🔥 Passé & Ressentiment - Me libérer du poids de mon passé",
+                    souffrance:
+                        "⚡ Souffrance présente - Mieux accepter les difficultés actuelles",
+                    authenticite:
+                        "🎭 Authenticité - Vivre selon mes propres valeurs",
+                    creation:
+                        "🎨 Création - Devenir un créateur actif de ma vie",
+                    eternel: "♾️ Éternel Retour - Affirmer totalement ma vie",
+                    none: "🧭 Aucune priorité spécifique - Observer mon évolution globale",
+                };
+
+                document.getElementById("currentPriority").textContent =
+                    priorityLabels[appData.priority] || "Non définie";
+            }
+
+            // Changer la priorité
+            function changePriority() {
+                const newPriority = prompt(
+                    "Quelle dimension veux-tu prioriser ?\n\n" +
+                        "1 - Passé & Ressentiment\n" +
+                        "2 - Souffrance présente\n" +
+                        "3 - Authenticité\n" +
+                        "4 - Création\n" +
+                        "5 - Éternel Retour\n" +
+                        "6 - Aucune priorité\n\n" +
+                        "Entre le numéro (1-6) :",
+                );
+
+                const priorities = [
+                    "ressentiment",
+                    "souffrance",
+                    "authenticite",
+                    "creation",
+                    "eternel",
+                    "none",
+                ];
+                const index = parseInt(newPriority) - 1;
+
+                if (index >= 0 && index < priorities.length) {
+                    appData.priority = priorities[index];
                     saveData();
-                    alert('✅ Toutes les données ont été supprimées.');
-                    switchTab('welcome');
-                    document.querySelector('.nav-tab:first-child').click();
+                    displaySettings();
+                    alert("✅ Ta priorité a été mise à jour !");
                 }
             }
-        }
-        
-        // Sauvegarder les données dans localStorage
-        function saveData() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-            } catch (e) {
-                console.error('Erreur de sauvegarde:', e);
-                alert('⚠️ Erreur lors de la sauvegarde des données.');
+
+            // Réinitialiser le formulaire
+            function resetForm() {
+                document.getElementById("assessmentForm").reset();
+                document
+                    .querySelectorAll(".option")
+                    .forEach((opt) => opt.classList.remove("selected"));
+                document.getElementById("contextNote").value = "";
+                document.getElementById("results").classList.remove("show");
+                window.scrollTo({ top: 0, behavior: "smooth" });
             }
-        }
-        
-        // Charger les données depuis localStorage
-        function loadData() {
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                if (stored) {
-                    appData = JSON.parse(stored);
-                    
-                    // Si l'utilisateur a déjà des données, aller directement à l'onglet évaluation
-                    if (appData.priority && appData.assessments.length > 0) {
-                        // Ne rien faire, laisser l'onglet accueil par défaut
+
+            // Exporter les données
+            function exportData() {
+                const dataStr = JSON.stringify(appData, null, 2);
+                const dataBlob = new Blob([dataStr], {
+                    type: "application/json",
+                });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `amor-fati-export-${new Date().toISOString().split("T")[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // Importer les données
+            function importData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+
+                        // Valider les données
+                        if (
+                            !importedData.assessments ||
+                            !Array.isArray(importedData.assessments)
+                        ) {
+                            throw new Error("Format de fichier invalide");
+                        }
+
+                        // Confirmer l'import
+                        if (
+                            confirm(
+                                `Voulez-vous importer ${importedData.assessments.length} évaluation(s) ?\n\nCela remplacera vos données actuelles.`,
+                            )
+                        ) {
+                            appData = importedData;
+                            saveData();
+                            alert("✅ Données importées avec succès !");
+                            displayHistory();
+                            switchTab("history");
+                            document
+                                .querySelector(".nav-tab:nth-child(3)")
+                                .click();
+                        }
+                    } catch (error) {
+                        alert("❌ Erreur lors de l'import : " + error.message);
+                    }
+                };
+                reader.readAsText(file);
+
+                // Réinitialiser l'input
+                event.target.value = "";
+            }
+
+            // Supprimer toutes les données
+            function deleteAllData() {
+                if (
+                    confirm(
+                        "⚠️ Es-tu sûr(e) de vouloir supprimer TOUTES tes données ?\n\nCette action est irréversible !",
+                    )
+                ) {
+                    if (
+                        confirm(
+                            "Dernière confirmation : toutes tes évaluations seront perdues définitivement.",
+                        )
+                    ) {
+                        appData = {
+                            priority: null,
+                            assessments: [],
+                            settings: { lastAssessment: null },
+                        };
+                        saveData();
+                        alert("✅ Toutes les données ont été supprimées.");
+                        switchTab("welcome");
+                        document.querySelector(".nav-tab:first-child").click();
                     }
                 }
-            } catch (e) {
-                console.error('Erreur de chargement:', e);
             }
-        }
-        
-        // Enregistrer le Service Worker pour PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js', { scope: '/AmorFati/' })
-                    .then(reg => {
-                        console.log('ServiceWorker registered with scope:', reg.scope);
 
-                        // If there's an update found, notify clients
-                        reg.addEventListener('updatefound', () => {
-                            const newWorker = reg.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed') {
-                                    // New content available, inform the user
-                                    if (navigator.serviceWorker.controller) {
-                                        // Show a small prompt to refresh
-                                        if (confirm('Une nouvelle version est disponible. Voulez-vous recharger pour l\'installer maintenant ?')) {
-                                            newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                        }
-                                    }
-                                }
-                            });
-                        });
-                    })
-                    .catch(err => console.warn('ServiceWorker registration failed:', err));
-
-            });
-
-            // React to messages from the SW (e.g., for skipWaiting)
-            navigator.serviceWorker.addEventListener('message', event => {
-                if (!event.data) return;
-                if (event.data.type === 'RELOAD_PAGE') {
-                    window.location.reload();
+            // Sauvegarder les données dans localStorage
+            function saveData() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                } catch (e) {
+                    console.error("Erreur de sauvegarde:", e);
+                    alert("⚠️ Erreur lors de la sauvegarde des données.");
                 }
-            });
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <!-- Commit: fichier mis à jour et poussé le 2025-11-09 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#667eea">
-    <!-- iOS / Safari PWA meta -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="AmorFati">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192.png" sizes="192x192">
-    <link rel="shortcut icon" href="icons/icon-192.png">
-    <link rel="stylesheet" href="styles.css">
-    <title>Amor Fati Tracker</title>
-</head>
-<body>
-    <div class="container">
-    <header class="header">
-        <h1>Amor Fati</h1>
-        <nav class="nav-tabs">
-            <button class="nav-tab active" data-tab="welcome">Accueil</button>
-            <button class="nav-tab" data-tab="assessment">Évaluer</button>
-            <button class="nav-tab" data-tab="history">Historique</button>
-            <button class="nav-tab" data-tab="settings">Paramètres</button>
-        </nav>
-    </header>
+            }
 
-    <main>
-    <section id="welcome" class="tab-content active">
-            <h2>Bienvenue</h2>
-            <p>Suivez votre évolution avec Amor Fati.</p>
-        </section>
+            // Charger les données depuis localStorage
+            function loadData() {
+                try {
+                    const stored = localStorage.getItem(STORAGE_KEY);
+                    if (stored) {
+                        appData = JSON.parse(stored);
 
-    <section id="assessment" class="tab-content">
-            <h2>Nouvelle évaluation</h2>
-            <form id="assessmentForm">
-                <div class="field">
-                    <label>Ressentiment (0-8)</label>
-                    <input type="number" name="ressentiment" min="0" max="8" value="0">
-                </div>
-                <div class="field">
-                    <label>Souffrance présente (0-8)</label>
-                    <input type="number" name="souffrance" min="0" max="8" value="0">
-                </div>
-                <div class="field">
-                    <label>Authenticité (0-8)</label>
-                    <input type="number" name="authenticite" min="0" max="8" value="0">
-                </div>
-                <div class="field">
-                    <label>Création (0-8)</label>
-                    <input type="number" name="creation" min="0" max="8" value="0">
-                </div>
-                <div class="field">
-                    <label>Éternel Retour (0-8)</label>
-                    <input type="number" name="eternel" min="0" max="8" value="0">
-                </div>
+                        // Si l'utilisateur a déjà des données, aller directement à l'onglet évaluation
+                        if (
+                            appData.priority &&
+                            appData.assessments.length > 0
+                        ) {
+                            // Ne rien faire, laisser l'onglet accueil par défaut
+                        }
+                    }
+                } catch (e) {
+                    console.error("Erreur de chargement:", e);
+                }
+            }
 
-                <div class="field">
-                    <label>Priorité</label>
-                    <select name="priority">
-                        <option value="none">Aucune</option>
-                        <option value="ressentiment">Passé & Ressentiment</option>
-                        <option value="souffrance">Souffrance présente</option>
-                        <option value="authenticite">Authenticité</option>
-                        <option value="creation">Création</option>
-                        <option value="eternel">Éternel Retour</option>
-                    </select>
-                </div>
+            // Enregistrer le Service Worker pour PWA
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker
+                        .register("service-worker.js", { scope: "/AmorFati/" })
+                        .then((reg) => {
+                            console.log(
+                                "ServiceWorker registered with scope:",
+                                reg.scope,
+                            );
 
-                <div class="field">
-                    <label>Contexte (optionnel)</label>
-                    <textarea id="contextNote" name="context" rows="3"></textarea>
-                </div>
+                            // If there's an update found, notify clients
+                            reg.addEventListener("updatefound", () => {
+                                const newWorker = reg.installing;
+                                newWorker.addEventListener(
+                                    "statechange",
+                                    () => {
+                                        if (newWorker.state === "installed") {
+                                            // New content available, inform the user
+                                            if (
+                                                navigator.serviceWorker
+                                                    .controller
+                                            ) {
+                                                // Show a small prompt to refresh
+                                                if (
+                                                    confirm(
+                                                        "Une nouvelle version est disponible. Voulez-vous recharger pour l'installer maintenant ?",
+                                                    )
+                                                ) {
+                                                    newWorker.postMessage({
+                                                        type: "SKIP_WAITING",
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    },
+                                );
+                            });
+                        })
+                        .catch((err) =>
+                            console.warn(
+                                "ServiceWorker registration failed:",
+                                err,
+                            ),
+                        );
+                });
 
-                <div class="actions">
-                    <button type="submit" class="btn">Enregistrer</button>
-                    <button type="button" id="resetForm" class="btn">Réinitialiser</button>
-                </div>
-            </form>
-
-            <div id="results" class="results"></div>
-        </section>
-
-    <section id="history" class="tab-content">
-            <h2>Historique</h2>
-            <div id="historyContent"></div>
-            <div class="history-actions">
-                <button class="btn" onclick="exportData()">Exporter</button>
-                <input id="importInput" type="file" accept="application/json" />
-                <button class="btn" onclick="deleteAllData()">Supprimer tout</button>
-            </div>
-        </section>
-
-    <section id="settings" class="tab-content">
-            <h2>Paramètres</h2>
-            <div>Priorité courante : <span id="currentPriority">Non définie</span></div>
-            <div style="margin-top:10px">
-                <button class="btn" onclick="changePriority()">Changer la priorité</button>
-            </div>
-        </section>
-    </main>
-    </div>
-
-    <!-- Update banner shown when service worker update available -->
-    <div id="updateBanner" style="display:none; position:fixed; bottom:16px; left:16px; right:16px; background:#fff; border:1px solid #ddd; padding:10px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08); z-index:1000;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>Nouvelle version disponible.</div>
-            <div>
-                <button id="updateReload" class="btn">Recharger</button>
-                <button id="updateDismiss" class="btn">Ignorer</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add-to-home modal for iOS fallback -->
-    <div id="addModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; z-index:1001;">
-        <div style="background:#fff; padding:16px; border-radius:8px; max-width:420px; width:90%;">
-            <h3>Ajouter à l'écran d'accueil</h3>
-            <p>Pour installer l'app, utilisez l'option "Ajouter à l'écran d'accueil" dans votre navigateur.</p>
-            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
-                <button id="addModalDismiss" class="btn">Fermer</button>
-                <button id="addModalAction" class="btn">Comment faire</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js" defer></script>
-</body>
+                // React to messages from the SW (e.g., for skipWaiting)
+                navigator.serviceWorker.addEventListener("message", (event) => {
+                    if (!event.data) return;
+                    if (event.data.type === "RELOAD_PAGE") {
+                        window.location.reload();
+                    }
+                });
+            }
+        </script>
+    </body>
 </html>
