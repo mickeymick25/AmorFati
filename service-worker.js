@@ -1,92 +1,156 @@
-const CACHE_NAME = 'amor-fati-cache-v2';
+const CACHE_NAME = "amor-fati-cache-v2";
 const PRECACHE_ASSETS = [
-  'index.html',
-  'manifest.json',
-  'offline.html',
-  'icons/icon-192.svg',
-  'icons/icon-512.svg'
+  "./",
+  "index.html",
+  "manifest.json",
+  // Icônes PNG (pas SVG)
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/icon-180.png",
+  // Splash screens iOS (optionnel)
+  "icons/splash-640x1136.png",
+  "icons/splash-750x1334.png",
+  "icons/splash-1125x2436.png",
+  "icons/splash-1242x2208.png",
+  "icons/splash-1536x2048.png",
 ];
 
-// Durations or limits could be added for runtime caches
-
-self.addEventListener('install', event => {
+// Installation : precache des assets
+self.addEventListener("install", (event) => {
+  console.log("[SW] Installation...");
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE_ASSETS))
-      .then(() => self.skipWaiting())
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => {
+        console.log("[SW] Mise en cache des assets");
+        return cache.addAll(PRECACHE_ASSETS);
+      })
+      .then(() => {
+        console.log("[SW] Installation terminée");
+        return self.skipWaiting();
+      })
+      .catch((err) => {
+        console.error("[SW] Erreur installation:", err);
+      }),
   );
 });
 
-self.addEventListener('activate', event => {
+// Activation : nettoyage des anciens caches
+self.addEventListener("activate", (event) => {
+  console.log("[SW] Activation...");
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-          return Promise.resolve();
-        })
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys.map((key) => {
+            if (key !== CACHE_NAME) {
+              console.log("[SW] Suppression ancien cache:", key);
+              return caches.delete(key);
+            }
+            return Promise.resolve();
+          }),
+        ),
       )
-    ).then(() => self.clients.claim())
+      .then(() => {
+        console.log("[SW] Activation terminée");
+        return self.clients.claim();
+      }),
   );
 });
 
-// Helper: send message to all clients
+// Helper: envoyer message à tous les clients
 function broadcastMessage(msg) {
-  self.clients.matchAll().then(clients => {
-    clients.forEach(client => client.postMessage(msg));
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => client.postMessage(msg));
   });
 }
 
-// Fetch strategy:
-// - Navigation requests (HTML): network-first, fallback to cache then offline.html
-// - Other requests: cache-first, then network and cache response
-self.addEventListener('fetch', event => {
+// Stratégie de fetch
+self.addEventListener("fetch", (event) => {
   const req = event.request;
 
-  // Only handle GET requests
-  if (req.method !== 'GET') return;
+  // Seulement les requêtes GET
+  if (req.method !== "GET") return;
 
-  if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
+  // Requêtes de navigation (HTML) : network-first
+  if (
+    req.mode === "navigate" ||
+    (req.headers.get("accept") || "").includes("text/html")
+  ) {
     event.respondWith(
-      fetch(req).then(response => {
-        // Put a copy in cache
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
-        return response;
-      }).catch(() => {
-  return caches.match(req).then(cached => cached || caches.match('offline.html'));
-      })
+      fetch(req)
+        .then((response) => {
+          // Mettre en cache la réponse
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          return response;
+        })
+        .catch(() => {
+          // Si offline, utiliser le cache ou index.html comme fallback
+          return caches
+            .match(req)
+            .then((cached) => cached || caches.match("index.html"))
+            .then(
+              (response) =>
+                response ||
+                new Response(
+                  "<h1>🌟 Amor Fati Offline</h1><p>Pas de connexion. Veuillez vous reconnecter.</p>",
+                  { headers: { "Content-Type": "text/html; charset=utf-8" } },
+                ),
+            );
+        }),
     );
     return;
   }
 
-  // For other requests, try cache first
-    event.respondWith(
-    caches.match(req).then(cached => {
-      if (cached) return cached;
-      return fetch(req).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') {
+  // Autres requêtes (assets) : cache-first
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      if (cached) {
+        // Trouv� en cache, le retourner
+        return cached;
+      }
+
+      // Pas en cache, fetch depuis le réseau
+      return fetch(req)
+        .then((response) => {
+          // Vérifier que la réponse est valide
+          if (
+            !response ||
+            response.status !== 200 ||
+            response.type === "opaque"
+          ) {
+            return response;
+          }
+
+          // Mettre en cache pour la prochaine fois
+          const resClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
           return response;
-        }
-        const resClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(req, resClone));
-        return response;
-      }).catch(() => {
-        // As a final fallback for images/scripts, try offline.html for navigations only
-        return caches.match('offline.html');
-      });
-    })
+        })
+        .catch((err) => {
+          console.warn("[SW] Fetch failed:", req.url, err);
+          // Pour les images, retourner une image placeholder si possible
+          if (req.url.match(/\.(jpg|jpeg|png|gif|svg)$/i)) {
+            return new Response(
+              '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="#ccc" width="100" height="100"/></svg>',
+              { headers: { "Content-Type": "image/svg+xml" } },
+            );
+          }
+          return new Response("Offline", { status: 503 });
+        });
+    }),
   );
 });
 
-// Notify clients when a new service worker is waiting to activate
-self.addEventListener('updatefound', () => {
-  broadcastMessage({ type: 'SW_UPDATE_FOUND' });
-});
-
-self.addEventListener('message', event => {
+// Gestion des messages des clients
+self.addEventListener("message", (event) => {
   if (!event.data) return;
-  if (event.data.type === 'SKIP_WAITING') {
+
+  if (event.data.type === "SKIP_WAITING") {
+    console.log("[SW] Skip waiting demandé");
     self.skipWaiting();
+    broadcastMessage({ type: "RELOAD_PAGE" });
   }
 });

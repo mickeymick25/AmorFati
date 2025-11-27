@@ -2342,58 +2342,73 @@
             }
 
             // Enregistrer le Service Worker pour PWA
+            // Enregistrer le Service Worker pour PWA
             if ("serviceWorker" in navigator) {
                 window.addEventListener("load", () => {
+                    // Détection auto du scope (local vs GitHub Pages)
+                    const isGitHubPages =
+                        location.hostname.includes("github.io");
+                    const scope = isGitHubPages ? "/AmorFati/" : "/";
+
                     navigator.serviceWorker
-                        .register("service-worker.js", { scope: "/AmorFati/" })
+                        .register("service-worker.js", { scope })
                         .then((reg) => {
                             console.log(
-                                "ServiceWorker registered with scope:",
+                                "✅ ServiceWorker enregistré:",
                                 reg.scope,
                             );
 
-                            // If there's an update found, notify clients
+                            // Gérer les mises à jour
                             reg.addEventListener("updatefound", () => {
                                 const newWorker = reg.installing;
+                                console.log("🔄 Mise à jour du SW détectée");
+
                                 newWorker.addEventListener(
                                     "statechange",
                                     () => {
                                         if (newWorker.state === "installed") {
-                                            // New content available, inform the user
                                             if (
                                                 navigator.serviceWorker
                                                     .controller
                                             ) {
-                                                // Show a small prompt to refresh
+                                                // Nouvelle version disponible
+                                                console.log(
+                                                    "✨ Nouvelle version disponible",
+                                                );
                                                 if (
                                                     confirm(
-                                                        "Une nouvelle version est disponible. Voulez-vous recharger pour l'installer maintenant ?",
+                                                        "Une nouvelle version est disponible. Recharger maintenant ?",
                                                     )
                                                 ) {
                                                     newWorker.postMessage({
                                                         type: "SKIP_WAITING",
                                                     });
                                                 }
+                                            } else {
+                                                // Première installation
+                                                console.log(
+                                                    "✅ SW installé pour la première fois",
+                                                );
                                             }
                                         }
                                     },
                                 );
                             });
                         })
-                        .catch((err) =>
-                            console.warn(
-                                "ServiceWorker registration failed:",
-                                err,
-                            ),
-                        );
-                });
+                        .catch((err) => {
+                            console.warn("⚠️ Erreur ServiceWorker:", err);
+                        });
 
-                // React to messages from the SW (e.g., for skipWaiting)
-                navigator.serviceWorker.addEventListener("message", (event) => {
-                    if (!event.data) return;
-                    if (event.data.type === "RELOAD_PAGE") {
-                        window.location.reload();
-                    }
+                    // Écouter les messages du SW
+                    navigator.serviceWorker.addEventListener(
+                        "message",
+                        (event) => {
+                            if (!event.data) return;
+                            if (event.data.type === "RELOAD_PAGE") {
+                                window.location.reload();
+                            }
+                        },
+                    );
                 });
             }
         </script>
