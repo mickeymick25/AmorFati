@@ -1,28 +1,21 @@
-const CACHE_NAME = "amor-fati-cache-v2";
-const PRECACHE_ASSETS = [
-  "./",
-  "index.html",
-  "manifest.json",
-  // Icônes PNG (pas SVG)
-  "icons/icon-192.png",
-  "icons/icon-512.png",
-  "icons/icon-180.png",
-  // Splash screens iOS (optionnel)
-  "icons/splash-640x1136.png",
-  "icons/splash-750x1334.png",
-  "icons/splash-1125x2436.png",
-  "icons/splash-1242x2208.png",
-  "icons/splash-1536x2048.png",
-];
+// ========================================
+// AmorFati — Service Worker
+// ========================================
+// Strategy: network-first for HTML, cache-first for assets.
+// Precaches only the app shell; other assets are cached on first visit.
 
-// Installation : precache des assets
+const CACHE_NAME = "amor-fati-cache-v3";
+
+const PRECACHE_ASSETS = ["./", "./manifest.json", "./offline.html"];
+
+// Installation : precache the app shell
 self.addEventListener("install", (event) => {
   console.log("[SW] Installation...");
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then((cache) => {
-        console.log("[SW] Mise en cache des assets");
+        console.log("[SW] Mise en cache du shell");
         return cache.addAll(PRECACHE_ASSETS);
       })
       .then(() => {
@@ -81,41 +74,40 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(req)
         .then((response) => {
-          // Mettre en cache la réponse
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
           return response;
         })
         .catch(() => {
-          // Si offline, utiliser le cache ou index.html comme fallback
           return caches
             .match(req)
-            .then((cached) => cached || caches.match("index.html"))
-            .then(
-              (response) =>
-                response ||
-                new Response(
-                  "<h1>🌟 Amor Fati Offline</h1><p>Pas de connexion. Veuillez vous reconnecter.</p>",
-                  { headers: { "Content-Type": "text/html; charset=utf-8" } },
-                ),
-            );
+            .then((cached) => cached || caches.match("./"))
+            .then((response) => {
+              if (response) return response;
+              return caches.match("./offline.html");
+            })
+            .then((response) => {
+              if (response) return response;
+              return new Response(
+                "<h1>🌟 Amor Fati Offline</h1><p>Pas de connexion. Veuillez vous reconnecter.</p>",
+                { headers: { "Content-Type": "text/html; charset=utf-8" } },
+              );
+            });
         }),
     );
     return;
   }
 
-  // Autres requêtes (assets) : cache-first
+  // Autres requêtes (assets JS, CSS, images, etc.) : cache-first
+  // Les assets Vite ont des hashes dans le nom, donc ils sont immutables
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) {
-        // Trouv� en cache, le retourner
         return cached;
       }
 
-      // Pas en cache, fetch depuis le réseau
       return fetch(req)
         .then((response) => {
-          // Vérifier que la réponse est valide
           if (
             !response ||
             response.status !== 200 ||
@@ -129,9 +121,8 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
           return response;
         })
-        .catch((err) => {
-          console.warn("[SW] Fetch failed:", req.url, err);
-          // Pour les images, retourner une image placeholder si possible
+        .catch(() => {
+          // Pour les images, retourner un placeholder
           if (req.url.match(/\.(jpg|jpeg|png|gif|svg)$/i)) {
             return new Response(
               '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="#ccc" width="100" height="100"/></svg>',
