@@ -22,6 +22,7 @@ function copyServiceWorkerPlugin() {
 }
 
 export default defineConfig({
+  base: "/AmorFati/",
   root: ".",
   build: {
     outDir: "dist",
