@@ -12,6 +12,9 @@ import {
   escapeHtml,
   DEFAULT_DATA,
   validateAppData,
+  migrateData,
+  CURRENT_SCHEMA_VERSION,
+  mergeAssessments,
   LocalStorageRepository,
 } from "./src/logic.js";
 
@@ -651,15 +654,37 @@ async function importData(event) {
         }
       }
 
-      const confirmed = await showConfirm(
-        `Voulez-vous importer ${importedData.assessments.length} évaluation(s) ?<br><br>Cela remplacera vos données actuelles.`,
-        { title: "📥 Importer des données" },
+      const count = importedData.assessments.length;
+      const existingCount = appData.assessments.length;
+
+      const choice = await openModal(
+        `📥 Importer ${count} évaluation(s)`,
+        `<p>Comment souhaites-tu importer les données ?</p>
+         <p><strong>Remplacer</strong> : les données actuelles (${existingCount} évaluation(s)) seront supprimées.<br>
+         <strong>Fusionner</strong> : les évaluations importées seront ajoutées aux existantes (les doublons sont ignorés).</p>`,
+        [
+          { label: "Annuler", value: null, class: "btn-secondary" },
+          { label: "Fusionner", value: "merge", class: "" },
+          { label: "Remplacer", value: "replace", class: "btn-danger" },
+        ],
       );
 
-      if (confirmed) {
+      if (choice === "replace") {
         appData = importedData;
+        appData.version = CURRENT_SCHEMA_VERSION;
         saveData();
-        await showAlert("✅ Données importées avec succès !");
+        await showAlert("✅ Données importées avec succès (remplacement) !");
+        displayHistory();
+        switchTab("history");
+      } else if (choice === "merge") {
+        const merged = mergeAssessments(
+          appData.assessments,
+          importedData.assessments,
+        );
+        appData.assessments = merged;
+        appData.version = CURRENT_SCHEMA_VERSION;
+        saveData();
+        await showAlert(`✅ ${merged.length} évaluation(s) après fusion !`);
         displayHistory();
         switchTab("history");
       }
@@ -711,7 +736,8 @@ function loadData() {
     const stored = storage.load();
     if (!stored) return;
 
-    const validated = validateAppData(stored);
+    const migrated = migrateData(stored);
+    const validated = validateAppData(migrated);
 
     const originalCount = stored.assessments ? stored.assessments.length : 0;
     if (validated.assessments.length !== originalCount) {

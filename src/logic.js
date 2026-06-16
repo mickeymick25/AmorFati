@@ -29,5 +29,11 @@ export {
   validateAppData,
 } from "./domain/assessment.js";
 
+// Domain migration
+export { migrateData, CURRENT_SCHEMA_VERSION } from "./domain/migration.js";
+
+// Domain merge
+export { mergeAssessments } from "./domain/merge.js";
+
 // Infrastructure
 export { LocalStorageRepository } from "./infrastructure/storage-repository.js";

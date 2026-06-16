@@ -8,6 +8,24 @@
       name="description"
       content="Évaluation personnelle Amor Fati - Suivi de ton évolution philosophique"
     />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Amor Fati Tracker - Suivi Personnel" />
+    <meta
+      property="og:description"
+      content="Évalue ton rapport à la vie à travers 5 dimensions philosophiques et suis ton évolution vers l'amor fati."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mickeymick25.github.io/AmorFati" />
+    <meta property="og:image" content="icons/icon-512.png" />
+    <meta property="og:locale" content="fr_FR" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Amor Fati Tracker - Suivi Personnel" />
+    <meta
+      name="twitter:description"
+      content="Évalue ton rapport à la vie à travers 5 dimensions philosophiques et suis ton évolution vers l'amor fati."
+    />
+    <meta name="twitter:image" content="icons/icon-512.png" />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="icons/icon-192.png" />
     <link rel="apple-touch-icon" href="icons/icon-180.png" />
@@ -16,6 +34,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
     <div class="container">
       <div class="header">
         <h1>🌟 Amor Fati Tracker</h1>
@@ -72,699 +91,713 @@
         </button>
       </div>
 
-      <!-- Welcome Tab -->
-      <div
-        id="welcome"
-        role="tabpanel"
-        aria-labelledby="tab-welcome"
-        class="tab-content active"
-      >
-        <div class="onboarding">
-          <h2>Bienvenue dans ton suivi Amor Fati</h2>
-          <p>
-            Cet outil te permet d'évaluer où tu te situes dans ton cheminement
-            vers l'acceptation totale de ta vie (amor fati) et de suivre ton
-            évolution dans le temps.
-          </p>
+      <main id="main-content">
+        <!-- Welcome Tab -->
+        <div
+          id="welcome"
+          role="tabpanel"
+          aria-labelledby="tab-welcome"
+          tabindex="0"
+          class="tab-content active"
+        >
+          <div class="onboarding">
+            <h2>Bienvenue dans ton suivi Amor Fati</h2>
+            <p>
+              Cet outil te permet d'évaluer où tu te situes dans ton cheminement
+              vers l'acceptation totale de ta vie (amor fati) et de suivre ton
+              évolution dans le temps.
+            </p>
+
+            <div class="alert alert-info">
+              <strong>🔒 100% Confidentiel :</strong> Toutes tes données restent
+              dans ton appareil. Rien n'est envoyé en ligne. Tu peux même
+              l'utiliser hors connexion.
+            </div>
+
+            <div class="priority-selection" id="prioritySelection">
+              <h3>
+                Avant de commencer : Quelle dimension souhaites-tu voir évoluer
+                en priorité ?
+              </h3>
+              <p class="priority-subtitle">
+                Cette réflexion t'aidera à orienter ton travail sur toi-même. Tu
+                pourras la modifier à tout moment.
+              </p>
+
+              <div
+                class="priority-options"
+                role="radiogroup"
+                aria-label="Choix de priorité"
+              >
+                <label class="priority-option">
+                  <input type="radio" name="priority" value="ressentiment" />
+                  <div>
+                    <span class="priority-label">🔥 Passé & Ressentiment</span>
+                    <span class="priority-desc"
+                      >Me libérer du poids de mon passé, dépasser la colère et
+                      l'amertume</span
+                    >
+                  </div>
+                </label>
+
+                <label class="priority-option">
+                  <input type="radio" name="priority" value="souffrance" />
+                  <div>
+                    <span class="priority-label">⚡ Souffrance présente</span>
+                    <span class="priority-desc"
+                      >Mieux accepter et traverser les difficultés
+                      actuelles</span
+                    >
+                  </div>
+                </label>
+
+                <label class="priority-option">
+                  <input type="radio" name="priority" value="authenticite" />
+                  <div>
+                    <span class="priority-label">🎭 Authenticité</span>
+                    <span class="priority-desc"
+                      >Vivre selon mes propres valeurs, être vraiment
+                      moi-même</span
+                    >
+                  </div>
+                </label>
+
+                <label class="priority-option">
+                  <input type="radio" name="priority" value="creation" />
+                  <div>
+                    <span class="priority-label">🎨 Création</span>
+                    <span class="priority-desc"
+                      >Devenir un créateur actif de ma vie plutôt que
+                      subir</span
+                    >
+                  </div>
+                </label>
+
+                <label class="priority-option">
+                  <input type="radio" name="priority" value="eternel" />
+                  <div>
+                    <span class="priority-label">♾️ Éternel Retour</span>
+                    <span class="priority-desc"
+                      >Affirmer totalement ma vie, vouloir la revivre telle
+                      quelle</span
+                    >
+                  </div>
+                </label>
+
+                <label class="priority-option">
+                  <input type="radio" name="priority" value="none" />
+                  <div>
+                    <span class="priority-label"
+                      >🧭 Aucune priorité spécifique</span
+                    >
+                    <span class="priority-desc"
+                      >Je veux juste observer mon évolution globale</span
+                    >
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <button class="btn" onclick="startAssessment()">
+              Commencer ma première évaluation
+            </button>
+          </div>
+        </div>
+
+        <!-- Assessment Tab -->
+        <div
+          id="assessment"
+          role="tabpanel"
+          aria-labelledby="tab-assessment"
+          class="tab-content"
+        >
+          <form id="assessmentForm">
+            <!-- Dimension 1 -->
+            <div class="dimension">
+              <h2>1. Rapport au passé & Ressentiment</h2>
+              <p class="dimension-description">
+                Comment te situes-tu face à ton histoire personnelle et aux
+                événements difficiles que tu as vécus ?
+              </p>
+
+              <div class="question">
+                <div class="question-text">
+                  Quand tu repenses à des événements difficiles de ton passé,
+                  que ressens-tu principalement ?
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q1" value="0" />
+                    <span class="option-label"
+                      >Une colère vive, un sentiment d'injustice qui me consume
+                      régulièrement <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q1" value="1" />
+                    <span class="option-label"
+                      >De l'amertume, je me dis souvent "si seulement ça ne
+                      s'était pas passé"
+                      <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q1" value="2" />
+                    <span class="option-label"
+                      >De la tristesse parfois, mais je n'y pense plus
+                      constamment <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q1" value="3" />
+                    <span class="option-label"
+                      >Une acceptation tranquille, c'est mon histoire et elle
+                      fait partie de moi
+                      <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q1" value="4" />
+                    <span class="option-label"
+                      >Une affirmation complète : je ne voudrais pas que ça
+                      n'ait pas existé
+                      <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div class="question">
+                <div class="question-text">
+                  Face aux personnes qui t'ont fait du mal dans le passé, quelle
+                  est ton attitude ?
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q2" value="0" />
+                    <span class="option-label"
+                      >Je leur en veux profondément, j'imagine parfois me venger
+                      <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q2" value="1" />
+                    <span class="option-label"
+                      >Je leur en veux encore beaucoup, j'évite d'y penser car
+                      ça me met en colère
+                      <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q2" value="2" />
+                    <span class="option-label"
+                      >Je travaille à leur pardonner, mais c'est difficile
+                      <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q2" value="3" />
+                    <span class="option-label"
+                      >Je ne leur en veux plus vraiment, j'ai tourné la page
+                      <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q2" value="4" />
+                    <span class="option-label"
+                      >Je les accepte comme faisant partie de mon histoire, sans
+                      ressentiment ni besoin de pardon
+                      <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dimension 2 -->
+            <div class="dimension">
+              <h2>2. Attitude face à la souffrance présente</h2>
+              <p class="dimension-description">
+                Comment réagis-tu face aux difficultés et souffrances actuelles
+                de ta vie ?
+              </p>
+
+              <div class="question">
+                <div class="question-text">
+                  Quand tu traverses une épreuve difficile (maladie, échec,
+                  perte), quelle est ta réaction dominante ?
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q3" value="0" />
+                    <span class="option-label"
+                      >"Pourquoi moi ? C'est injuste !" - Je me sens victime
+                      <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q3" value="1" />
+                    <span class="option-label"
+                      >"Il faut que je transforme ça en quelque chose de positif
+                      pour que ça ait un sens"
+                      <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q3" value="2" />
+                    <span class="option-label"
+                      >"C'est dur, mais ça fait partie de la vie, je vais m'en
+                      sortir" <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q3" value="3" />
+                    <span class="option-label"
+                      >"C'est une épreuve, je l'accepte et je vais la traverser
+                      avec dignité" <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q3" value="4" />
+                    <span class="option-label"
+                      >"Cette souffrance fait partie de ma vie, je dis oui même
+                      à cela" <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div class="question">
+                <div class="question-text">
+                  Comment réagis-tu quand quelque chose échappe complètement à
+                  ton contrôle ?
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q4" value="0" />
+                    <span class="option-label"
+                      >Je m'énerve, je lutte contre la réalité, je refuse
+                      d'accepter <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q4" value="1" />
+                    <span class="option-label"
+                      >Je suis frustré mais je finis par me résigner à
+                      contrecœur <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q4" value="2" />
+                    <span class="option-label"
+                      >J'accepte relativement vite et je me concentre sur ce que
+                      je peux contrôler
+                      <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q4" value="3" />
+                    <span class="option-label"
+                      >J'accepte sereinement, je comprends que tout ne dépend
+                      pas de moi <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q4" value="4" />
+                    <span class="option-label"
+                      >J'accueille même cela comme faisant partie du flux de la
+                      vie <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dimension 3 -->
+            <div class="dimension">
+              <h2>3. Rapport à soi-même & Authenticité</h2>
+              <p class="dimension-description">
+                Dans quelle mesure vis-tu selon tes propres valeurs plutôt que
+                selon les attentes extérieures ?
+              </p>
+
+              <div class="question">
+                <div class="question-text">
+                  Concernant tes choix de vie importants (travail, relations,
+                  projets), tu dirais qu'ils sont :
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q5" value="0" />
+                    <span class="option-label"
+                      >Principalement dictés par les attentes des autres
+                      (famille, société)
+                      <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q5" value="1" />
+                    <span class="option-label"
+                      >Un mélange, mais j'ai du mal à distinguer ce qui vient
+                      vraiment de moi
+                      <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q5" value="2" />
+                    <span class="option-label"
+                      >Plutôt alignés avec mes valeurs, même si je fais parfois
+                      des compromis <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q5" value="3" />
+                    <span class="option-label"
+                      >Clairement alignés avec mes valeurs personnelles,
+                      j'assume mes choix
+                      <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q5" value="4" />
+                    <span class="option-label"
+                      >Je crée mes propres valeurs et vis selon elles,
+                      indépendamment du jugement
+                      <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div class="question">
+                <div class="question-text">
+                  Si tu devais être totalement honnête : acceptes-tu qui tu es
+                  vraiment (forces ET faiblesses) ?
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q6" value="0" />
+                    <span class="option-label"
+                      >Non, je me déteste ou je rejette des parties de moi-même
+                      <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q6" value="1" />
+                    <span class="option-label"
+                      >J'accepte mes forces mais je suis en lutte contre mes
+                      faiblesses <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q6" value="2" />
+                    <span class="option-label"
+                      >J'apprends à m'accepter, c'est un travail en cours
+                      <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q6" value="3" />
+                    <span class="option-label"
+                      >Oui, j'accepte qui je suis dans ma globalité
+                      <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q6" value="4" />
+                    <span class="option-label"
+                      >J'affirme totalement qui je suis, y compris mes parts
+                      d'ombre <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dimension 4 -->
+            <div class="dimension">
+              <h2>4. Création vs Réaction</h2>
+              <p class="dimension-description">
+                Es-tu un créateur actif de ta vie ou réagis-tu principalement
+                aux circonstances ?
+              </p>
+
+              <div class="question">
+                <div class="question-text">
+                  Dans ta vie quotidienne, tu dirais que tu passes le plus de
+                  temps à :
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q7" value="0" />
+                    <span class="option-label"
+                      >Subir et me plaindre de ce qui m'arrive
+                      <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q7" value="1" />
+                    <span class="option-label"
+                      >Consommer (divertissements, réseaux sociaux, séries...)
+                      <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q7" value="2" />
+                    <span class="option-label"
+                      >Gérer mes obligations avec un peu de temps pour moi
+                      <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q7" value="3" />
+                    <span class="option-label"
+                      >Construire activement des projets qui me tiennent à cœur
+                      <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q7" value="4" />
+                    <span class="option-label"
+                      >Créer (art, pensée, relations, œuvres) avec passion et
+                      nécessité <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div class="question">
+                <div class="question-text">
+                  Face à un échec ou une difficulté, tu as tendance à :
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q8" value="0" />
+                    <span class="option-label"
+                      >T'effondrer et abandonner, rester paralysé
+                      <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q8" value="1" />
+                    <span class="option-label"
+                      >Chercher qui blâmer (les autres, les circonstances,
+                      toi-même) <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q8" value="2" />
+                    <span class="option-label"
+                      >Prendre du recul, apprendre et réessayer
+                      <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q8" value="3" />
+                    <span class="option-label"
+                      >Utiliser l'échec comme matériau pour créer quelque chose
+                      de nouveau <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q8" value="4" />
+                    <span class="option-label"
+                      >L'accepter totalement et créer à partir de cette nouvelle
+                      réalité <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dimension 5 -->
+            <div class="dimension">
+              <h2>5. Le test de l'Éternel Retour</h2>
+              <p class="dimension-description">
+                La question ultime de Nietzsche : voudrais-tu revivre ta vie
+                exactement comme elle a été ?
+              </p>
+
+              <div class="question">
+                <div class="question-text">
+                  Si tu devais revivre ta vie EXACTEMENT à l'identique (même
+                  joies, même souffrances, même erreurs), que répondrais-tu ?
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q9" value="0" />
+                    <span class="option-label"
+                      >Non, surtout pas ! Ma vie a trop de souffrance et
+                      d'échecs <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q9" value="1" />
+                    <span class="option-label"
+                      >Non, je voudrais changer beaucoup de choses
+                      <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q9" value="2" />
+                    <span class="option-label"
+                      >Peut-être... si je pouvais changer quelques événements
+                      clés <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q9" value="3" />
+                    <span class="option-label"
+                      >Probablement oui, même si certains moments ont été très
+                      durs <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q9" value="4" />
+                    <span class="option-label"
+                      >Oui, absolument, sans changer une seule chose
+                      <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div class="question">
+                <div class="question-text">
+                  Honnêtement, pourquoi accepterais-tu (ou pas) de revivre ta
+                  vie ?
+                </div>
+                <div class="options">
+                  <label class="option">
+                    <input type="radio" name="q10" value="0" />
+                    <span class="option-label"
+                      >Je ne l'accepterais pas, il y a eu trop de souffrance
+                      inutile <span class="score-badge">0 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q10" value="1" />
+                    <span class="option-label"
+                      >Seulement si la souffrance m'a "servi" à quelque chose
+                      <span class="score-badge">1 pt</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q10" value="2" />
+                    <span class="option-label"
+                      >Parce que les bons moments compensent les mauvais
+                      <span class="score-badge">2 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q10" value="3" />
+                    <span class="option-label"
+                      >Parce que c'est ma vie, avec tout ce qu'elle comporte
+                      <span class="score-badge">3 pts</span></span
+                    >
+                  </label>
+                  <label class="option">
+                    <input type="radio" name="q10" value="4" />
+                    <span class="option-label"
+                      >Parce que j'affirme la totalité de l'existence, même le
+                      tragique <span class="score-badge">4 pts</span></span
+                    >
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Context Note -->
+            <div class="context-note">
+              <label for="contextNote">📝 Note de contexte (optionnel)</label>
+              <textarea
+                id="contextNote"
+                placeholder="Que se passe-t-il dans ta vie en ce moment ? (ex: semaine difficile au travail, période de calme, événement marquant...)"
+              ></textarea>
+            </div>
+
+            <button type="button" class="btn" onclick="calculateResults()">
+              📊 Calculer mon score
+            </button>
+          </form>
+
+          <div
+            id="results"
+            class="results"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
+        </div>
+
+        <!-- History Tab -->
+        <div
+          id="history"
+          role="tabpanel"
+          aria-labelledby="tab-history"
+          class="tab-content"
+        >
+          <div id="historyContent" aria-live="polite"></div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div
+          id="settings"
+          role="tabpanel"
+          aria-labelledby="tab-settings"
+          class="tab-content"
+        >
+          <div class="setting-item">
+            <h3>🎯 Ta priorité actuelle</h3>
+            <p id="currentPriority"></p>
+            <button class="btn btn-secondary" onclick="changePriority()">
+              Modifier ma priorité
+            </button>
+          </div>
+
+          <div class="setting-item">
+            <h3>📊 Exporter mes données</h3>
+            <p>
+              Télécharge toutes tes évaluations en format JSON pour les
+              sauvegarder ou les transférer sur un autre appareil.
+            </p>
+            <button class="btn btn-secondary" onclick="exportData()">
+              Télécharger mes données
+            </button>
+          </div>
+
+          <div class="setting-item">
+            <h3>📥 Importer des données</h3>
+            <p>
+              Restaure tes évaluations depuis un fichier de sauvegarde. Tu
+              pourras choisir de remplacer tes données ou de les fusionner.
+            </p>
+            <input type="file" id="importFile" accept=".json" class="sr-only" />
+            <button
+              class="btn btn-secondary"
+              onclick="document.getElementById('importFile').click()"
+            >
+              Importer un fichier
+            </button>
+          </div>
 
           <div class="alert alert-info">
-            <strong>🔒 100% Confidentiel :</strong> Toutes tes données restent
-            dans ton appareil. Rien n'est envoyé en ligne. Tu peux même
-            l'utiliser hors connexion.
+            <strong>💡 Conseil :</strong> Il est recommandé de faire une
+            évaluation une fois par semaine, toujours le même jour (ex: dimanche
+            soir) pour une meilleure comparabilité.
           </div>
 
-          <div class="priority-selection" id="prioritySelection">
-            <h3>
-              Avant de commencer : Quelle dimension souhaites-tu voir évoluer en
-              priorité ?
-            </h3>
-            <p class="priority-subtitle">
-              Cette réflexion t'aidera à orienter ton travail sur toi-même. Tu
-              pourras la modifier à tout moment.
+          <div class="setting-item">
+            <h3>🗑️ Supprimer toutes mes données</h3>
+            <p class="text-danger">
+              <strong>⚠️ Attention :</strong> Cette action est irréversible.
+              Toutes tes évaluations seront définitivement supprimées.
             </p>
-
-            <div
-              class="priority-options"
-              role="radiogroup"
-              aria-label="Choix de priorité"
-            >
-              <label class="priority-option">
-                <input type="radio" name="priority" value="ressentiment" />
-                <div>
-                  <span class="priority-label">🔥 Passé & Ressentiment</span>
-                  <span class="priority-desc"
-                    >Me libérer du poids de mon passé, dépasser la colère et
-                    l'amertume</span
-                  >
-                </div>
-              </label>
-
-              <label class="priority-option">
-                <input type="radio" name="priority" value="souffrance" />
-                <div>
-                  <span class="priority-label">⚡ Souffrance présente</span>
-                  <span class="priority-desc"
-                    >Mieux accepter et traverser les difficultés actuelles</span
-                  >
-                </div>
-              </label>
-
-              <label class="priority-option">
-                <input type="radio" name="priority" value="authenticite" />
-                <div>
-                  <span class="priority-label">🎭 Authenticité</span>
-                  <span class="priority-desc"
-                    >Vivre selon mes propres valeurs, être vraiment
-                    moi-même</span
-                  >
-                </div>
-              </label>
-
-              <label class="priority-option">
-                <input type="radio" name="priority" value="creation" />
-                <div>
-                  <span class="priority-label">🎨 Création</span>
-                  <span class="priority-desc"
-                    >Devenir un créateur actif de ma vie plutôt que subir</span
-                  >
-                </div>
-              </label>
-
-              <label class="priority-option">
-                <input type="radio" name="priority" value="eternel" />
-                <div>
-                  <span class="priority-label">♾️ Éternel Retour</span>
-                  <span class="priority-desc"
-                    >Affirmer totalement ma vie, vouloir la revivre telle
-                    quelle</span
-                  >
-                </div>
-              </label>
-
-              <label class="priority-option">
-                <input type="radio" name="priority" value="none" />
-                <div>
-                  <span class="priority-label"
-                    >🧭 Aucune priorité spécifique</span
-                  >
-                  <span class="priority-desc"
-                    >Je veux juste observer mon évolution globale</span
-                  >
-                </div>
-              </label>
-            </div>
+            <button class="btn btn-danger" onclick="deleteAllData()">
+              Tout supprimer
+            </button>
           </div>
-
-          <button class="btn" onclick="startAssessment()">
-            Commencer ma première évaluation
-          </button>
         </div>
-      </div>
-
-      <!-- Assessment Tab -->
-      <div
-        id="assessment"
-        role="tabpanel"
-        aria-labelledby="tab-assessment"
-        class="tab-content"
-      >
-        <form id="assessmentForm">
-          <!-- Dimension 1 -->
-          <div class="dimension">
-            <h2>1. Rapport au passé & Ressentiment</h2>
-            <p class="dimension-description">
-              Comment te situes-tu face à ton histoire personnelle et aux
-              événements difficiles que tu as vécus ?
-            </p>
-
-            <div class="question">
-              <div class="question-text">
-                Quand tu repenses à des événements difficiles de ton passé, que
-                ressens-tu principalement ?
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q1" value="0" />
-                  <span class="option-label"
-                    >Une colère vive, un sentiment d'injustice qui me consume
-                    régulièrement <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q1" value="1" />
-                  <span class="option-label"
-                    >De l'amertume, je me dis souvent "si seulement ça ne
-                    s'était pas passé"
-                    <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q1" value="2" />
-                  <span class="option-label"
-                    >De la tristesse parfois, mais je n'y pense plus constamment
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q1" value="3" />
-                  <span class="option-label"
-                    >Une acceptation tranquille, c'est mon histoire et elle fait
-                    partie de moi <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q1" value="4" />
-                  <span class="option-label"
-                    >Une affirmation complète : je ne voudrais pas que ça n'ait
-                    pas existé <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-
-            <div class="question">
-              <div class="question-text">
-                Face aux personnes qui t'ont fait du mal dans le passé, quelle
-                est ton attitude ?
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q2" value="0" />
-                  <span class="option-label"
-                    >Je leur en veux profondément, j'imagine parfois me venger
-                    <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q2" value="1" />
-                  <span class="option-label"
-                    >Je leur en veux encore beaucoup, j'évite d'y penser car ça
-                    me met en colère <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q2" value="2" />
-                  <span class="option-label"
-                    >Je travaille à leur pardonner, mais c'est difficile
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q2" value="3" />
-                  <span class="option-label"
-                    >Je ne leur en veux plus vraiment, j'ai tourné la page
-                    <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q2" value="4" />
-                  <span class="option-label"
-                    >Je les accepte comme faisant partie de mon histoire, sans
-                    ressentiment ni besoin de pardon
-                    <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Dimension 2 -->
-          <div class="dimension">
-            <h2>2. Attitude face à la souffrance présente</h2>
-            <p class="dimension-description">
-              Comment réagis-tu face aux difficultés et souffrances actuelles de
-              ta vie ?
-            </p>
-
-            <div class="question">
-              <div class="question-text">
-                Quand tu traverses une épreuve difficile (maladie, échec,
-                perte), quelle est ta réaction dominante ?
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q3" value="0" />
-                  <span class="option-label"
-                    >"Pourquoi moi ? C'est injuste !" - Je me sens victime
-                    <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q3" value="1" />
-                  <span class="option-label"
-                    >"Il faut que je transforme ça en quelque chose de positif
-                    pour que ça ait un sens"
-                    <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q3" value="2" />
-                  <span class="option-label"
-                    >"C'est dur, mais ça fait partie de la vie, je vais m'en
-                    sortir" <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q3" value="3" />
-                  <span class="option-label"
-                    >"C'est une épreuve, je l'accepte et je vais la traverser
-                    avec dignité" <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q3" value="4" />
-                  <span class="option-label"
-                    >"Cette souffrance fait partie de ma vie, je dis oui même à
-                    cela" <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-
-            <div class="question">
-              <div class="question-text">
-                Comment réagis-tu quand quelque chose échappe complètement à ton
-                contrôle ?
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q4" value="0" />
-                  <span class="option-label"
-                    >Je m'énerve, je lutte contre la réalité, je refuse
-                    d'accepter <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q4" value="1" />
-                  <span class="option-label"
-                    >Je suis frustré mais je finis par me résigner à contrecœur
-                    <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q4" value="2" />
-                  <span class="option-label"
-                    >J'accepte relativement vite et je me concentre sur ce que
-                    je peux contrôler
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q4" value="3" />
-                  <span class="option-label"
-                    >J'accepte sereinement, je comprends que tout ne dépend pas
-                    de moi <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q4" value="4" />
-                  <span class="option-label"
-                    >J'accueille même cela comme faisant partie du flux de la
-                    vie <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Dimension 3 -->
-          <div class="dimension">
-            <h2>3. Rapport à soi-même & Authenticité</h2>
-            <p class="dimension-description">
-              Dans quelle mesure vis-tu selon tes propres valeurs plutôt que
-              selon les attentes extérieures ?
-            </p>
-
-            <div class="question">
-              <div class="question-text">
-                Concernant tes choix de vie importants (travail, relations,
-                projets), tu dirais qu'ils sont :
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q5" value="0" />
-                  <span class="option-label"
-                    >Principalement dictés par les attentes des autres (famille,
-                    société) <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q5" value="1" />
-                  <span class="option-label"
-                    >Un mélange, mais j'ai du mal à distinguer ce qui vient
-                    vraiment de moi <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q5" value="2" />
-                  <span class="option-label"
-                    >Plutôt alignés avec mes valeurs, même si je fais parfois
-                    des compromis <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q5" value="3" />
-                  <span class="option-label"
-                    >Clairement alignés avec mes valeurs personnelles, j'assume
-                    mes choix <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q5" value="4" />
-                  <span class="option-label"
-                    >Je crée mes propres valeurs et vis selon elles,
-                    indépendamment du jugement
-                    <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-
-            <div class="question">
-              <div class="question-text">
-                Si tu devais être totalement honnête : acceptes-tu qui tu es
-                vraiment (forces ET faiblesses) ?
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q6" value="0" />
-                  <span class="option-label"
-                    >Non, je me déteste ou je rejette des parties de moi-même
-                    <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q6" value="1" />
-                  <span class="option-label"
-                    >J'accepte mes forces mais je suis en lutte contre mes
-                    faiblesses <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q6" value="2" />
-                  <span class="option-label"
-                    >J'apprends à m'accepter, c'est un travail en cours
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q6" value="3" />
-                  <span class="option-label"
-                    >Oui, j'accepte qui je suis dans ma globalité
-                    <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q6" value="4" />
-                  <span class="option-label"
-                    >J'affirme totalement qui je suis, y compris mes parts
-                    d'ombre <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Dimension 4 -->
-          <div class="dimension">
-            <h2>4. Création vs Réaction</h2>
-            <p class="dimension-description">
-              Es-tu un créateur actif de ta vie ou réagis-tu principalement aux
-              circonstances ?
-            </p>
-
-            <div class="question">
-              <div class="question-text">
-                Dans ta vie quotidienne, tu dirais que tu passes le plus de
-                temps à :
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q7" value="0" />
-                  <span class="option-label"
-                    >Subir et me plaindre de ce qui m'arrive
-                    <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q7" value="1" />
-                  <span class="option-label"
-                    >Consommer (divertissements, réseaux sociaux, séries...)
-                    <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q7" value="2" />
-                  <span class="option-label"
-                    >Gérer mes obligations avec un peu de temps pour moi
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q7" value="3" />
-                  <span class="option-label"
-                    >Construire activement des projets qui me tiennent à cœur
-                    <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q7" value="4" />
-                  <span class="option-label"
-                    >Créer (art, pensée, relations, œuvres) avec passion et
-                    nécessité <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-
-            <div class="question">
-              <div class="question-text">
-                Face à un échec ou une difficulté, tu as tendance à :
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q8" value="0" />
-                  <span class="option-label"
-                    >T'effondrer et abandonner, rester paralysé
-                    <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q8" value="1" />
-                  <span class="option-label"
-                    >Chercher qui blâmer (les autres, les circonstances,
-                    toi-même) <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q8" value="2" />
-                  <span class="option-label"
-                    >Prendre du recul, apprendre et réessayer
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q8" value="3" />
-                  <span class="option-label"
-                    >Utiliser l'échec comme matériau pour créer quelque chose de
-                    nouveau <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q8" value="4" />
-                  <span class="option-label"
-                    >L'accepter totalement et créer à partir de cette nouvelle
-                    réalité <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Dimension 5 -->
-          <div class="dimension">
-            <h2>5. Le test de l'Éternel Retour</h2>
-            <p class="dimension-description">
-              La question ultime de Nietzsche : voudrais-tu revivre ta vie
-              exactement comme elle a été ?
-            </p>
-
-            <div class="question">
-              <div class="question-text">
-                Si tu devais revivre ta vie EXACTEMENT à l'identique (même
-                joies, même souffrances, même erreurs), que répondrais-tu ?
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q9" value="0" />
-                  <span class="option-label"
-                    >Non, surtout pas ! Ma vie a trop de souffrance et d'échecs
-                    <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q9" value="1" />
-                  <span class="option-label"
-                    >Non, je voudrais changer beaucoup de choses
-                    <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q9" value="2" />
-                  <span class="option-label"
-                    >Peut-être... si je pouvais changer quelques événements clés
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q9" value="3" />
-                  <span class="option-label"
-                    >Probablement oui, même si certains moments ont été très
-                    durs <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q9" value="4" />
-                  <span class="option-label"
-                    >Oui, absolument, sans changer une seule chose
-                    <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-
-            <div class="question">
-              <div class="question-text">
-                Honnêtement, pourquoi accepterais-tu (ou pas) de revivre ta vie
-                ?
-              </div>
-              <div class="options">
-                <label class="option">
-                  <input type="radio" name="q10" value="0" />
-                  <span class="option-label"
-                    >Je ne l'accepterais pas, il y a eu trop de souffrance
-                    inutile <span class="score-badge">0 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q10" value="1" />
-                  <span class="option-label"
-                    >Seulement si la souffrance m'a "servi" à quelque chose
-                    <span class="score-badge">1 pt</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q10" value="2" />
-                  <span class="option-label"
-                    >Parce que les bons moments compensent les mauvais
-                    <span class="score-badge">2 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q10" value="3" />
-                  <span class="option-label"
-                    >Parce que c'est ma vie, avec tout ce qu'elle comporte
-                    <span class="score-badge">3 pts</span></span
-                  >
-                </label>
-                <label class="option">
-                  <input type="radio" name="q10" value="4" />
-                  <span class="option-label"
-                    >Parce que j'affirme la totalité de l'existence, même le
-                    tragique <span class="score-badge">4 pts</span></span
-                  >
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Context Note -->
-          <div class="context-note">
-            <label for="contextNote">📝 Note de contexte (optionnel)</label>
-            <textarea
-              id="contextNote"
-              placeholder="Que se passe-t-il dans ta vie en ce moment ? (ex: semaine difficile au travail, période de calme, événement marquant...)"
-            ></textarea>
-          </div>
-
-          <button type="button" class="btn" onclick="calculateResults()">
-            📊 Calculer mon score
-          </button>
-        </form>
-
-        <div
-          id="results"
-          class="results"
-          aria-live="polite"
-          aria-atomic="true"
-        ></div>
-      </div>
-
-      <!-- History Tab -->
-      <div
-        id="history"
-        role="tabpanel"
-        aria-labelledby="tab-history"
-        class="tab-content"
-      >
-        <div id="historyContent" aria-live="polite"></div>
-      </div>
-
-      <!-- Settings Tab -->
-      <div
-        id="settings"
-        role="tabpanel"
-        aria-labelledby="tab-settings"
-        class="tab-content"
-      >
-        <div class="setting-item">
-          <h3>🎯 Ta priorité actuelle</h3>
-          <p id="currentPriority"></p>
-          <button class="btn btn-secondary" onclick="changePriority()">
-            Modifier ma priorité
-          </button>
-        </div>
-
-        <div class="setting-item">
-          <h3>📊 Exporter mes données</h3>
-          <p>
-            Télécharge toutes tes évaluations en format JSON pour les
-            sauvegarder ou les transférer sur un autre appareil.
-          </p>
-          <button class="btn btn-secondary" onclick="exportData()">
-            Télécharger mes données
-          </button>
-        </div>
-
-        <div class="setting-item">
-          <h3>📥 Importer des données</h3>
-          <p>Restaure tes évaluations depuis un fichier de sauvegarde.</p>
-          <input type="file" id="importFile" accept=".json" class="sr-only" />
-          <button
-            class="btn btn-secondary"
-            onclick="document.getElementById('importFile').click()"
-          >
-            Importer un fichier
-          </button>
-        </div>
-
-        <div class="alert alert-info">
-          <strong>💡 Conseil :</strong> Il est recommandé de faire une
-          évaluation une fois par semaine, toujours le même jour (ex: dimanche
-          soir) pour une meilleure comparabilité.
-        </div>
-
-        <div class="setting-item">
-          <h3>🗑️ Supprimer toutes mes données</h3>
-          <p class="text-danger">
-            <strong>⚠️ Attention :</strong> Cette action est irréversible.
-            Toutes tes évaluations seront définitivement supprimées.
-          </p>
-          <button class="btn btn-danger" onclick="deleteAllData()">
-            Tout supprimer
-          </button>
-        </div>
-      </div>
+      </main>
     </div>
 
     <!-- Modal Dialog -->

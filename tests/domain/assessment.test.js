@@ -22,6 +22,10 @@ describe("DEFAULT_DATA", () => {
     expect(DEFAULT_DATA.settings).toEqual({ lastAssessment: null });
   });
 
+  it("has version field equal to 1", () => {
+    expect(DEFAULT_DATA.version).toBe(1);
+  });
+
   it("is a frozen-like structure (immutable by convention)", () => {
     const cloned = structuredClone(DEFAULT_DATA);
     cloned.priority = "creation";
@@ -296,6 +300,7 @@ describe("validateAppData", () => {
 
   it("accepts valid data with null priority and null lastAssessment", () => {
     const data = {
+      version: 1,
       priority: null,
       assessments: [],
       settings: { lastAssessment: null },
@@ -306,6 +311,7 @@ describe("validateAppData", () => {
 
   it("accepts valid data with string priority and string lastAssessment", () => {
     const data = {
+      version: 1,
       priority: "creation",
       assessments: [],
       settings: { lastAssessment: "2024-01-01" },
@@ -316,6 +322,7 @@ describe("validateAppData", () => {
 
   it("filters out invalid assessments from valid data", () => {
     const data = {
+      version: 1,
       priority: null,
       assessments: [
         {
@@ -340,6 +347,7 @@ describe("validateAppData", () => {
 
   it("returns a new object (not a reference to input)", () => {
     const data = {
+      version: 1,
       priority: null,
       assessments: [],
       settings: { lastAssessment: null },
@@ -347,5 +355,36 @@ describe("validateAppData", () => {
     const result = validateAppData(data);
     result.priority = "modified";
     expect(data.priority).toBeNull();
+  });
+
+  it("accepts valid version field", () => {
+    const data = {
+      version: 1,
+      priority: null,
+      assessments: [],
+      settings: { lastAssessment: null },
+    };
+    const result = validateAppData(data);
+    expect(result.version).toBe(1);
+  });
+
+  it("returns DEFAULT_DATA clone when version is not a number", () => {
+    const result = validateAppData({
+      version: "1",
+      priority: null,
+      assessments: [],
+      settings: { lastAssessment: null },
+    });
+    expect(result).toEqual(DEFAULT_DATA);
+  });
+
+  it("defaults missing version to CURRENT_SCHEMA_VERSION", () => {
+    const data = {
+      priority: null,
+      assessments: [],
+      settings: { lastAssessment: null },
+    };
+    const result = validateAppData(data);
+    expect(result.version).toBe(1);
   });
 });

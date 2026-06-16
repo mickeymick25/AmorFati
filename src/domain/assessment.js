@@ -8,6 +8,7 @@
  * Default application data structure.
  */
 export const DEFAULT_DATA = {
+  version: 1,
   priority: null,
   assessments: [],
   settings: { lastAssessment: null },
@@ -101,9 +102,14 @@ export function validateAppData(parsed) {
     return structuredClone(DEFAULT_DATA);
   }
 
+  if (parsed.version !== undefined && typeof parsed.version !== "number") {
+    return structuredClone(DEFAULT_DATA);
+  }
+
   const validAssessments = filterValidAssessments(parsed.assessments);
 
   return {
+    version: typeof parsed.version === "number" ? parsed.version : 1,
     priority: parsed.priority,
     assessments: validAssessments,
     settings: parsed.settings,
