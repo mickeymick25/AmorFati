@@ -1,0 +1,53 @@
+services:
+  # ── Serveur de développement Vite ──
+  dev:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev -- --host 0.0.0.0
+
+  # ── Tests unitaires (exécution unique) ──
+  test:
+    build: .
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=test
+    command: npm run test
+
+  # ── Tests en mode watch ──
+  test-watch:
+    build: .
+    ports:
+      - "51204:51204"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=test
+    command: npm run test:watch
+
+  # ── Build de production ──
+  build:
+    build: .
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: npm run build
+
+  # ── Linting ──
+  lint:
+    build: .
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: npm run lint
+
+volumes:
+  node_modules:

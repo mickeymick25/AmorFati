@@ -2,9 +2,9 @@ name: Lighthouse Audit
 
 on:
   push:
-    branches: [ 'main' ]
+    branches: ["main"]
   pull_request:
-    branches: [ 'main' ]
+    branches: ["main"]
   workflow_dispatch: {}
 
 jobs:
@@ -19,10 +19,10 @@ jobs:
         uses: treosh/lighthouse-ci-action@v9
         with:
           # URL to audit - GitHub Pages public URL for this repo
-          urls: 'https://mickeymick25.github.io/AmorFati'
+          urls: "https://mickeymick25.github.io/AmorFati"
           # Use temporary public storage for reports (avoids artifact creation issues)
           temporaryPublicStorage: true
           # do not attempt the runner artifact upload (can fail on some runners)
           uploadArtifacts: false
           # name for artifacts if enabled
-          artifactName: 'lighthouse-results'
+          artifactName: "lighthouse-results"

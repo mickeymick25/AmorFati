@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.github
+Doc
+*.md
+!README.md
+.DS_Store
+*.pyc

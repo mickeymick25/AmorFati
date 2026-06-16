@@ -1,0 +1,39 @@
+{
+  "name": "amorfati",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Suivi personnel Amor Fati — PWA d'évaluation philosophique",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . && prettier --check .",
+    "lint:fix": "eslint . --fix && prettier --write .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{html,css,json,md}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@vitest/coverage-v8": "^3.2.3",
+    "eslint": "^9.28.0",
+    "globals": "^16.2.0",
+    "husky": "^9.1.7",
+    "jsdom": "^26.0.0",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.5.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.3"
+  }
+}
