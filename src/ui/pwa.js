@@ -2,8 +2,6 @@
 // AmorFati — PWA Install & Service Worker
 // ========================================
 
-import { showConfirm } from "./modal.js";
-
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -50,14 +48,7 @@ if ("serviceWorker" in navigator) {
             if (newWorker.state === "installed") {
               if (navigator.serviceWorker.controller) {
                 console.log("✨ Nouvelle version disponible");
-                showConfirm(
-                  "Une nouvelle version est disponible. Recharger maintenant ?",
-                  { title: "✨ Mise à jour disponible" },
-                ).then((confirmed) => {
-                  if (confirmed) {
-                    newWorker.postMessage({ type: "SKIP_WAITING" });
-                  }
-                });
+                showUpdateBanner(newWorker);
               } else {
                 console.log("✅ SW installé pour la première fois");
               }
@@ -69,11 +60,51 @@ if ("serviceWorker" in navigator) {
         console.warn("⚠️ Erreur ServiceWorker:", err);
       });
 
-    // Listen for SW messages
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      if (event.data && event.data.type === "RELOAD_PAGE") {
+    // Listen for SW controller change to auto-reload
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!refreshing) {
+        refreshing = true;
         window.location.reload();
       }
     });
   });
+}
+
+// ========================================
+// Update Banner
+// ========================================
+
+function showUpdateBanner(newWorker) {
+  const banner = document.getElementById("updateBanner");
+  if (!banner) return;
+
+  banner.removeAttribute("hidden");
+
+  const reloadBtn = document.getElementById("updateReloadBtn");
+  const dismissBtn = document.getElementById("updateDismissBtn");
+
+  const onReload = () => {
+    newWorker.postMessage({ type: "SKIP_WAITING" });
+    hideUpdateBanner();
+    cleanup();
+  };
+
+  const onDismiss = () => {
+    hideUpdateBanner();
+    cleanup();
+  };
+
+  const cleanup = () => {
+    reloadBtn.removeEventListener("click", onReload);
+    dismissBtn.removeEventListener("click", onDismiss);
+  };
+
+  reloadBtn.addEventListener("click", onReload);
+  dismissBtn.addEventListener("click", onDismiss);
+}
+
+function hideUpdateBanner() {
+  const banner = document.getElementById("updateBanner");
+  if (banner) banner.setAttribute("hidden", "");
 }

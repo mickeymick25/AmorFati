@@ -228,7 +228,7 @@ AmorFati/
 |---|-------|-----------|--------|------|
 | P5.1 | Service Worker bump v5 (invalidate ancien cache dark mode) | ✅ Terminé | ~15min | Bumpé de v4 → v5 |
 | P5.2 | Traduction / i18n | 🟢 | ~4h | L'interface est en français fixe |
-| P5.3 | PWA update notification (améliorer le prompt existant) | 🟢 | ~1h | Le prompt de MAJ existe mais pourrait être plus visible |
+| P5.3 | PWA update notification (améliorer le prompt existant) | ✅ Terminé | ~1h | Bannière persistante en haut + controllerchange au lieu de modale |
 | P5.4 | Lighthouse audit & perf optimisation | 🟢 | ~2h | Images, lazy loading, cache headers |
 | P5.5 | Séparer `app.js` en modules UI | ✅ Terminé | ~3h | `app.js` réduit de ~860 à ~108 lignes |
 | P5.6 | Ajouter des tests pour couverture branches | ✅ Terminé | ~30min | 100% branches sur `src/`, 195 tests |
@@ -252,6 +252,7 @@ AmorFati/
 - `DIMENSIONS` n'est plus dans `constants.js` mais dans `questions.js` (dérivé de `QUESTIONS` + `DIMENSION_INFO`). `logic.js` re-exporte depuis `questions.js`.
 - Les fichiers statiques (`manifest.json`, `offline.html`, `icons/`) sont dans `public/` et copiés dans `dist/` par Vite.
 - Le `service-worker.js` est copié dans `dist/` par un plugin Vite custom (`copyServiceWorkerPlugin`).
+- **Bannière de mise à jour** : quand un nouveau SW est disponible, une bannière fixe en haut de page s'affiche (au lieu d'une modale). Le bouton "Recharger" envoie `SKIP_WAITING` au SW, puis le reload est déclenché par l'événement `controllerchange` (plus fiable que le message `RELOAD_PAGE`).
 
 ---
 
