@@ -16,6 +16,8 @@ import {
   CURRENT_SCHEMA_VERSION,
   mergeAssessments,
   LocalStorageRepository,
+  QUESTIONS,
+  DIMENSION_INFO,
 } from "./src/logic.js";
 
 let appData = structuredClone(DEFAULT_DATA);
@@ -104,10 +106,66 @@ async function showPrioritySelector() {
 }
 
 // ========================================
+// Assessment Form Rendering
+// ========================================
+
+function renderAssessmentForm() {
+  const container = document.getElementById("assessmentFormContainer");
+  if (!container) return;
+
+  const scoreBadgeLabels = ["0 pt", "1 pt", "2 pts", "3 pts", "4 pts"];
+
+  let html = '<form id="assessmentForm">';
+
+  for (const dim of DIMENSION_INFO) {
+    const dimQuestions = QUESTIONS.filter((q) => q.dimension === dim.name);
+
+    html += '<div class="dimension">';
+    html += `<h2>${escapeHtml(dim.title)}</h2>`;
+    html += `<p class="dimension-description">${escapeHtml(dim.description)}</p>`;
+
+    for (const question of dimQuestions) {
+      html += '<div class="question">';
+      html += `<div class="question-text">${escapeHtml(question.text)}</div>`;
+      html += '<div class="options">';
+
+      for (const option of question.options) {
+        html += '<label class="option">';
+        html += `<input type="radio" name="${escapeHtml(question.id)}" value="${option.value}" />`;
+        html += '<span class="option-label">';
+        html += `${escapeHtml(option.label)} <span class="score-badge">${scoreBadgeLabels[option.value]}</span>`;
+        html += "</span>";
+        html += "</label>";
+      }
+
+      html += "</div>";
+      html += "</div>";
+    }
+
+    html += "</div>";
+  }
+
+  // Context Note
+  html += '<div class="context-note">';
+  html += '<label for="contextNote">📝 Note de contexte (optionnel)</label>';
+  html +=
+    '<textarea id="contextNote" placeholder="Que se passe-t-il dans ta vie en ce moment ? (ex: semaine difficile au travail, période de calme, événement marquant...)"></textarea>';
+  html += "</div>";
+
+  html += '<button type="button" class="btn" onclick="calculateResults()">';
+  html += "📊 Calculer mon score";
+  html += "</button>";
+  html += "</form>";
+
+  container.innerHTML = html;
+}
+
+// ========================================
 // Initialization
 // ========================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  renderAssessmentForm();
   loadData();
   displaySettings();
   displayHistory();

@@ -10,10 +10,12 @@ export {
   STORAGE_KEY,
   PRIORITY_LABELS,
   PRIORITY_LABELS_FULL,
-  DIMENSIONS,
   INTERPRETATIONS,
   PRIORITY_RECOMMENDATIONS,
 } from "./domain/constants.js";
+
+// Domain questions (DIMENSIONS is derived from QUESTIONS)
+export { QUESTIONS, DIMENSION_INFO, DIMENSIONS } from "./domain/questions.js";
 
 // Domain functions
 export { getInterpretation } from "./domain/interpretation.js";

@@ -25,13 +25,8 @@ export const PRIORITY_LABELS_FULL = {
   none: "🧭 Aucune priorité spécifique - Observer mon évolution globale",
 };
 
-export const DIMENSIONS = {
-  "Passé & Ressentiment": ["q1", "q2"],
-  "Souffrance présente": ["q3", "q4"],
-  Authenticité: ["q5", "q6"],
-  Création: ["q7", "q8"],
-  "Éternel Retour": ["q9", "q10"],
-};
+// DIMENSIONS is now derived from QUESTIONS in questions.js
+// and re-exported via logic.js for backward compatibility.
 
 export const INTERPRETATIONS = [
   {

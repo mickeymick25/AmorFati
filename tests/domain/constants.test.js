@@ -3,7 +3,6 @@ import {
   STORAGE_KEY,
   PRIORITY_LABELS,
   PRIORITY_LABELS_FULL,
-  DIMENSIONS,
   INTERPRETATIONS,
   PRIORITY_RECOMMENDATIONS,
 } from "../../src/domain/constants.js";
@@ -44,43 +43,6 @@ describe("PRIORITY_LABELS_FULL", () => {
         PRIORITY_LABELS[key].length,
       );
     }
-  });
-});
-
-describe("DIMENSIONS", () => {
-  it("has 5 entries", () => {
-    expect(Object.keys(DIMENSIONS)).toHaveLength(5);
-  });
-
-  it("has expected dimension names", () => {
-    expect(DIMENSIONS).toHaveProperty("Passé & Ressentiment");
-    expect(DIMENSIONS).toHaveProperty("Souffrance présente");
-    expect(DIMENSIONS).toHaveProperty("Authenticité");
-    expect(DIMENSIONS).toHaveProperty("Création");
-    expect(DIMENSIONS).toHaveProperty("Éternel Retour");
-  });
-
-  it("each dimension has 2 questions", () => {
-    const entries = Object.values(DIMENSIONS);
-    for (let i = 0; i < entries.length; i++) {
-      expect(entries[i]).toHaveLength(2);
-    }
-  });
-
-  it("questions are q1 through q10", () => {
-    const allQuestions = Object.values(DIMENSIONS).flat();
-    expect(allQuestions).toEqual([
-      "q1",
-      "q2",
-      "q3",
-      "q4",
-      "q5",
-      "q6",
-      "q7",
-      "q8",
-      "q9",
-      "q10",
-    ]);
   });
 });
 

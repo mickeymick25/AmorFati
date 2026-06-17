@@ -1,5 +1,5 @@
-/* Styles extraits depuis index.html - version initiale (refactor minimal)
-   Objectif : séparer le CSS pour faciliter le nettoyage et les futurs refactors.
+/* AmorFati — Styles
+   Mobile-first responsive design with dark mode support.
 */
 
 :root {
@@ -9,6 +9,37 @@
   --bg-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   --transition: all 0.3s ease;
+
+  /* Semantic color tokens */
+  --bg-page: var(--bg-gradient);
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-subtle: #f8f9fa;
+  --bg-hover: #f0f4ff;
+  --bg-selected: #e8eeff;
+  --text-primary: #333333;
+  --text-secondary: #555555;
+  --text-on-primary: #ffffff;
+  --border-default: #e0e0e0;
+  --border-active: var(--primary);
+  --nav-bg: #f8f9fa;
+  --nav-active-bg: #ffffff;
+  --nav-active-text: #1f2b6b;
+  --btn-secondary-bg: #6c757d;
+  --btn-danger-bg: #dc3545;
+  --alert-info-bg: #d1ecf1;
+  --alert-info-border: #0c5460;
+  --alert-info-text: #0c5460;
+  --alert-warning-bg: #fff3cd;
+  --alert-warning-border: #856404;
+  --alert-warning-text: #856404;
+  --alert-success-bg: #d4edda;
+  --alert-success-border: #155724;
+  --alert-success-text: #155724;
+  --context-bg: #fff9e6;
+  --context-border: #ffc107;
+  --context-text: #856404;
+  --overlay-bg: rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -26,13 +57,13 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
     Cantarell, sans-serif;
-  background: var(--bg-gradient);
+  background: var(--bg-page);
   min-height: 100vh;
   padding: calc(10px + env(safe-area-inset-top, 0px))
     calc(10px + env(safe-area-inset-right, 0px))
     calc(10px + env(safe-area-inset-bottom, 0px))
     calc(10px + env(safe-area-inset-left, 0px));
-  color: #333;
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -40,7 +71,7 @@ body {
   width: min(900px, calc(100% - 20px));
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   overflow: hidden;
@@ -67,8 +98,8 @@ body {
 
 .nav-tabs {
   display: flex;
-  background: #f8f9fa;
-  border-bottom: 2px solid #e0e0e0;
+  background: var(--nav-bg);
+  border-bottom: 2px solid var(--border-default);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -82,15 +113,15 @@ body {
   cursor: pointer;
   font-size: 0.95em;
   font-weight: 600;
-  color: #555;
+  color: var(--text-secondary);
   transition: var(--transition);
   white-space: nowrap;
 }
 
 .nav-tab.active {
-  color: #1f2b6b; /* darker blue for better contrast against white */
-  background: white;
-  border-bottom: 3px solid #1f2b6b;
+  color: var(--nav-active-text);
+  background: var(--nav-active-bg);
+  border-bottom: 3px solid var(--nav-active-text);
 }
 
 .tab-content {
@@ -130,7 +161,7 @@ body {
 .onboarding p {
   line-height: 1.8;
   margin-bottom: 20px;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .priority-selection {
@@ -151,21 +182,21 @@ body {
 
 .priority-option {
   padding: 15px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-default);
   border-radius: 8px;
   cursor: pointer;
   transition: var(--transition);
-  background: white;
+  background: var(--bg-card);
 }
 
 .priority-option:hover {
   border-color: var(--primary);
-  background: #f0f4ff;
+  background: var(--bg-hover);
 }
 
 .priority-option.selected {
   border-color: var(--primary);
-  background: #e8eeff;
+  background: var(--bg-selected);
 }
 
 .priority-option input[type="radio"] {
@@ -180,7 +211,7 @@ body {
 
 .priority-desc {
   font-size: 0.9em;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .btn {
@@ -208,11 +239,11 @@ body {
 }
 
 .btn-secondary {
-  background: #6c757d;
+  background: var(--btn-secondary-bg);
 }
 
 .btn-danger {
-  background: #dc3545;
+  background: var(--btn-danger-bg);
 }
 
 /* Assessment */
@@ -229,7 +260,7 @@ body {
 }
 
 .dimension-description {
-  color: #555;
+  color: var(--text-secondary);
   font-style: italic;
   margin-bottom: 15px;
   line-height: 1.5;
@@ -239,14 +270,14 @@ body {
 .question {
   margin-bottom: 20px;
   padding: 15px;
-  background: #f8f9fa;
+  background: var(--bg-subtle);
   border-radius: 8px;
 }
 
 .question-text {
   font-weight: 600;
   margin-bottom: 12px;
-  color: #333;
+  color: var(--text-primary);
   font-size: 0.95em;
 }
 
@@ -260,8 +291,8 @@ body {
   display: flex;
   align-items: flex-start;
   padding: 10px;
-  background: white;
-  border: 2px solid #e0e0e0;
+  background: var(--bg-card);
+  border: 2px solid var(--border-default);
   border-radius: 6px;
   cursor: pointer;
   transition: var(--transition);
@@ -269,12 +300,12 @@ body {
 
 .option:hover {
   border-color: var(--primary);
-  background: #f0f4ff;
+  background: var(--bg-hover);
 }
 
 .option.selected {
   border-color: var(--primary);
-  background: #e8eeff;
+  background: var(--bg-selected);
 }
 
 .option input[type="radio"] {
@@ -292,7 +323,7 @@ body {
 .score-badge {
   display: inline-block;
   background: var(--primary);
-  color: white;
+  color: var(--text-on-primary);
   padding: 2px 6px;
   border-radius: 10px;
   font-size: 0.8em;
@@ -303,8 +334,8 @@ body {
 .context-note {
   margin: 20px 0;
   padding: 15px;
-  background: #fff9e6;
-  border-left: 4px solid #ffc107;
+  background: var(--context-bg);
+  border-left: 4px solid var(--context-border);
   border-radius: 4px;
 }
 
@@ -312,13 +343,13 @@ body {
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #856404;
+  color: var(--context-text);
 }
 
 .context-note textarea {
   width: 100%;
   padding: 10px;
-  border: 2px solid #ffc107;
+  border: 2px solid var(--context-border);
   border-radius: 6px;
   resize: vertical;
   min-height: 80px;
@@ -343,7 +374,7 @@ body {
 }
 
 .interpretation {
-  background: white;
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -358,7 +389,7 @@ body {
 
 .interpretation p {
   line-height: 1.7;
-  color: #555;
+  color: var(--text-secondary);
   margin-bottom: 10px;
   font-size: 0.95em;
 }
@@ -371,7 +402,7 @@ body {
 }
 
 .dimension-score {
-  background: white;
+  background: var(--bg-card);
   padding: 12px;
   border-radius: 8px;
   border-left: 4px solid var(--primary);
@@ -386,12 +417,12 @@ body {
 .dimension-score-value {
   font-size: 1.3em;
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .score-bar {
   height: 6px;
-  background: #e0e0e0;
+  background: var(--border-default);
   border-radius: 3px;
   overflow: hidden;
   margin-top: 6px;
@@ -407,7 +438,7 @@ body {
 .history-empty {
   text-align: center;
   padding: 40px 20px;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .history-empty p {
@@ -421,7 +452,7 @@ body {
 }
 
 .history-item {
-  background: white;
+  background: var(--bg-card);
   padding: 15px;
   border-radius: 8px;
   border-left: 4px solid var(--primary);
@@ -445,7 +476,7 @@ body {
 
 .history-date {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   font-size: 0.95em;
 }
 
@@ -457,20 +488,20 @@ body {
 
 .history-context {
   font-size: 0.9em;
-  color: #555;
+  color: var(--text-secondary);
   font-style: italic;
   margin-top: 5px;
 }
 
 .history-priority {
   font-size: 0.85em;
-  color: #555;
+  color: var(--text-secondary);
   margin-top: 5px;
 }
 
 /* Chart */
 .chart-container {
-  background: white;
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 8px;
   margin: 20px 0;
@@ -491,7 +522,7 @@ body {
 
 /* Settings */
 .setting-item {
-  background: white;
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 15px;
@@ -505,7 +536,7 @@ body {
 }
 
 .setting-item p {
-  color: #555;
+  color: var(--text-secondary);
   margin-bottom: 12px;
   line-height: 1.6;
   font-size: 0.9em;
@@ -519,21 +550,21 @@ body {
 }
 
 .alert-info {
-  background: #d1ecf1;
-  border-left: 4px solid #0c5460;
-  color: #0c5460;
+  background: var(--alert-info-bg);
+  border-left: 4px solid var(--alert-info-border);
+  color: var(--alert-info-text);
 }
 
 .alert-warning {
-  background: #fff3cd;
-  border-left: 4px solid #856404;
-  color: #856404;
+  background: var(--alert-warning-bg);
+  border-left: 4px solid var(--alert-warning-border);
+  color: var(--alert-warning-text);
 }
 
 .alert-success {
-  background: #d4edda;
-  border-left: 4px solid #155724;
-  color: #155724;
+  background: var(--alert-success-bg);
+  border-left: 4px solid var(--alert-success-border);
+  color: var(--alert-success-text);
 }
 
 /* Loading animation */
@@ -559,7 +590,7 @@ body {
   bottom: 20px;
   left: 20px;
   right: 20px;
-  background: white;
+  background: var(--bg-card);
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
@@ -684,7 +715,7 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -697,7 +728,7 @@ img {
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-card);
   border-radius: 12px;
   padding: 24px;
   max-width: 480px;
@@ -713,7 +744,7 @@ img {
 }
 
 .modal-body {
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 20px;
   font-size: 0.95em;
@@ -736,11 +767,11 @@ img {
 }
 
 .modal-actions .btn-secondary {
-  background: #6c757d;
+  background: var(--btn-secondary-bg);
 }
 
 .modal-actions .btn-danger {
-  background: #dc3545;
+  background: var(--btn-danger-bg);
 }
 
 .modal-priority-options {
@@ -754,21 +785,21 @@ img {
   display: flex;
   align-items: flex-start;
   padding: 10px 12px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-default);
   border-radius: 6px;
   cursor: pointer;
   transition: var(--transition);
-  background: white;
+  background: var(--bg-card);
 }
 
 .modal-priority-option:hover {
   border-color: var(--primary);
-  background: #f0f4ff;
+  background: var(--bg-hover);
 }
 
 .modal-priority-option.selected {
   border-color: var(--primary);
-  background: #e8eeff;
+  background: var(--bg-selected);
 }
 
 .modal-priority-option input[type="radio"] {
@@ -785,7 +816,7 @@ img {
 
 .modal-priority-desc {
   font-size: 0.85em;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 @keyframes modalFadeIn {
@@ -801,7 +832,7 @@ img {
 
 /* Extracted inline styles — T1.5 */
 .priority-subtitle {
-  color: #555;
+  color: var(--text-secondary);
   font-size: 0.9em;
   margin-bottom: 15px;
 }
@@ -837,7 +868,7 @@ img {
 }
 
 .text-danger {
-  color: #dc3545;
+  color: var(--btn-danger-bg);
 }
 
 .install-title {
@@ -846,12 +877,12 @@ img {
 
 .install-desc {
   font-size: 0.9em;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .chart-empty {
   text-align: center;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .evolution-diff {
@@ -869,4 +900,46 @@ img {
 /* Alert role styling for screen readers */
 [role="alert"] {
   font-weight: 500;
+}
+
+/* Dark mode — follows system preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-gradient: linear-gradient(135deg, #0f1b2e 0%, #1a2d50 100%);
+    --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    --bg-card: #1e2235;
+    --bg-input: #2a2f45;
+    --bg-subtle: #252a3e;
+    --bg-hover: #2d3352;
+    --bg-selected: #353c5e;
+    --text-primary: #e4e6f0;
+    --text-secondary: #a0a4b8;
+    --text-on-primary: #ffffff;
+    --border-default: #3a3f55;
+    --border-active: #8899e8;
+    --nav-bg: #1a1e30;
+    --nav-active-bg: #252a3e;
+    --nav-active-text: #9ba8f0;
+    --btn-secondary-bg: #5a6070;
+    --btn-danger-bg: #b83240;
+    --alert-info-bg: #14303a;
+    --alert-info-border: #3da8b8;
+    --alert-info-text: #7dd3e0;
+    --alert-warning-bg: #3a3015;
+    --alert-warning-border: #b89230;
+    --alert-warning-text: #e8c870;
+    --alert-success-bg: #1a3a25;
+    --alert-success-border: #40b060;
+    --alert-success-text: #70d090;
+    --context-bg: #2a2510;
+    --context-border: #b89230;
+    --context-text: #e8c870;
+    --overlay-bg: rgba(0, 0, 0, 0.7);
+  }
+
+  /* Ensure context textarea inherits dark styles */
+  .context-note textarea {
+    background: var(--bg-input);
+    color: var(--text-primary);
+  }
 }
