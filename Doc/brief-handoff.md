@@ -1,7 +1,7 @@
 # Brief — Handoff pour le prochain thread
 
 > Date : 2026-06-17  
-> État : P0–P4 terminés. P5.1 + P5.5 + P5.6 terminés. CI/CD opérationnel.
+> État : P0–P5 terminés (sauf P5.2 i18n et P4.4/P4.5 reportés). CI/CD opérationnel. 195 tests, 100% coverage.
 
 ---
 
@@ -290,6 +290,8 @@ docker compose run --rm lint npm run lint:fix
 
 | Hash | Message |
 |------|---------|
-| `xxxx` | feat: P5.5 — split app.js into 7 UI modules (state, renderer, tabs, assessment, data, priority, pwa) |
-| `xxxx` | feat: P5.6 — add branch coverage tests (merge, migration, modal) → 195 tests, 100% branches |
-| `xxxx` | feat: P5.1 — bump service worker cache to v5 (dark mode CSS invalidation) |
+| `339380d` | docs: update Doc/ to reflect P0-P5 implementations |
+| `b0b1803` | docs: update brief-handoff with P5.1-P5.6 completion status |
+| `fb67418` | feat: P5.4 — manifest purpose fix, color-scheme, iOS status bar meta |
+| `ec53f18` | feat: P5.3 — replace SW update modal with persistent top banner |
+| `98fa531` | feat: P5 — SW v5, 100% branch coverage, split app.js into UI modules |
