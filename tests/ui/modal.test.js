@@ -423,5 +423,21 @@ describe("Modal System", () => {
       // With only one element, first === last, so normal Tab from the last
       // element wraps to first (which is itself).
     });
+
+    it("returns early when no focusable elements exist", () => {
+      openModal("Empty Trap", "<p>No buttons</p>", []);
+
+      // No buttons added to modalActions
+      expect(getModalActions().querySelectorAll("button")).toHaveLength(0);
+
+      const event = new KeyboardEvent("keydown", {
+        key: "Tab",
+        bubbles: true,
+        cancelable: true,
+      });
+
+      // Should not throw — the handler returns early
+      expect(() => getOverlay().dispatchEvent(event)).not.toThrow();
+    });
   });
 });

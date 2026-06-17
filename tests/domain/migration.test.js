@@ -101,4 +101,26 @@ describe("migrateData", () => {
     const result = migrateData([1, 2, 3]);
     expect(result).toEqual(DEFAULT_DATA);
   });
+
+  it("resets non-string, non-null priority to null during migration", () => {
+    const legacy = {
+      priority: 42,
+      assessments: [],
+      settings: { lastAssessment: null },
+    };
+    const result = migrateData(legacy);
+    expect(result.priority).toBeNull();
+    expect(result.version).toBe(CURRENT_SCHEMA_VERSION);
+  });
+
+  it("defaults assessments to empty array when not an array during migration", () => {
+    const legacy = {
+      priority: null,
+      assessments: "not an array",
+      settings: { lastAssessment: null },
+    };
+    const result = migrateData(legacy);
+    expect(result.assessments).toEqual([]);
+    expect(result.version).toBe(CURRENT_SCHEMA_VERSION);
+  });
 });

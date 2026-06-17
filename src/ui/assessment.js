@@ -1,0 +1,98 @@
+// ========================================
+// AmorFati — Assessment Flow
+// ========================================
+
+import { DIMENSIONS } from "../domain/questions.js";
+import { showAlert } from "./modal.js";
+import { appState, saveData } from "./state.js";
+import { displayResults } from "./renderer.js";
+import { switchTab } from "./tabs.js";
+
+export async function startAssessment() {
+  const selectedPriority = document.querySelector(
+    'input[name="priority"]:checked',
+  );
+  if (!selectedPriority) {
+    await showAlert("Merci de sélectionner une priorité avant de commencer.");
+    return;
+  }
+
+  appState.data.priority = selectedPriority.value;
+  saveData();
+  switchTab("assessment");
+}
+
+export async function calculateResults() {
+  const form = document.getElementById("assessmentForm");
+  const formData = new FormData(form);
+
+  // Validate all questions answered
+  const totalQuestions = 10;
+  let answeredQuestions = 0;
+  for (let i = 1; i <= totalQuestions; i++) {
+    if (formData.get(`q${i}`)) answeredQuestions++;
+  }
+
+  if (answeredQuestions < totalQuestions) {
+    await showAlert(
+      `Merci de répondre à toutes les questions (${answeredQuestions}/${totalQuestions} répondues)`,
+    );
+    return;
+  }
+
+  // Calculate dimension scores
+  let totalScore = 0;
+  let dimensionScores = {};
+  let answers = {};
+
+  for (const [dimension, questions] of Object.entries(DIMENSIONS)) {
+    let dimScore = 0;
+    questions.forEach((q) => {
+      const score = parseInt(formData.get(q));
+      dimScore += score;
+      answers[q] = score;
+    });
+    dimensionScores[dimension] = dimScore;
+    totalScore += dimScore;
+  }
+
+  // Save assessment
+  const assessment = {
+    date: new Date().toISOString(),
+    totalScore: totalScore,
+    dimensionScores: dimensionScores,
+    answers: answers,
+    context: document.getElementById("contextNote").value,
+    priority: appState.data.priority,
+  };
+
+  appState.data.assessments.push(assessment);
+  appState.data.settings.lastAssessment = assessment.date;
+  saveData();
+
+  // Display results
+  displayResults(assessment);
+
+  // Scroll to results
+  document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+}
+
+export function resetForm() {
+  const form = document.getElementById("assessmentForm");
+  if (form) form.reset();
+  document
+    .querySelectorAll(".option")
+    .forEach((opt) => opt.classList.remove("selected"));
+  const ctx = document.getElementById("contextNote");
+  if (ctx) ctx.value = "";
+  const results = document.getElementById("results");
+  if (results) results.classList.remove("show");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+export function viewAssessmentDetails(index) {
+  const assessment = appState.data.assessments[index];
+  if (!assessment) return;
+  displayResults(assessment);
+  switchTab("assessment");
+}

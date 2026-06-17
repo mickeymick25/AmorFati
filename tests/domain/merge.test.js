@@ -93,4 +93,31 @@ describe("mergeAssessments", () => {
 
     expect(incoming).toEqual(copy);
   });
+
+  it("defaults existing to empty array when null", () => {
+    const result = mergeAssessments(null, [assessmentA]);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual(assessmentA);
+  });
+
+  it("defaults existing to empty array when undefined", () => {
+    const result = mergeAssessments(undefined, [assessmentA]);
+    expect(result).toHaveLength(1);
+  });
+
+  it("defaults incoming to empty array when null", () => {
+    const result = mergeAssessments([assessmentA], null);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual(assessmentA);
+  });
+
+  it("defaults incoming to empty array when undefined", () => {
+    const result = mergeAssessments([assessmentA], undefined);
+    expect(result).toHaveLength(1);
+  });
+
+  it("defaults both to empty arrays when null", () => {
+    const result = mergeAssessments(null, null);
+    expect(result).toEqual([]);
+  });
 });

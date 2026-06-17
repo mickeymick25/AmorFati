@@ -4,7 +4,7 @@
 // Strategy: network-first for HTML, cache-first for assets.
 // Precaches only the app shell; other assets are cached on first visit.
 
-const CACHE_NAME = "amor-fati-cache-v4";
+const CACHE_NAME = "amor-fati-cache-v5";
 
 const PRECACHE_ASSETS = ["./", "./manifest.json", "./offline.html"];
 
