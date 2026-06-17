@@ -229,7 +229,7 @@ AmorFati/
 | P5.1 | Service Worker bump v5 (invalidate ancien cache dark mode) | ✅ Terminé | ~15min | Bumpé de v4 → v5 |
 | P5.2 | Traduction / i18n | 🟢 | ~4h | L'interface est en français fixe |
 | P5.3 | PWA update notification (améliorer le prompt existant) | ✅ Terminé | ~1h | Bannière persistante en haut + controllerchange au lieu de modale |
-| P5.4 | Lighthouse audit & perf optimisation | 🟢 | ~2h | Images, lazy loading, cache headers |
+| P5.4 | Lighthouse audit & perf optimisation | ✅ Terminé | ~2h | Manifest purpose fix, color-scheme, iOS status bar meta |
 | P5.5 | Séparer `app.js` en modules UI | ✅ Terminé | ~3h | `app.js` réduit de ~860 à ~108 lignes |
 | P5.6 | Ajouter des tests pour couverture branches | ✅ Terminé | ~30min | 100% branches sur `src/`, 195 tests |
 
