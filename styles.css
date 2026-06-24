@@ -59,10 +59,7 @@ body {
     Cantarell, sans-serif;
   background: var(--bg-page);
   min-height: 100vh;
-  padding: calc(10px + env(safe-area-inset-top, 0px))
-    calc(10px + env(safe-area-inset-right, 0px))
-    calc(10px + env(safe-area-inset-bottom, 0px))
-    calc(10px + env(safe-area-inset-left, 0px));
+  padding: 0;
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -72,10 +69,10 @@ body {
   max-width: 900px;
   margin: 0 auto;
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: 0;
   box-shadow: var(--card-shadow);
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .header {
@@ -86,7 +83,7 @@ body {
 }
 
 .header h1 {
-  font-size: 1.8em;
+  font-size: 1.5em;
   margin-bottom: 8px;
 }
 
@@ -106,12 +103,12 @@ body {
 
 .nav-tab {
   flex: 1;
-  min-width: 120px;
-  padding: 15px 10px;
+  min-width: 80px;
+  padding: 10px 6px;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 0.95em;
+  font-size: 0.82em;
   font-weight: 600;
   color: var(--text-secondary);
   transition: var(--transition);
@@ -126,7 +123,7 @@ body {
 
 .tab-content {
   display: none;
-  padding: 20px;
+  padding: 15px;
   animation: fadeIn 0.3s;
 }
 
@@ -256,7 +253,7 @@ body {
 .dimension h2 {
   color: var(--primary);
   margin-bottom: 8px;
-  font-size: 1.3em;
+  font-size: 1.1em;
 }
 
 .dimension-description {
@@ -367,7 +364,7 @@ body {
 
 .total-score {
   text-align: center;
-  font-size: 2.2em;
+  font-size: 1.8em;
   color: var(--primary);
   font-weight: bold;
   margin: 20px 0;
@@ -396,7 +393,7 @@ body {
 
 .dimension-scores {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
   margin: 20px 0;
 }
@@ -588,14 +585,16 @@ body {
 .install-prompt {
   position: fixed;
   bottom: 20px;
-  left: 20px;
-  right: 20px;
+  left: auto;
+  right: auto;
   background: var(--bg-card);
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
   display: none;
   z-index: 1000;
+  width: calc(100% - 32px);
+  margin: 0 16px;
 }
 
 .install-prompt.show {
@@ -655,6 +654,8 @@ body {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+  flex-direction: column;
+  text-align: center;
 }
 
 .update-banner-text {
@@ -702,37 +703,6 @@ body {
   animation: slideDown 0.3s ease-out;
 }
 
-/* Mobile optimizations */
-@media (max-width: 768px) {
-  body {
-    padding: 0;
-  }
-  .container {
-    border-radius: 0;
-    margin-bottom: 0;
-  }
-  .header h1 {
-    font-size: 1.5em;
-  }
-  .nav-tab {
-    font-size: 0.85em;
-    padding: 12px 8px;
-    min-width: 80px;
-  }
-  .tab-content {
-    padding: 15px;
-  }
-  .dimension h2 {
-    font-size: 1.1em;
-  }
-  .total-score {
-    font-size: 1.8em;
-  }
-  .dimension-scores {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Ensure SVG charts and images scale and never cause horizontal scroll */
 .chart svg,
 img {
@@ -741,26 +711,66 @@ img {
   display: block;
 }
 
-/* Small devices additional tweaks */
-@media (max-width: 420px) {
+/* ── Mobile-first breakpoints ──
+   Default styles target the smallest screens (≤420px).
+   min-width: 421px restores the intermediate (mobile) layout.
+   min-width: 769px restores the desktop layout. */
+@media (min-width: 421px) {
   .nav-tab {
-    font-size: 0.82em;
-    padding: 10px 6px;
+    font-size: 0.85em;
+    padding: 12px 8px;
   }
   .update-banner-content {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    text-align: left;
   }
   .install-prompt,
   #addModal > div {
-    width: calc(100% - 32px);
-    margin: 0 16px;
+    width: auto;
+    margin: 0;
     left: auto;
     right: auto;
   }
+  .install-prompt {
+    left: 20px;
+    right: 20px;
+  }
   .modal-content {
-    width: calc(100% - 32px);
-    margin: 0 16px;
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  body {
+    padding: calc(10px + env(safe-area-inset-top, 0px))
+      calc(10px + env(safe-area-inset-right, 0px))
+      calc(10px + env(safe-area-inset-bottom, 0px))
+      calc(10px + env(safe-area-inset-left, 0px));
+  }
+  .container {
+    border-radius: 16px;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 1.8em;
+  }
+  .nav-tab {
+    font-size: 0.95em;
+    padding: 15px 10px;
+    min-width: 120px;
+  }
+  .tab-content {
+    padding: 20px;
+  }
+  .dimension h2 {
+    font-size: 1.3em;
+  }
+  .total-score {
+    font-size: 2.2em;
+  }
+  .dimension-scores {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
 
@@ -807,7 +817,8 @@ img {
   border-radius: 12px;
   padding: 24px;
   max-width: 480px;
-  width: 100%;
+  width: calc(100% - 32px);
+  margin: 0 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: modalFadeIn 0.2s ease;
 }

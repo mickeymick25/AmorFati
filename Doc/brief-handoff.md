@@ -1,7 +1,7 @@
 # Brief — Handoff pour le prochain thread
 
 > Date : 2026-06-17  
-> État : P0–P5 terminés (sauf P5.2 i18n et P4.4/P4.5 reportés). CI/CD opérationnel. 195 tests, 100% coverage.
+> État : P0–P5 terminés (sauf P5.2 i18n et P4.5 reportés). CI/CD opérationnel. 195 tests, 100% coverage.
 
 ---
 
@@ -69,7 +69,7 @@
 | P4.1 | Dark mode (`prefers-color-scheme: dark` + 30+ variables CSS sémantiques) | ✅ Terminé |
 | P4.2 | Extraction données métier (`src/domain/questions.js` + `DIMENSION_INFO` + `renderAssessmentForm()`) | ✅ Terminé |
 | P4.3 | SVG favicon (`public/icons/favicon.svg`) référencé dans `index.html` | ✅ Terminé |
-| P4.4 | CSS mobile-first (inverser media queries) | ⏳ Reporté — rapport risque/bénéfice faible |
+| P4.4 | CSS mobile-first (styles par défaut = ≤420px, breakpoints `min-width: 421px` et `min-width: 769px`) | ✅ Terminé |
 | P4.5 | Tests E2E Playwright | ⏳ Reporté — infrastructure lourde, ~4h |
 
 ### Bugs corrigés
@@ -219,7 +219,6 @@ AmorFati/
 
 | # | Tâche | Criticité | Effort | Note |
 |---|-------|-----------|--------|------|
-| P4.4 | CSS mobile-first (inverser media queries) | 🟡 | ~2h | Risque de régression visuelle élevé, bénéfice modéré |
 | P4.5 | Tests E2E (Playwright) | 🟡 | ~4h | Infrastructure lourde, nécessite Docker + navigateurs |
 
 ### P5 — Suggestions futures
@@ -248,6 +247,7 @@ AmorFati/
 - L'import de données offre 2 modes : **Remplacer** (remplace tout) et **Fusionner** (ajoute sans doublons via `mergeAssessments`).
 - Le schéma de données a un champ `version` (actuellement `1`). `migrateData()` gère la migration des anciennes données sans version.
 - **Dark mode** : implémenté via 30+ variables CSS sémantiques dans `:root` et inversées dans `@media (prefers-color-scheme: dark)`. Pour ajuster les couleurs sombres, modifier les variables dans ce bloc media query uniquement.
+- **CSS mobile-first (P4.4)** : les styles par défaut (hors media query) dans `styles.css` ciblent les écrans ≤420px. Deux breakpoints `min-width: 421px` (mobile intermédiaire) et `min-width: 769px` (desktop) restaurent les layouts plus larges. Plus aucune media query `max-width` pour la largeur — pour ajuster un palier, modifier les valeurs par défaut (≤420px) et/ou le breakpoint `min-width` correspondant.
 - Les questions du formulaire sont générées dynamiquement par `renderAssessmentForm()` depuis `src/domain/questions.js`. Le HTML ne contient que `<div id="assessmentFormContainer"></div>`.
 - `DIMENSIONS` n'est plus dans `constants.js` mais dans `questions.js` (dérivé de `QUESTIONS` + `DIMENSION_INFO`). `logic.js` re-exporte depuis `questions.js`.
 - Les fichiers statiques (`manifest.json`, `offline.html`, `icons/`) sont dans `public/` et copiés dans `dist/` par Vite.
