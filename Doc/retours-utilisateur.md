@@ -10,7 +10,7 @@
 
 **Source** : retour utilisateur (message direct)
 **Thème** : réduction du biais de mesure lors des évaluations répétées
-**Statut** : à analyser (ci-dessous)
+**Statut** : ✅ Implémenté (commit à venir, voir `Doc/suivi-p5.2-i18n.md` § P6)
 
 ### Résumé
 

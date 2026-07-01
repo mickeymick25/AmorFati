@@ -6,7 +6,7 @@ import { DIMENSIONS } from "../domain/questions.js";
 import { showAlert } from "./modal.js";
 import { t } from "../i18n/index.js";
 import { appState, saveData } from "./state.js";
-import { displayResults } from "./renderer.js";
+import { displayResults, renderAssessmentForm } from "./renderer.js";
 import { switchTab } from "./tabs.js";
 
 export async function startAssessment() {
@@ -20,6 +20,7 @@ export async function startAssessment() {
 
   appState.data.priority = selectedPriority.value;
   saveData();
+  resetForm();
   switchTab("assessment");
 }
 
@@ -82,13 +83,9 @@ export async function calculateResults() {
 }
 
 export function resetForm() {
-  const form = document.getElementById("assessmentForm");
-  if (form) form.reset();
-  document
-    .querySelectorAll(".option")
-    .forEach((opt) => opt.classList.remove("selected"));
-  const ctx = document.getElementById("contextNote");
-  if (ctx) ctx.value = "";
+  // Re-render a fresh form (blank, shuffled options) so the previous
+  // answers never bias the next assessment.
+  renderAssessmentForm();
   const results = document.getElementById("results");
   if (results) results.classList.remove("show");
   window.scrollTo({ top: 0, behavior: "smooth" });

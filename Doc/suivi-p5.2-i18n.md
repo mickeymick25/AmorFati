@@ -203,6 +203,22 @@ Migration complète de l'UI et du domain vers i18next, + traduction EN complète
   - `offline.html` ne dépend pas d'i18next (servie hors app) — dictionnaires FR/EN inline minimaux.
 - **Prochaine étape** : P5.2.5 — validation bilingue finale (vérification visuelle FR/EN dans le dev server).
 
+### 2026-06-24 — P6 (biais d'évaluation) terminée en parallèle
+
+Pendant la session P5.2, le retour utilisateur P6 (biais d'évaluation, voir `Doc/retours-utilisateur.md`) a été implémenté :
+
+- ✅ **P6.1 — Bug UX réponses précédentes visibles** : `startAssessment()` appelle désormais `resetForm()` avant `switchTab("assessment")`. `resetForm()` re-rend le formulaire via `renderAssessmentForm()` (nouveau DOM vierge + options shufflées) au lieu de `form.reset()`. Le formulaire repart toujours d'un état vierge → plus d'effet d'ancrage.
+- ✅ **P6.2 — Retrait score-badge + shuffle options** :
+  - Le `<span class="score-badge">` a été retiré du formulaire dès P5.2.2 (migration i18n). La règle CSS `.score-badge` a été supprimée (dead code).
+  - `shuffle()` (Fisher-Yates) ajouté dans `src/domain/utils.js` (ne mute pas l'input, retourne une copie). `renderAssessmentForm()` utilise `shuffle(question.options)` → les options apparaissent dans un ordre aléatoire à chaque rendu, empêchant de se situer d'avance visuellement.
+- ✅ **Délégation d'événements** : `app.js` câble désormais un seul handler sur `#assessmentFormContainer` (event delegation via `e.target.closest(".option")`) au lieu d'attacher un handler par `.option`. Cela survit aux re-rendus (reset, changement de langue) sans re-câblage.
+- ✅ **Tests TDD** :
+  - `tests/domain/utils.test.js` (9 tests) : `shuffle` (longueur, éléments conservés, non-mutation, nouvelle référence, edge cases empty/single, distribution non dégénérée, objets par référence).
+  - `tests/ui/assessment.test.js` (7 tests) : `resetForm` (form vierge, `.selected` retiré, results cachés) + `startAssessment` (form reset, results cachés, priorité sauvegardée, pas de reset si pas de priorité).
+- ✅ **Validation** : 228 tests (211 + 17 nouveaux), lint ✅, build ✅.
+- **Note** : le bonus « libellé dynamique du bouton d'accueil » évoqué dans l'analyse n'a pas été implémenté (le bouton reste "Commencer ma première évaluation" / "Start my first assessment" via i18n statique). Ce serait un petit ajout futur si souhaité.
+- **Prochaine étape** : P4.5 (tests E2E Playwright) si on poursuit le backlog, ou arrêt ici.
+
 ---
 
 ## 6. Points d'attention pour l'implémentation

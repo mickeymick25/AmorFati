@@ -12,6 +12,7 @@ import {
   getInterpretation,
   getRecommendations,
   escapeHtml,
+  shuffle,
 } from "../logic.js";
 import { appState } from "./state.js";
 import { t, getCurrentLang } from "../i18n/index.js";
@@ -38,7 +39,7 @@ export function renderAssessmentForm() {
       html += `<div class="question-text">${escapeHtml(t(`${question.id}.text`))}</div>`;
       html += '<div class="options">';
 
-      for (const option of question.options) {
+      for (const option of shuffle(question.options)) {
         html += '<label class="option">';
         html += `<input type="radio" name="${escapeHtml(question.id)}" value="${option.value}" />`;
         html += '<span class="option-label">';

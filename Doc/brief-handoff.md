@@ -1,7 +1,7 @@
 # Brief — Handoff pour le prochain thread
 
-> Date : 2026-06-17  
-> État : P0–P5 terminés (sauf P5.2 i18n et P4.5 reportés). CI/CD opérationnel. 195 tests, 100% coverage.
+> Date : 2026-06-24  
+> État : P0–P6 terminés (sauf P4.5 E2E reporté). i18n FR/EN opérationnel. CI/CD opérationnel. 228 tests, 100% coverage.
 
 ---
 
@@ -196,20 +196,18 @@ AmorFati/
 
 ## 5. Métriques
 
-| Métrique          | Valeur                                                                    |
-| ----------------- | ------------------------------------------------------------------------- |
-| Tests             | 195 (9 fichiers)                                                          |
-| Couverture `src/` | 100% statements, 100% branches, 100% functions, 100% lines                |
-| `app.js`          | ~108 lignes (était ~860)                                                  |
-| `index.html`      | ~335 lignes (était ~810)                                                  |
-| Modules `src/`    | 18 (7 domain + 1 infrastructure + 7 UI + 1 questions + 1 barrel + 1 tabs) |
-| Lint              | ✅ ESLint + Prettier, 0 errors, 0 warnings                                |
-| Build             | ✅ Vite, 22 modules transformés                                           |
-| CI/CD             | ✅ GitHub Actions (build + deploy + lighthouse)                           |
-| Pre-commit        | ✅ lint-staged via Docker                                                 |
-| Pre-push          | ✅ tests complets via Docker                                              |
-| Déploiement       | ✅ GitHub Pages fonctionnel                                               |
-| Dark mode         | ✅ `prefers-color-scheme: dark` via 30+ variables CSS                     |
+| Métrique          | Valeur                                                                           |
+| ----------------- | -------------------------------------------------------------------------------- |
+| Tests             | 228 (12 fichiers : 9 existants + utils + assessment + i18n)                      |
+| Couverture `src/` | 100% statements, 100% branches, 100% functions, 100% lines                       |
+| `app.js`          | ~108 lignes (était ~860)                                                         |
+| `index.html`      | ~335 lignes (était ~810)                                                         |
+| Modules `src/`    | 22 (8 domain + 1 infrastructure + 7 UI + 1 i18n + 1 barrel + 1 tabs + 2 locales) |
+| Dépendances prod  | i18next + i18next-browser-languagedetector                                       |
+| Build             | ✅ Vite, 27 modules transformés                                                  |
+| Lint              | ✅ ESLint + Prettier, 0 errors, 0 warnings                                       |
+| i18n              | ✅ FR + EN, sélecteur Paramètres, persistance localStorage `amorFatiLang`        |
+| Dark mode         | ✅ `prefers-color-scheme: dark` via 30+ variables CSS                            |
 
 ---
 
@@ -223,14 +221,21 @@ AmorFati/
 
 ### P5 — Suggestions futures
 
-| #    | Tâche                                                      | Criticité  | Effort | Note                                                              |
-| ---- | ---------------------------------------------------------- | ---------- | ------ | ----------------------------------------------------------------- |
-| P5.1 | Service Worker bump v5 (invalidate ancien cache dark mode) | ✅ Terminé | ~15min | Bumpé de v4 → v5                                                  |
-| P5.2 | Traduction / i18n                                          | 🟢         | ~4h    | L'interface est en français fixe                                  |
-| P5.3 | PWA update notification (améliorer le prompt existant)     | ✅ Terminé | ~1h    | Bannière persistante en haut + controllerchange au lieu de modale |
-| P5.4 | Lighthouse audit & perf optimisation                       | ✅ Terminé | ~2h    | Manifest purpose fix, color-scheme, iOS status bar meta           |
-| P5.5 | Séparer `app.js` en modules UI                             | ✅ Terminé | ~3h    | `app.js` réduit de ~860 à ~108 lignes                             |
-| P5.6 | Ajouter des tests pour couverture branches                 | ✅ Terminé | ~30min | 100% branches sur `src/`, 195 tests                               |
+| #    | Tâche                                                      | Criticité  | Effort | Note                                                                                                                              |
+| ---- | ---------------------------------------------------------- | ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| P5.1 | Service Worker bump v5 (invalidate ancien cache dark mode) | ✅ Terminé | ~15min | Bumpé de v4 → v5                                                                                                                  |
+| P5.2 | Traduction / i18n                                          | ✅ Terminé | ~4h    | i18next + browser-languagedetector, FR/EN, dictionnaires JSON, `data-i18n` + `t()`, sélecteur Paramètres, délégation d'événements |
+| P5.3 | PWA update notification (améliorer le prompt existant)     | ✅ Terminé | ~1h    | Bannière persistante en haut + controllerchange au lieu de modale                                                                 |
+| P5.4 | Lighthouse audit & perf optimisation                       | ✅ Terminé | ~2h    | Manifest purpose fix, color-scheme, iOS status bar meta                                                                           |
+| P5.5 | Séparer `app.js` en modules UI                             | ✅ Terminé | ~3h    | `app.js` réduit de ~860 à ~108 lignes                                                                                             |
+| P5.6 | Ajouter des tests pour couverture branches                 | ✅ Terminé | ~30min | 100% branches sur `src/`, 195 tests                                                                                               |
+
+### P6 — Biais d'évaluation (retour utilisateur 2026-06-24) — Terminé ✅
+
+| #    | Tâche                                                    | Criticité  | Effort | Note                                                                                      |
+| ---- | -------------------------------------------------------- | ---------- | ------ | ----------------------------------------------------------------------------------------- |
+| P6.1 | Bug UX : réponses précédentes visibles (effet d'ancrage) | ✅ Terminé | ~45min | `startAssessment()` reset le formulaire (`resetForm` re-rend via `renderAssessmentForm`)  |
+| P6.2 | Retrait score-badge + shuffle options (anti-ancrage)     | ✅ Terminé | ~30min | `shuffle()` (Fisher-Yates) dans `src/domain/utils.js`, `.score-badge` retiré du DOM + CSS |
 
 ---
 

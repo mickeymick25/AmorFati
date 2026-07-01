@@ -72,18 +72,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   displaySettings();
   displayHistory();
 
-  // Wire option selection (radio buttons in assessment form)
-  document.querySelectorAll(".option").forEach((option) => {
-    option.addEventListener("click", function () {
-      const radio = this.querySelector('input[type="radio"]');
+  // Wire option selection via event delegation on the form container.
+  // This survives re-renders of #assessmentFormContainer (reset, language change)
+  // without needing to re-attach handlers each time.
+  const formContainer = document.getElementById("assessmentFormContainer");
+  if (formContainer) {
+    formContainer.addEventListener("click", (e) => {
+      const option = e.target.closest(".option");
+      if (!option) return;
+      const radio = option.querySelector('input[type="radio"]');
+      if (!radio) return;
       const name = radio.name;
       document.querySelectorAll(`input[name="${name}"]`).forEach((r) => {
         r.parentElement.classList.remove("selected");
       });
       radio.checked = true;
-      this.classList.add("selected");
+      option.classList.add("selected");
     });
-  });
+  }
 
   // Wire priority selection
   document.querySelectorAll(".priority-option").forEach((option) => {
@@ -110,24 +116,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Re-translate the static DOM and re-render dynamic modules when the language changes.
+  // Option-selection handlers don't need re-wiring thanks to event delegation.
   onLanguageChanged(() => {
     translatePage();
     updateLangButtonsActive();
     renderAssessmentForm();
     displaySettings();
     displayHistory();
-    // Re-wire option selection on the freshly rendered form
-    document.querySelectorAll(".option").forEach((option) => {
-      option.addEventListener("click", function () {
-        const radio = this.querySelector('input[type="radio"]');
-        const name = radio.name;
-        document.querySelectorAll(`input[name="${name}"]`).forEach((r) => {
-          r.parentElement.classList.remove("selected");
-        });
-        radio.checked = true;
-        this.classList.add("selected");
-      });
-    });
   });
 
   // Wire modal priority option selection

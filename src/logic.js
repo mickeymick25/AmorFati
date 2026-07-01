@@ -20,7 +20,7 @@ export { QUESTIONS, DIMENSION_INFO, DIMENSIONS } from "./domain/questions.js";
 // Domain functions
 export { getInterpretation } from "./domain/interpretation.js";
 export { getRecommendations } from "./domain/recommendation.js";
-export { escapeHtml } from "./domain/utils.js";
+export { escapeHtml, shuffle } from "./domain/utils.js";
 
 // Domain assessment
 export {
