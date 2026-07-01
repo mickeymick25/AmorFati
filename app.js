@@ -34,6 +34,15 @@ import { changePriority } from "./src/ui/priority.js";
 // --- PWA ---
 import { installApp, dismissInstall } from "./src/ui/pwa.js";
 
+// --- i18n ---
+import {
+  initI18n,
+  translatePage,
+  setLang,
+  getCurrentLang,
+  onLanguageChanged,
+} from "./src/i18n/index.js";
+
 // ========================================
 // Expose functions to global scope for onclick handlers
 // ========================================
@@ -53,7 +62,11 @@ window.viewAssessmentDetails = viewAssessmentDetails;
 // Initialization
 // ========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await initI18n();
+  translatePage();
+  updateLangButtonsActive();
+
   renderAssessmentForm();
   loadData();
   displaySettings();
@@ -88,6 +101,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const importInput = document.getElementById("importFile");
   if (importInput) importInput.addEventListener("change", importData);
 
+  // Wire language selector buttons
+  document.querySelectorAll(".lang-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const lang = btn.getAttribute("data-lang");
+      if (lang && lang !== getCurrentLang()) await setLang(lang);
+    });
+  });
+
+  // Re-translate the static DOM when the language changes.
+  // (Dynamic modules will be re-rendered in P5.2.2/P5.2.3.)
+  onLanguageChanged(() => {
+    translatePage();
+    updateLangButtonsActive();
+  });
+
   // Wire modal priority option selection
   document.addEventListener("click", (e) => {
     const option = e.target.closest(".modal-priority-option");
@@ -108,3 +136,15 @@ document.addEventListener("DOMContentLoaded", () => {
     tab.addEventListener("keydown", handleTabKeydown);
   });
 });
+
+// ========================================
+// Language selector helpers
+// ========================================
+
+function updateLangButtonsActive() {
+  const current = getCurrentLang();
+  document.querySelectorAll(".lang-btn").forEach((btn) => {
+    const isActive = btn.getAttribute("data-lang") === current;
+    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}

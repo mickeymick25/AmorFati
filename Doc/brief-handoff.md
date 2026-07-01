@@ -18,59 +18,59 @@
 
 ### P0 + P1 — Terminé ✅
 
-| Tâche | Détail |
-|-------|--------|
-| T0.1 | Élimination duplication code (`index.html` éclaté en 3 fichiers) |
-| T0.2 | Correction XSS (`escapeHtml()` importé depuis `logic.js`, appliqué partout) |
-| T0.3 | Accessibilité ARIA (tabs, modales, `aria-live`, `role`, navigation clavier) |
-| T0.4 | Bugs `app.js` corrigés |
-| T1.1 | Modales accessibles (`showAlert`, `showConfirm`, `showDangerConfirm`, `showPrioritySelector`) |
-| T1.2 | Focus visible (`:focus-visible` sur tous les éléments interactifs) |
-| T1.3 | Contraste couleur (`#666` → `#555`, 9 occurrences) |
-| T1.4 | Validation données au chargement (`isValidAssessment`, `DEFAULT_DATA`, `loadData()`) |
-| T1.5 | Nettoyage CSS inline (9 nouvelles classes, `index.html` nettoyé) |
-| T1.6 | Workflow redondant `deploy-pages.yml` supprimé |
-| T1.7 | Constantes centralisées dans `src/logic.js`, importées dans `app.js` |
-| T1.8 | 41 tests passent, `app.js` importe depuis `logic.js` |
-| T1.9 | `app.js` en module ES, globals exposés via `window.xxx` |
-| T2.9 | `URL.revokeObjectURL` avec `setTimeout` |
-| T2.11 | Service Worker v3 (runtime caching, build Vite, `public/`) |
+| Tâche | Détail                                                                                        |
+| ----- | --------------------------------------------------------------------------------------------- |
+| T0.1  | Élimination duplication code (`index.html` éclaté en 3 fichiers)                              |
+| T0.2  | Correction XSS (`escapeHtml()` importé depuis `logic.js`, appliqué partout)                   |
+| T0.3  | Accessibilité ARIA (tabs, modales, `aria-live`, `role`, navigation clavier)                   |
+| T0.4  | Bugs `app.js` corrigés                                                                        |
+| T1.1  | Modales accessibles (`showAlert`, `showConfirm`, `showDangerConfirm`, `showPrioritySelector`) |
+| T1.2  | Focus visible (`:focus-visible` sur tous les éléments interactifs)                            |
+| T1.3  | Contraste couleur (`#666` → `#555`, 9 occurrences)                                            |
+| T1.4  | Validation données au chargement (`isValidAssessment`, `DEFAULT_DATA`, `loadData()`)          |
+| T1.5  | Nettoyage CSS inline (9 nouvelles classes, `index.html` nettoyé)                              |
+| T1.6  | Workflow redondant `deploy-pages.yml` supprimé                                                |
+| T1.7  | Constantes centralisées dans `src/logic.js`, importées dans `app.js`                          |
+| T1.8  | 41 tests passent, `app.js` importe depuis `logic.js`                                          |
+| T1.9  | `app.js` en module ES, globals exposés via `window.xxx`                                       |
+| T2.9  | `URL.revokeObjectURL` avec `setTimeout`                                                       |
+| T2.11 | Service Worker v3 (runtime caching, build Vite, `public/`)                                    |
 
 ### P2 — TDD + DDD — Terminé ✅
 
-| Tâche | Détail |
-|-------|--------|
-| P2.1 | Créé `src/infrastructure/storage-repository.js` — Classe `LocalStorageRepository` |
-| P2.2 | Ajouté `@vitest/coverage-v8` + seuil 80% sur `src/` (atteint: 100%) |
-| P2.3 | Tests TDD pour assessment (42 tests) |
-| P2.4 | Extrait `src/domain/assessment.js` |
-| P2.5 | Extrait `src/domain/constants.js` |
-| P2.6 | Extrait `src/domain/interpretation.js` et `src/domain/recommendation.js` |
-| P2.7 | Transformé `src/logic.js` en barrel re-export |
-| P2.8 | Refactoré `app.js` pour utiliser les nouveaux modules + LocalStorageRepository |
-| P2.9 | Extrait `src/ui/modal.js` + 31 tests UI |
-| P2.10 | Configuré Husky + lint-staged |
-| P2.11 | Créé `CONTRIBUTING.md` |
+| Tâche | Détail                                                                            |
+| ----- | --------------------------------------------------------------------------------- |
+| P2.1  | Créé `src/infrastructure/storage-repository.js` — Classe `LocalStorageRepository` |
+| P2.2  | Ajouté `@vitest/coverage-v8` + seuil 80% sur `src/` (atteint: 100%)               |
+| P2.3  | Tests TDD pour assessment (42 tests)                                              |
+| P2.4  | Extrait `src/domain/assessment.js`                                                |
+| P2.5  | Extrait `src/domain/constants.js`                                                 |
+| P2.6  | Extrait `src/domain/interpretation.js` et `src/domain/recommendation.js`          |
+| P2.7  | Transformé `src/logic.js` en barrel re-export                                     |
+| P2.8  | Refactoré `app.js` pour utiliser les nouveaux modules + LocalStorageRepository    |
+| P2.9  | Extrait `src/ui/modal.js` + 31 tests UI                                           |
+| P2.10 | Configuré Husky + lint-staged                                                     |
+| P2.11 | Créé `CONTRIBUTING.md`                                                            |
 
 ### P3 — Qualité & Améliorations — Terminé ✅
 
-| Tâche | Détail |
-|-------|--------|
-| P3.1 | Skip-link accessibilité clavier + `<main id="main-content">` + CSS |
-| P3.2 | Versionnage schéma données (`appData.version = 1` + `migrateData()` + `CURRENT_SCHEMA_VERSION`) |
-| P3.3 | Open Graph + Twitter Card meta tags |
-| P3.4 | `.editorconfig` |
-| P3.5 | Mode merge import (`mergeAssessments()` + modale Remplacer/Fusionner/Annuler) |
+| Tâche | Détail                                                                                          |
+| ----- | ----------------------------------------------------------------------------------------------- |
+| P3.1  | Skip-link accessibilité clavier + `<main id="main-content">` + CSS                              |
+| P3.2  | Versionnage schéma données (`appData.version = 1` + `migrateData()` + `CURRENT_SCHEMA_VERSION`) |
+| P3.3  | Open Graph + Twitter Card meta tags                                                             |
+| P3.4  | `.editorconfig`                                                                                 |
+| P3.5  | Mode merge import (`mergeAssessments()` + modale Remplacer/Fusionner/Annuler)                   |
 
 ### P4 — Améliorations incrémentales — Terminé ✅
 
-| Tâche | Détail | Statut |
-|-------|--------|--------|
-| P4.1 | Dark mode (`prefers-color-scheme: dark` + 30+ variables CSS sémantiques) | ✅ Terminé |
-| P4.2 | Extraction données métier (`src/domain/questions.js` + `DIMENSION_INFO` + `renderAssessmentForm()`) | ✅ Terminé |
-| P4.3 | SVG favicon (`public/icons/favicon.svg`) référencé dans `index.html` | ✅ Terminé |
-| P4.4 | CSS mobile-first (styles par défaut = ≤420px, breakpoints `min-width: 421px` et `min-width: 769px`) | ✅ Terminé |
-| P4.5 | Tests E2E Playwright | ⏳ Reporté — infrastructure lourde, ~4h |
+| Tâche | Détail                                                                                              | Statut                                  |
+| ----- | --------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| P4.1  | Dark mode (`prefers-color-scheme: dark` + 30+ variables CSS sémantiques)                            | ✅ Terminé                              |
+| P4.2  | Extraction données métier (`src/domain/questions.js` + `DIMENSION_INFO` + `renderAssessmentForm()`) | ✅ Terminé                              |
+| P4.3  | SVG favicon (`public/icons/favicon.svg`) référencé dans `index.html`                                | ✅ Terminé                              |
+| P4.4  | CSS mobile-first (styles par défaut = ≤420px, breakpoints `min-width: 421px` et `min-width: 769px`) | ✅ Terminé                              |
+| P4.5  | Tests E2E Playwright                                                                                | ⏳ Reporté — infrastructure lourde, ~4h |
 
 ### Bugs corrigés
 
@@ -196,20 +196,20 @@ AmorFati/
 
 ## 5. Métriques
 
-| Métrique | Valeur |
-|----------|--------|
-| Tests | 195 (9 fichiers) |
-| Couverture `src/` | 100% statements, 100% branches, 100% functions, 100% lines |
-| `app.js` | ~108 lignes (était ~860) |
-| `index.html` | ~335 lignes (était ~810) |
-| Modules `src/` | 18 (7 domain + 1 infrastructure + 7 UI + 1 questions + 1 barrel + 1 tabs) |
-| Lint | ✅ ESLint + Prettier, 0 errors, 0 warnings |
-| Build | ✅ Vite, 22 modules transformés |
-| CI/CD | ✅ GitHub Actions (build + deploy + lighthouse) |
-| Pre-commit | ✅ lint-staged via Docker |
-| Pre-push | ✅ tests complets via Docker |
-| Déploiement | ✅ GitHub Pages fonctionnel |
-| Dark mode | ✅ `prefers-color-scheme: dark` via 30+ variables CSS |
+| Métrique          | Valeur                                                                    |
+| ----------------- | ------------------------------------------------------------------------- |
+| Tests             | 195 (9 fichiers)                                                          |
+| Couverture `src/` | 100% statements, 100% branches, 100% functions, 100% lines                |
+| `app.js`          | ~108 lignes (était ~860)                                                  |
+| `index.html`      | ~335 lignes (était ~810)                                                  |
+| Modules `src/`    | 18 (7 domain + 1 infrastructure + 7 UI + 1 questions + 1 barrel + 1 tabs) |
+| Lint              | ✅ ESLint + Prettier, 0 errors, 0 warnings                                |
+| Build             | ✅ Vite, 22 modules transformés                                           |
+| CI/CD             | ✅ GitHub Actions (build + deploy + lighthouse)                           |
+| Pre-commit        | ✅ lint-staged via Docker                                                 |
+| Pre-push          | ✅ tests complets via Docker                                              |
+| Déploiement       | ✅ GitHub Pages fonctionnel                                               |
+| Dark mode         | ✅ `prefers-color-scheme: dark` via 30+ variables CSS                     |
 
 ---
 
@@ -217,20 +217,20 @@ AmorFati/
 
 ### P4 — Tâches reportées
 
-| # | Tâche | Criticité | Effort | Note |
-|---|-------|-----------|--------|------|
-| P4.5 | Tests E2E (Playwright) | 🟡 | ~4h | Infrastructure lourde, nécessite Docker + navigateurs |
+| #    | Tâche                  | Criticité | Effort | Note                                                  |
+| ---- | ---------------------- | --------- | ------ | ----------------------------------------------------- |
+| P4.5 | Tests E2E (Playwright) | 🟡        | ~4h    | Infrastructure lourde, nécessite Docker + navigateurs |
 
 ### P5 — Suggestions futures
 
-| # | Tâche | Criticité | Effort | Note |
-|---|-------|-----------|--------|------|
-| P5.1 | Service Worker bump v5 (invalidate ancien cache dark mode) | ✅ Terminé | ~15min | Bumpé de v4 → v5 |
-| P5.2 | Traduction / i18n | 🟢 | ~4h | L'interface est en français fixe |
-| P5.3 | PWA update notification (améliorer le prompt existant) | ✅ Terminé | ~1h | Bannière persistante en haut + controllerchange au lieu de modale |
-| P5.4 | Lighthouse audit & perf optimisation | ✅ Terminé | ~2h | Manifest purpose fix, color-scheme, iOS status bar meta |
-| P5.5 | Séparer `app.js` en modules UI | ✅ Terminé | ~3h | `app.js` réduit de ~860 à ~108 lignes |
-| P5.6 | Ajouter des tests pour couverture branches | ✅ Terminé | ~30min | 100% branches sur `src/`, 195 tests |
+| #    | Tâche                                                      | Criticité  | Effort | Note                                                              |
+| ---- | ---------------------------------------------------------- | ---------- | ------ | ----------------------------------------------------------------- |
+| P5.1 | Service Worker bump v5 (invalidate ancien cache dark mode) | ✅ Terminé | ~15min | Bumpé de v4 → v5                                                  |
+| P5.2 | Traduction / i18n                                          | 🟢         | ~4h    | L'interface est en français fixe                                  |
+| P5.3 | PWA update notification (améliorer le prompt existant)     | ✅ Terminé | ~1h    | Bannière persistante en haut + controllerchange au lieu de modale |
+| P5.4 | Lighthouse audit & perf optimisation                       | ✅ Terminé | ~2h    | Manifest purpose fix, color-scheme, iOS status bar meta           |
+| P5.5 | Séparer `app.js` en modules UI                             | ✅ Terminé | ~3h    | `app.js` réduit de ~860 à ~108 lignes                             |
+| P5.6 | Ajouter des tests pour couverture branches                 | ✅ Terminé | ~30min | 100% branches sur `src/`, 195 tests                               |
 
 ---
 
@@ -288,10 +288,10 @@ docker compose run --rm lint npm run lint:fix
 
 ## 9. Derniers commits
 
-| Hash | Message |
-|------|---------|
-| `339380d` | docs: update Doc/ to reflect P0-P5 implementations |
-| `b0b1803` | docs: update brief-handoff with P5.1-P5.6 completion status |
+| Hash      | Message                                                              |
+| --------- | -------------------------------------------------------------------- |
+| `339380d` | docs: update Doc/ to reflect P0-P5 implementations                   |
+| `b0b1803` | docs: update brief-handoff with P5.1-P5.6 completion status          |
 | `fb67418` | feat: P5.4 — manifest purpose fix, color-scheme, iOS status bar meta |
-| `ec53f18` | feat: P5.3 — replace SW update modal with persistent top banner |
+| `ec53f18` | feat: P5.3 — replace SW update modal with persistent top banner      |
 | `98fa531` | feat: P5 — SW v5, 100% branch coverage, split app.js into UI modules |

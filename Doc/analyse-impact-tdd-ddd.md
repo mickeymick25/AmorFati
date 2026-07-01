@@ -7,6 +7,7 @@
 > Cette analyse a servi de base au plan P2, qui est désormais **complet**. Le document ci-dessous est conservé comme référence historique.
 >
 > **Ce qui a été implémenté (P2 — terminé) :**
+>
 > - Création de `src/infrastructure/storage-repository.js` — classe LocalStorageRepository
 > - Ajout de `@vitest/coverage-v8` + seuil 80 % sur `src/` (atteint : 100 % statements/functions/lines, ~100 % branches)
 > - Tests TDD pour l'assessment (42 → 46 tests)
@@ -24,42 +25,44 @@
 > **Couverture de tests actuelle :** 195 tests sur 9 fichiers, 100 % statements/functions/lines sur `src/`
 >
 > **L'architecture actuelle correspond à l'architecture proposée en Section 3.1**, avec les différences suivantes :
+>
 > - `dimension.js` et `score.js` ont été fusionnés dans `questions.js` (DIMENSION_INFO + DIMENSIONS dérivés de QUESTIONS)
 > - `utils.js` contient `escapeHtml` (gardé minimal, comme recommandé)
+
 - `app.js` a été découpé en 7 modules UI lors de P5.5 :
->   - `src/ui/state.js` (appState partagé, storage, saveData, loadData)
->   - `src/ui/renderer.js` (rendu DOM)
->   - `src/ui/tabs.js` (navigation par onglets)
->   - `src/ui/assessment.js` (flux d'assessment)
->   - `src/ui/data.js` (export/import/delete)
->   - `src/ui/priority.js` (sélecteur de priorité)
->   - `src/ui/pwa.js` (installation PWA + enregistrement SW)
+  > - `src/ui/state.js` (appState partagé, storage, saveData, loadData)
+  > - `src/ui/renderer.js` (rendu DOM)
+  > - `src/ui/tabs.js` (navigation par onglets)
+  > - `src/ui/assessment.js` (flux d'assessment)
+  > - `src/ui/data.js` (export/import/delete)
+  > - `src/ui/priority.js` (sélecteur de priorité)
+  > - `src/ui/pwa.js` (installation PWA + enregistrement SW)
 
 ---
 
 ## 1. État actuel — Cartographie du code
 
-| Fichier | Lignes | Rôle | Testé ? |
-|---------|--------|------|---------|
-| `src/logic.js` | 188 | Fonctions pures + constantes | ✅ 38 tests |
-| `app.js` | 948 | UI + modales + données + DOM | ❌ 0 tests |
-| `index.html` | 811 | Structure HTML + onglets ARIA | ❌ |
-| `styles.css` | 854 | Styles | ❌ |
-| `service-worker.js` | 147 | Cache offline | ❌ |
-| `tests/logic.test.js` | 271 | Tests du domaine | — |
-| `tests/environment.test.js` | 19 | Tests environnement | — |
+| Fichier                     | Lignes | Rôle                          | Testé ?     |
+| --------------------------- | ------ | ----------------------------- | ----------- |
+| `src/logic.js`              | 188    | Fonctions pures + constantes  | ✅ 38 tests |
+| `app.js`                    | 948    | UI + modales + données + DOM  | ❌ 0 tests  |
+| `index.html`                | 811    | Structure HTML + onglets ARIA | ❌          |
+| `styles.css`                | 854    | Styles                        | ❌          |
+| `service-worker.js`         | 147    | Cache offline                 | ❌          |
+| `tests/logic.test.js`       | 271    | Tests du domaine              | —           |
+| `tests/environment.test.js` | 19     | Tests environnement           | —           |
 
 ### Analyse de `app.js` — Répartition des responsabilités
 
 `app.js` mélange **5 catégories de logique** qui relèvent de couches différentes :
 
-| Catégorie | Fonctions | Lignes approx. | Testable sans DOM ? |
-|-----------|-----------|----------------|---------------------|
-| **Domaine pur** | `isValidAssessment`, `DEFAULT_DATA`, calculs de scores (déjà dans `logic.js`) | ~190 | ✅ Oui |
-| **Modales** | `openModal`, `closeModal`, `showAlert`, `showConfirm`, `showDangerConfirm`, `showPrioritySelector` | ~170 | ⚠️ Partiel (DOM) |
-| **Rendu HTML** | `displayResults`, `getEvolutionComparison`, `displayHistory`, `createChart`, `displaySettings` | ~220 | ⚠️ Partiel (DOM) |
-| **Données** | `saveData`, `loadData`, `exportData`, `importData`, `deleteAllData` | ~120 | ⚠️ Partiel (localStorage) |
-| **Navigation** | `switchTab`, `handleTabKeydown`, `resetForm` | ~50 | ❌ DOM uniquement |
+| Catégorie       | Fonctions                                                                                          | Lignes approx. | Testable sans DOM ?       |
+| --------------- | -------------------------------------------------------------------------------------------------- | -------------- | ------------------------- |
+| **Domaine pur** | `isValidAssessment`, `DEFAULT_DATA`, calculs de scores (déjà dans `logic.js`)                      | ~190           | ✅ Oui                    |
+| **Modales**     | `openModal`, `closeModal`, `showAlert`, `showConfirm`, `showDangerConfirm`, `showPrioritySelector` | ~170           | ⚠️ Partiel (DOM)          |
+| **Rendu HTML**  | `displayResults`, `getEvolutionComparison`, `displayHistory`, `createChart`, `displaySettings`     | ~220           | ⚠️ Partiel (DOM)          |
+| **Données**     | `saveData`, `loadData`, `exportData`, `importData`, `deleteAllData`                                | ~120           | ⚠️ Partiel (localStorage) |
+| **Navigation**  | `switchTab`, `handleTabKeydown`, `resetForm`                                                       | ~50            | ❌ DOM uniquement         |
 
 ### Dépendances croisées dans `app.js`
 
@@ -86,38 +89,38 @@ app.js
 
 ### 2.2 Couverture de tests actuelle vs. nécessaire
 
-| Module | Tests actuels | Tests nécessaires | Difficulté |
-|--------|--------------|-------------------|------------|
-| `src/logic.js` | 38 tests ✅ | Maintenir | Faible — déjà couvert |
-| `isValidAssessment()` | 0 ❌ | ~5 tests | Faible — fonction pure |
-| `loadData()` validation | 0 ❌ | ~8 tests | Moyen — mock localStorage |
-| `DEFAULT_DATA` | 0 ❌ | ~2 tests | Faible — constante |
-| Modales (`showAlert`, etc.) | 0 ❌ | ~6 tests | Élevé — DOM + Promesses |
-| `displayResults` | 0 ❌ | ~3 tests | Élevé — DOM + innerHTML |
-| `calculateResults` | 0 ❌ | ~3 tests | Élevé — FormData + DOM |
-| `switchTab` | 0 ❌ | ~2 tests | Élevé — DOM |
+| Module                      | Tests actuels | Tests nécessaires | Difficulté                |
+| --------------------------- | ------------- | ----------------- | ------------------------- |
+| `src/logic.js`              | 38 tests ✅   | Maintenir         | Faible — déjà couvert     |
+| `isValidAssessment()`       | 0 ❌          | ~5 tests          | Faible — fonction pure    |
+| `loadData()` validation     | 0 ❌          | ~8 tests          | Moyen — mock localStorage |
+| `DEFAULT_DATA`              | 0 ❌          | ~2 tests          | Faible — constante        |
+| Modales (`showAlert`, etc.) | 0 ❌          | ~6 tests          | Élevé — DOM + Promesses   |
+| `displayResults`            | 0 ❌          | ~3 tests          | Élevé — DOM + innerHTML   |
+| `calculateResults`          | 0 ❌          | ~3 tests          | Élevé — FormData + DOM    |
+| `switchTab`                 | 0 ❌          | ~2 tests          | Élevé — DOM               |
 
 ### 2.3 Investissement nécessaire
 
-| Action | Effort | Impact |
-|--------|--------|--------|
-| Ajouter `@vitest/coverage-v8` | 15 min | Couverture mesurable |
-| Configurer seuil de couverture (80% sur `src/`) | 10 min | Check CI |
-| Tester `isValidAssessment` et `loadData` | 1-2h | 13 tests, couverture domaine |
-| Tester les modales avec jsdom | 2-3h | 6 tests, couverture UX critique |
-| Tester le rendu HTML avec jsdom | 2-3h | 8 tests, couverture affichage |
-| Ajouter `@testing-library/dom` | 30 min | Meilleure ergonomie de test DOM |
-| Configurer pre-commit hook (husky + lint-staged) | 30 min | Automatisation TDD |
-| Écrire un CONTRIBUTING.md | 30 min | Documentation |
+| Action                                           | Effort | Impact                          |
+| ------------------------------------------------ | ------ | ------------------------------- |
+| Ajouter `@vitest/coverage-v8`                    | 15 min | Couverture mesurable            |
+| Configurer seuil de couverture (80% sur `src/`)  | 10 min | Check CI                        |
+| Tester `isValidAssessment` et `loadData`         | 1-2h   | 13 tests, couverture domaine    |
+| Tester les modales avec jsdom                    | 2-3h   | 6 tests, couverture UX critique |
+| Tester le rendu HTML avec jsdom                  | 2-3h   | 8 tests, couverture affichage   |
+| Ajouter `@testing-library/dom`                   | 30 min | Meilleure ergonomie de test DOM |
+| Configurer pre-commit hook (husky + lint-staged) | 30 min | Automatisation TDD              |
+| Écrire un CONTRIBUTING.md                        | 30 min | Documentation                   |
 
 ### 2.4 Risques et mitigation
 
-| Risque | Mitigation |
-|--------|-----------|
-| Les tests DOM sont fragiles (sélecteurs CSS) | Utiliser `@testing-library/dom` (sélection par rôle/texte) |
-| Couverture ≠ qualité | Privilégier les tests de comportement sur les tests d'implémentation |
-| TDD ralentit le développement court terme | Le gain est à long terme : moins de bugs de régression |
-| Les tests de modales impliquent des Promesses | Utiliser `vi.fn()` et `await` systématiquement |
+| Risque                                        | Mitigation                                                           |
+| --------------------------------------------- | -------------------------------------------------------------------- |
+| Les tests DOM sont fragiles (sélecteurs CSS)  | Utiliser `@testing-library/dom` (sélection par rôle/texte)           |
+| Couverture ≠ qualité                          | Privilégier les tests de comportement sur les tests d'implémentation |
+| TDD ralentit le développement court terme     | Le gain est à long terme : moins de bugs de régression               |
+| Les tests de modales impliquent des Promesses | Utiliser `vi.fn()` et `await` systématiquement                       |
 
 ### 2.5 Recommandation TDD
 
@@ -154,6 +157,7 @@ app.js                     # UI orchestration only
 ### 3.2 Ce que chaque module contient
 
 #### `src/domain/assessment.js`
+
 ```js
 // Actuellement dans app.js (loadData, isValidAssessment, DEFAULT_DATA)
 export const DEFAULT_DATA = { priority: null, assessments: [], settings: { lastAssessment: null } };
@@ -163,6 +167,7 @@ export function filterValidAssessments(assessments) { ... }
 ```
 
 #### `src/domain/score.js`
+
 ```js
 // Actuellement dans logic.js (getInterpretation)
 export function calculateTotalScore(answers, dimensions) { ... }
@@ -170,18 +175,21 @@ export function calculateDimensionScores(answers, dimensions) { ... }
 ```
 
 #### `src/domain/recommendation.js`
+
 ```js
 // Actuellement dans logic.js (getRecommendations, PRIORITY_RECOMMENDATIONS)
 export function getRecommendations(dimensionScores, priority) { ... }
 ```
 
 #### `src/domain/interpretation.js`
+
 ```js
 // Actuellement dans logic.js (INTERPRETATIONS, getInterpretation)
 export function getInterpretation(score) { ... }
 ```
 
 #### `src/domain/dimension.js`
+
 ```js
 // Actuellement dans logic.js (DIMENSIONS)
 export const DIMENSIONS = { ... };
@@ -190,6 +198,7 @@ export function getQuestionsForDimension(dimension) { ... }
 ```
 
 #### `src/infrastructure/storage-repository.js`
+
 ```js
 // Actuellement dans app.js (saveData, loadData, STORAGE_KEY)
 export class LocalStorageRepository {
@@ -208,10 +217,17 @@ export class LocalStorageRepository {
 
 ```js
 // src/logic.js — Barrel re-export (backward compatibility)
-export { STORAGE_KEY, PRIORITY_LABELS, PRIORITY_LABELS_FULL, DIMENSIONS, INTERPRETATIONS, PRIORITY_RECOMMENDATIONS } from './domain/constants.js';
-export { getInterpretation } from './domain/interpretation.js';
-export { getRecommendations } from './domain/recommendation.js';
-export { escapeHtml } from './domain/utils.js';
+export {
+  STORAGE_KEY,
+  PRIORITY_LABELS,
+  PRIORITY_LABELS_FULL,
+  DIMENSIONS,
+  INTERPRETATIONS,
+  PRIORITY_RECOMMENDATIONS,
+} from "./domain/constants.js";
+export { getInterpretation } from "./domain/interpretation.js";
+export { getRecommendations } from "./domain/recommendation.js";
+export { escapeHtml } from "./domain/utils.js";
 ```
 
 **Impact** : `app.js` et `tests/logic.test.js` continuent d'importer depuis `./src/logic.js`. Aucun import à changer. Migration transparente.
@@ -232,23 +248,23 @@ app.js (orchestrateur)
 
 ### 3.5 Investissement nécessaire
 
-| Action | Effort | Impact |
-|--------|--------|--------|
-| Créer `src/domain/` avec 5 modules | 2-3h | Séparation claire du domaine |
-| Créer `src/infrastructure/storage-repository.js` | 1h | Abstraction de localStorage |
-| Transformer `logic.js` en barrel re-export | 30 min | Backward compat |
-| Migrer les tests vers les nouveaux modules | 1-2h | Tests par domaine |
-| Refactor `app.js` pour utiliser les nouveaux modules | 1-2h | Code plus lisible |
-| Créer `CONTRIBUTING.md` avec architecture DDD | 30 min | Documentation |
+| Action                                               | Effort | Impact                       |
+| ---------------------------------------------------- | ------ | ---------------------------- |
+| Créer `src/domain/` avec 5 modules                   | 2-3h   | Séparation claire du domaine |
+| Créer `src/infrastructure/storage-repository.js`     | 1h     | Abstraction de localStorage  |
+| Transformer `logic.js` en barrel re-export           | 30 min | Backward compat              |
+| Migrer les tests vers les nouveaux modules           | 1-2h   | Tests par domaine            |
+| Refactor `app.js` pour utiliser les nouveaux modules | 1-2h   | Code plus lisible            |
+| Créer `CONTRIBUTING.md` avec architecture DDD        | 30 min | Documentation                |
 
 ### 3.6 Risques et mitigation
 
-| Risque | Mitigation |
-|--------|-----------|
-| Sur-ingénierie pour une petite PWA | Commencer par la couche Repository (le plus utile), les modules domaine en second |
-| Duplication temporaire pendant la migration | Garder `logic.js` comme barrel jusqu'à ce que tous les imports soient migrés |
-| Trop de fichiers pour un petit projet | Limiter à 3-4 modules domaine au lieu de 5-6 si certains sont trop petits |
-| Les modules domaine finissent par ressembler à `logic.js` découpé | C'est le but — mais chaque module a une responsabilité unique et testable |
+| Risque                                                            | Mitigation                                                                        |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Sur-ingénierie pour une petite PWA                                | Commencer par la couche Repository (le plus utile), les modules domaine en second |
+| Duplication temporaire pendant la migration                       | Garder `logic.js` comme barrel jusqu'à ce que tous les imports soient migrés      |
+| Trop de fichiers pour un petit projet                             | Limiter à 3-4 modules domaine au lieu de 5-6 si certains sont trop petits         |
+| Les modules domaine finissent par ressembler à `logic.js` découpé | C'est le but — mais chaque module a une responsabilité unique et testable         |
 
 ### 3.7 Recommandation DDD
 
@@ -296,13 +312,13 @@ Résultat combiné       →  Couverture élevée sur le domaine, confiance dans
 
 ### 4.3 Ce que ça change concrètement pour le développeur
 
-| Action | Avant | Après |
-|--------|-------|-------|
-| Ajouter une question | Modifier `DIMENSIONS` dans `logic.js` | Modifier `dimension.js` + test en TDD |
-| Ajouter une interprétation | Modifier `INTERPRETATIONS` dans `logic.js` | Modifier `interpretation.js` + test en TDD |
-| Changer le stockage | Modifier `saveData`/`loadData` dans `app.js` | Créer une nouvelle implémentation de `StorageRepository` |
-| Ajouter une modale | Ajouter du code dans `app.js` | Ajouter du code dans `app.js` (pas de changement) |
-| Corriger un bug de calcul | Modifier `logic.js` | Modifier le module domaine + vérifier que le test passe |
+| Action                     | Avant                                        | Après                                                    |
+| -------------------------- | -------------------------------------------- | -------------------------------------------------------- |
+| Ajouter une question       | Modifier `DIMENSIONS` dans `logic.js`        | Modifier `dimension.js` + test en TDD                    |
+| Ajouter une interprétation | Modifier `INTERPRETATIONS` dans `logic.js`   | Modifier `interpretation.js` + test en TDD               |
+| Changer le stockage        | Modifier `saveData`/`loadData` dans `app.js` | Créer une nouvelle implémentation de `StorageRepository` |
+| Ajouter une modale         | Ajouter du code dans `app.js`                | Ajouter du code dans `app.js` (pas de changement)        |
+| Corriger un bug de calcul  | Modifier `logic.js`                          | Modifier le module domaine + vérifier que le test passe  |
 
 ### 4.4 Ce qui NE change PAS
 
@@ -315,10 +331,10 @@ Résultat combiné       →  Couverture élevée sur le domaine, confiance dans
 
 ## 5. Conclusion
 
-| Pratique | Investissement | Gain principal | Risque |
-|----------|----------------|---------------|--------|
-| **TDD** | ~8h (tests domaine + modales + setup) | Confiance dans les refactorings, moins de bugs de régression | Tests DOM fragiles |
-| **DDD** | ~5-6h (extraction modules + Repository) | Séparation domain/infrastructure, testabilité, maintenabilité | Sur-ingénierie possible |
-| **TDD + DDD** | ~10-12h (les deux se renforcent) | Architecture propre, haute couverture, évolutivité | Complexité initiale |
+| Pratique      | Investissement                          | Gain principal                                                | Risque                  |
+| ------------- | --------------------------------------- | ------------------------------------------------------------- | ----------------------- |
+| **TDD**       | ~8h (tests domaine + modales + setup)   | Confiance dans les refactorings, moins de bugs de régression  | Tests DOM fragiles      |
+| **DDD**       | ~5-6h (extraction modules + Repository) | Séparation domain/infrastructure, testabilité, maintenabilité | Sur-ingénierie possible |
+| **TDD + DDD** | ~10-12h (les deux se renforcent)        | Architecture propre, haute couverture, évolutivité            | Complexité initiale     |
 
 **Recommandation** : Commencer par le **Storage Repository** (DDD, ~1h) puis les **tests de `isValidAssessment` et `loadData`** (TDD, ~2h). Ces deux étapes apportent le meilleur rapport investissement/qualité et préparent le terrain pour la suite.

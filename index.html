@@ -247,6 +247,33 @@
           class="tab-content"
         >
           <div class="setting-item">
+            <h3 data-i18n="settings.language.title">
+              🌐 Langue de l'interface
+            </h3>
+            <p data-i18n="settings.language.desc">
+              Choisis la langue d'affichage de l'application.
+            </p>
+            <div class="lang-selector" role="group" aria-label="Language">
+              <button
+                type="button"
+                class="btn btn-secondary lang-btn"
+                data-lang="fr"
+                aria-pressed="true"
+              >
+                Français
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary lang-btn"
+                data-lang="en"
+                aria-pressed="false"
+              >
+                English
+              </button>
+            </div>
+          </div>
+
+          <div class="setting-item">
             <h3>🎯 Ta priorité actuelle</h3>
             <p id="currentPriority"></p>
             <button class="btn btn-secondary" onclick="changePriority()">

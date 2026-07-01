@@ -11,6 +11,7 @@
 ### 1.1 Ce qu'est le projet
 
 AmorFati est une **PWA légère** de suivi personnel :
+
 - ~960 lignes HTML, ~800 lignes JS, ~420 lignes CSS
 - Aucun backend, 100% client-side
 - Données stockées en `localStorage`
@@ -27,12 +28,12 @@ AmorFati est une **PWA légère** de suivi personnel :
 
 ### 1.3 Contraintes hard
 
-| Contrainte | Détail |
-|------------|--------|
-| Hébergement | GitHub Pages — fichiers statiques uniquement, pas de serveur |
-| PWA | Doit rester installable, fonctionner offline |
-| Taille | L'app doit rester légère (< 100 KB payload idéal) |
-| Simplicité | Un dev doit pouvoir comprendre le projet en < 30 min |
+| Contrainte    | Détail                                                                |
+| ------------- | --------------------------------------------------------------------- |
+| Hébergement   | GitHub Pages — fichiers statiques uniquement, pas de serveur          |
+| PWA           | Doit rester installable, fonctionner offline                          |
+| Taille        | L'app doit rester légère (< 100 KB payload idéal)                     |
+| Simplicité    | Un dev doit pouvoir comprendre le projet en < 30 min                  |
 | Accessibilité | Doit fonctionner sans JS build si possible (ou avec un build minimal) |
 
 ---
@@ -56,19 +57,20 @@ AmorFati/
 ```
 
 **Comment ça marche :**
+
 - `logic.js` est un ES module avec `export` pour les fonctions pures
 - `app.js` est un script classique (pas `type="module"`) qui **duplique les références** aux constantes/fonctions de `logic.js` via une IIFE ou un simple import dynamique
 - Les tests importent directement depuis `logic.js` via `import`
 - Pas de build step pour la production
 
-| Aspect | Évaluation |
-|--------|-----------|
-| Complexité outillage | ⭐ Très faible |
-| Payload production | ⭐⭐⭐⭐⭐ Minimal (pas de bundler) |
-| Testabilité | ⭐⭐⭐ Bonne (fonctions pures testables) |
-| DX (Developer Experience) | ⭐⭐ Moyenne (pas de HMR, reload manuel) |
-| Maintenabilité | ⭐⭐⭐ Bonne (séparation des préoccupations) |
-| Risque | ⭐⭐⭐⭐⭐ Faible |
+| Aspect                    | Évaluation                                   |
+| ------------------------- | -------------------------------------------- |
+| Complexité outillage      | ⭐ Très faible                               |
+| Payload production        | ⭐⭐⭐⭐⭐ Minimal (pas de bundler)          |
+| Testabilité               | ⭐⭐⭐ Bonne (fonctions pures testables)     |
+| DX (Developer Experience) | ⭐⭐ Moyenne (pas de HMR, reload manuel)     |
+| Maintenabilité            | ⭐⭐⭐ Bonne (séparation des préoccupations) |
+| Risque                    | ⭐⭐⭐⭐⭐ Faible                            |
 
 **Problème majeur :** `app.js` ne peut pas `import` depuis `logic.js` sans `type="module"`. Si on utilise `type="module"`, les fonctions globales ne sont plus accessibles aux `onclick` inline. Deux sous-options :
 
@@ -103,22 +105,24 @@ AmorFati/
 ```
 
 **Comment ça marche :**
+
 - Vite sert les fichiers en dev avec HMR
 - En production, Vite bundle, minifie et tree-shake
 - ES modules natifs en dev, bundle optimisé en prod
 - Vitest pour les tests (intégration native avec Vite)
 - Le SW est dans `public/` et n'est pas transformé par Vite
 
-| Aspect | Évaluation |
-|--------|-----------|
-| Complexité outillage | ⭐⭐⭐ Moyenne (1 config file, 1 build step) |
-| Payload production | ⭐⭐⭐⭐ Optimisé (minifié, tree-shaken) |
-| Testabilité | ⭐⭐⭐⭐⭐ Excellente (Vitest + jsdom) |
-| DX | ⭐⭐⭐⭐⭐ Excellente (HMR, source maps, auto-reload) |
-| Maintenabilité | ⭐⭐⭐⭐ Bonne (modules séparés) |
-| Risque | ⭐⭐⭐⭐ Faible (Vite est mature et très utilisé) |
+| Aspect               | Évaluation                                            |
+| -------------------- | ----------------------------------------------------- |
+| Complexité outillage | ⭐⭐⭐ Moyenne (1 config file, 1 build step)          |
+| Payload production   | ⭐⭐⭐⭐ Optimisé (minifié, tree-shaken)              |
+| Testabilité          | ⭐⭐⭐⭐⭐ Excellente (Vitest + jsdom)                |
+| DX                   | ⭐⭐⭐⭐⭐ Excellente (HMR, source maps, auto-reload) |
+| Maintenabilité       | ⭐⭐⭐⭐ Bonne (modules séparés)                      |
+| Risque               | ⭐⭐⭐⭐ Faible (Vite est mature et très utilisé)     |
 
 **Avantages clés :**
+
 - HMR instantané pendant le développement
 - Bundle optimisé en production (minification, tree-shaking)
 - Vitest intégré nativement — tests ultra-rapides
@@ -126,6 +130,7 @@ AmorFati/
 - Prêt pour i18n (imports dynamiques)
 
 **Inconvénients :**
+
 - Nécessite Node.js pour le dev et le build
 - Un step de build avant déploiement (mais automatisable via CI)
 - Ajoute ~200 lignes de config (vite.config.js, package.json)
@@ -145,16 +150,17 @@ AmorFati/
 └── ... (des dizaines de fichiers)
 ```
 
-| Aspect | Évaluation |
-|--------|-----------|
-| Complexité outillage | ⭐⭐⭐⭐⭐ Élevée |
-| Payload production | ⭐⭐⭐ Acceptable (framework runtime ~10-40 KB) |
-| Testabilité | ⭐⭐⭐⭐⭐ Excellente |
-| DX | ⭐⭐⭐⭐⭐ Excellente |
-| Maintenabilité | ⭐⭐⭐⭐ Bonne (si on connaît le framework) |
-| Risque | ⭐⭐ Moyen (over-engineering pour cette taille) |
+| Aspect               | Évaluation                                      |
+| -------------------- | ----------------------------------------------- |
+| Complexité outillage | ⭐⭐⭐⭐⭐ Élevée                               |
+| Payload production   | ⭐⭐⭐ Acceptable (framework runtime ~10-40 KB) |
+| Testabilité          | ⭐⭐⭐⭐⭐ Excellente                           |
+| DX                   | ⭐⭐⭐⭐⭐ Excellente                           |
+| Maintenabilité       | ⭐⭐⭐⭐ Bonne (si on connaît le framework)     |
+| Risque               | ⭐⭐ Moyen (over-engineering pour cette taille) |
 
 **Pourquoi ce n'est PAS recommandé :**
+
 - L'app fait 960 lignes de HTML et 800 de JS. Un framework ajouterait 10-40 KB de runtime pour... quoi ?
 - La complexité cognitive augmente considérablement
 - Le form de 10 questions est trivial en vanilla, verbeux en React/Vue
@@ -180,16 +186,17 @@ AmorFati/
 └── ...
 ```
 
-| Aspect | Évaluation |
-|--------|-----------|
-| Complexité outillage | ⭐⭐⭐⭐ Élevée |
-| Payload production | ⭐⭐⭐⭐ Bon (~5 KB pour Lit) |
-| Testabilité | ⭐⭐⭐⭐ Bonne |
-| DX | ⭐⭐⭐⭐ Bonne |
-| Maintenabilité | ⭐⭐⭐⭐ Bonne |
-| Risque | ⭐⭐⭐ Moyen (courbe d'apprentissage) |
+| Aspect               | Évaluation                            |
+| -------------------- | ------------------------------------- |
+| Complexité outillage | ⭐⭐⭐⭐ Élevée                       |
+| Payload production   | ⭐⭐⭐⭐ Bon (~5 KB pour Lit)         |
+| Testabilité          | ⭐⭐⭐⭐ Bonne                        |
+| DX                   | ⭐⭐⭐⭐ Bonne                        |
+| Maintenabilité       | ⭐⭐⭐⭐ Bonne                        |
+| Risque               | ⭐⭐⭐ Moyen (courbe d'apprentissage) |
 
 **Pourquoi ce n'est PAS recommandé actuellement :**
+
 - Ajoute une dépendance (Lit) pour un gain marginal à cette échelle
 - La réécriture en composants serait un gros travail pour un bénéfice limité
 - Les Web Components natifs (sans Lit) sont trop verbeux
@@ -216,19 +223,19 @@ quadrantChart
     D_Web_Components: [0.55, 0.55]
 ```
 
-| Critère | A (Vanilla) | B (Vite + Vanilla) | C (Framework) | D (Lit) |
-|---------|:-----------:|:-----------------:|:------------:|:------:|
-| Pas de build step | ✅ | ❌ | ❌ | ❌ |
-| HMR / hot reload | ❌ | ✅ | ✅ | ✅ |
-| Tests automatisés | ⚠️ | ✅ | ✅ | ✅ |
-| Minification prod | ❌ | ✅ | ✅ | ✅ |
-| Tree-shaking | ❌ | ✅ | ✅ | ✅ |
-| Payload minimal | ✅✅ | ✅ | ⚠️ | ✅ |
-| Courbe d'apprentissage | ✅✅ | ✅ | ❌ | ⚠️ |
-| i18n futur | ❌ | ✅ | ✅ | ✅ |
-| TypeScript futur | ❌ | ✅ | ✅ | ✅ |
-| Déploiement simple | ✅✅ | ⚠️ (build step) | ⚠️ | ⚠️ |
-| Adapté à la taille du projet | ✅✅ | ✅ | ❌ | ⚠️ |
+| Critère                      | A (Vanilla) | B (Vite + Vanilla) | C (Framework) | D (Lit) |
+| ---------------------------- | :---------: | :----------------: | :-----------: | :-----: |
+| Pas de build step            |     ✅      |         ❌         |      ❌       |   ❌    |
+| HMR / hot reload             |     ❌      |         ✅         |      ✅       |   ✅    |
+| Tests automatisés            |     ⚠️      |         ✅         |      ✅       |   ✅    |
+| Minification prod            |     ❌      |         ✅         |      ✅       |   ✅    |
+| Tree-shaking                 |     ❌      |         ✅         |      ✅       |   ✅    |
+| Payload minimal              |    ✅✅     |         ✅         |      ⚠️       |   ✅    |
+| Courbe d'apprentissage       |    ✅✅     |         ✅         |      ❌       |   ⚠️    |
+| i18n futur                   |     ❌      |         ✅         |      ✅       |   ✅    |
+| TypeScript futur             |     ❌      |         ✅         |      ✅       |   ✅    |
+| Déploiement simple           |    ✅✅     |  ⚠️ (build step)   |      ⚠️       |   ⚠️    |
+| Adapté à la taille du projet |    ✅✅     |         ✅         |      ❌       |   ⚠️    |
 
 ---
 
@@ -319,15 +326,15 @@ AmorFati/
 
 ```js
 // vite.config.js
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: '.',                     // index.html à la racine
+  root: ".", // index.html à la racine
   build: {
-    outDir: 'dist',              // Dossier de sortie
+    outDir: "dist", // Dossier de sortie
     rollupOptions: {
       input: {
-        main: 'index.html',
+        main: "index.html",
       },
     },
   },
@@ -338,13 +345,13 @@ export default defineConfig({
 
 ```js
 // vitest.config.js
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    environment: 'jsdom',       // Simule le DOM pour les tests UI
-    globals: true,                // describe/it/expect globaux
-    setupFiles: './tests/setup.js',
+    environment: "jsdom", // Simule le DOM pour les tests UI
+    globals: true, // describe/it/expect globaux
+    setupFiles: "./tests/setup.js",
   },
 });
 ```
@@ -395,15 +402,15 @@ Le `service-worker.js` doit être dans `public/` pour ne pas être transformé p
 
 ```js
 // public/service-worker.js
-const CACHE_NAME = 'amor-fati-cache-v3';
+const CACHE_NAME = "amor-fati-cache-v3";
 const PRECACHE_ASSETS = [
-  './',
-  'index.html',
-  'manifest.json',
-  'icons/icon-192.png',
-  'icons/icon-512.png',
-  'icons/icon-180.png',
-  'offline.html',
+  "./",
+  "index.html",
+  "manifest.json",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/icon-180.png",
+  "offline.html",
   // Les assets JS/CSS seront ajoutés dynamiquement
   // ou via un plugin Vite (vite-plugin-pwa)
 ];
@@ -418,6 +425,7 @@ const PRECACHE_ASSETS = [
 ### 5.1 Principe
 
 Le TDD (Test-Driven Development) sera appliqué de manière **pragmatique** :
+
 - Les fonctions pures (logique métier) sont testées en priorité
 - Les fonctions UI (DOM) sont testées avec jsdom
 - Les tests E2E sont un objectif futur (Playwright), pas une priorité immédiate
@@ -439,67 +447,67 @@ Le TDD (Test-Driven Development) sera appliqué de manière **pragmatique** :
 
 ### 5.3 Modules testables en priorité
 
-| Module | Fonctions | Priorité | Raison |
-|--------|-----------|----------|--------|
-| `scoring.js` | `calculateResults`, `getInterpretation` | 🔴 P0 | Logique métier critique, facile à tester |
-| `recommendations.js` | `getRecommendations` | 🔴 P0 | Logique métier, dépend de conditions multiples |
-| `storage.js` | `loadData`, `saveData`, `importData`, `exportData` | 🟠 P1 | Validation des données, edge cases |
-| `constants.js` | `escapeHtml` | 🟠 P1 | Sécurité XSS |
-| `tabs.js` | `switchTab` | 🟡 P2 | UI, testable avec jsdom |
-| `assessment.js` | `startAssessment` | 🟡 P2 | UI + logique mixte |
+| Module               | Fonctions                                          | Priorité | Raison                                         |
+| -------------------- | -------------------------------------------------- | -------- | ---------------------------------------------- |
+| `scoring.js`         | `calculateResults`, `getInterpretation`            | 🔴 P0    | Logique métier critique, facile à tester       |
+| `recommendations.js` | `getRecommendations`                               | 🔴 P0    | Logique métier, dépend de conditions multiples |
+| `storage.js`         | `loadData`, `saveData`, `importData`, `exportData` | 🟠 P1    | Validation des données, edge cases             |
+| `constants.js`       | `escapeHtml`                                       | 🟠 P1    | Sécurité XSS                                   |
+| `tabs.js`            | `switchTab`                                        | 🟡 P2    | UI, testable avec jsdom                        |
+| `assessment.js`      | `startAssessment`                                  | 🟡 P2    | UI + logique mixte                             |
 
 ### 5.4 Exemple de test TDD
 
 ```js
 // tests/scoring.test.js
-import { describe, it, expect } from 'vitest';
-import { getInterpretation, calculateResults } from '../src/logic/scoring.js';
+import { describe, it, expect } from "vitest";
+import { getInterpretation, calculateResults } from "../src/logic/scoring.js";
 
-describe('getInterpretation', () => {
-  it('returns nihilism level for score 0', () => {
+describe("getInterpretation", () => {
+  it("returns nihilism level for score 0", () => {
     const result = getInterpretation(0);
-    expect(result.title).toContain('Nihilisme');
+    expect(result.title).toContain("Nihilisme");
     expect(result.min).toBe(0);
     expect(result.max).toBe(8);
   });
 
-  it('returns accomplished level for score 40', () => {
+  it("returns accomplished level for score 40", () => {
     const result = getInterpretation(40);
-    expect(result.title).toContain('Accompli');
+    expect(result.title).toContain("Accompli");
     expect(result.min).toBe(33);
     expect(result.max).toBe(40);
   });
 
-  it('returns resignation for score 12', () => {
+  it("returns resignation for score 12", () => {
     const result = getInterpretation(12);
-    expect(result.title).toContain('Résignation');
+    expect(result.title).toContain("Résignation");
   });
 
-  it('returns acceptance for score 20', () => {
+  it("returns acceptance for score 20", () => {
     const result = getInterpretation(20);
-    expect(result.title).toContain('Acceptation');
+    expect(result.title).toContain("Acceptation");
   });
 
-  it('returns affirmation for score 28', () => {
+  it("returns affirmation for score 28", () => {
     const result = getInterpretation(28);
-    expect(result.title).toContain('Affirmation');
+    expect(result.title).toContain("Affirmation");
   });
 });
 
-describe('escapeHtml', () => {
-  it('escapes HTML special characters', () => {
-    expect(escapeHtml('<script>alert("xss")</script>'))
-      .toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;');
+describe("escapeHtml", () => {
+  it("escapes HTML special characters", () => {
+    expect(escapeHtml('<script>alert("xss")</script>')).toBe(
+      "&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;",
+    );
   });
 
-  it('escapes ampersands', () => {
-    expect(escapeHtml('Passé & Ressentiment'))
-      .toBe('Passé &amp; Ressentiment');
+  it("escapes ampersands", () => {
+    expect(escapeHtml("Passé & Ressentiment")).toBe("Passé &amp; Ressentiment");
   });
 
-  it('returns empty string for non-string input', () => {
-    expect(escapeHtml(null)).toBe('');
-    expect(escapeHtml(undefined)).toBe('');
+  it("returns empty string for non-string input", () => {
+    expect(escapeHtml(null)).toBe("");
+    expect(escapeHtml(undefined)).toBe("");
   });
 });
 ```
@@ -551,13 +559,13 @@ graph LR
 
 ## 7. Risques et mitigation
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|------------|--------|------------|
-| Sur-complexifier l'outil pour la taille du projet | Moyen | Moyen | Garder la structure plate (pas de sur-découpage en sous-dossiers), limiter les dépendances |
-| Node.js pas disponible sur le poste du dev | Faible | Élevé | Documenter l'installation, ajouter un `.nvmrc` |
-| Build Vite qui casse le SW | Faible | Élevé | Tester le SW en local après chaque build, utiliser `public/` pour les fichiers statiques |
-| Régression de l'existant pendant la migration | Moyen | Élevé | Écrire les tests AVANT de migrer, smoke test en CI |
-| Perte de la compatibilité navigateur | Faible | Moyen | Vite génère du JS compatible par défaut, configurer les targets si nécessaire |
+| Risque                                            | Probabilité | Impact | Mitigation                                                                                 |
+| ------------------------------------------------- | ----------- | ------ | ------------------------------------------------------------------------------------------ |
+| Sur-complexifier l'outil pour la taille du projet | Moyen       | Moyen  | Garder la structure plate (pas de sur-découpage en sous-dossiers), limiter les dépendances |
+| Node.js pas disponible sur le poste du dev        | Faible      | Élevé  | Documenter l'installation, ajouter un `.nvmrc`                                             |
+| Build Vite qui casse le SW                        | Faible      | Élevé  | Tester le SW en local après chaque build, utiliser `public/` pour les fichiers statiques   |
+| Régression de l'existant pendant la migration     | Moyen       | Élevé  | Écrire les tests AVANT de migrer, smoke test en CI                                         |
+| Perte de la compatibilité navigateur              | Faible      | Moyen  | Vite génère du JS compatible par défaut, configurer les targets si nécessaire              |
 
 ---
 

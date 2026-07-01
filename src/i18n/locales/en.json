@@ -1,0 +1,12 @@
+{
+  "settings": {
+    "language": {
+      "title": "🌐 Interface language",
+      "desc": "Choose the display language of the application."
+    }
+  },
+  "lang": {
+    "fr": "Français",
+    "en": "English"
+  }
+}
