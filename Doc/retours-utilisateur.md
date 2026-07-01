@@ -190,7 +190,7 @@ Deux mécanismes trahissent visuellement le score attendu :
 
 **Source** : retour utilisateur (message direct)
 **Thème** : refonte de l'expérience du formulaire d'évaluation
-**Statut** : à analyser (ci-dessous)
+**Statut** : ✅ Implémenté (P7, commit à venir)
 
 ### Retour
 

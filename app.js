@@ -43,6 +43,13 @@ import {
   onLanguageChanged,
 } from "./src/i18n/index.js";
 
+// --- Assessment flow ---
+import {
+  nextQuestion,
+  prevQuestion,
+  updateFlowButtons,
+} from "./src/ui/assessment-flow.js";
+
 // ========================================
 // Expose functions to global scope for onclick handlers
 // ========================================
@@ -72,22 +79,41 @@ document.addEventListener("DOMContentLoaded", async () => {
   displaySettings();
   displayHistory();
 
-  // Wire option selection via event delegation on the form container.
+  // Wire option selection + flow buttons via event delegation on the form container.
   // This survives re-renders of #assessmentFormContainer (reset, language change)
   // without needing to re-attach handlers each time.
   const formContainer = document.getElementById("assessmentFormContainer");
   if (formContainer) {
     formContainer.addEventListener("click", (e) => {
+      // Option selection
       const option = e.target.closest(".option");
-      if (!option) return;
-      const radio = option.querySelector('input[type="radio"]');
-      if (!radio) return;
-      const name = radio.name;
-      document.querySelectorAll(`input[name="${name}"]`).forEach((r) => {
-        r.parentElement.classList.remove("selected");
-      });
-      radio.checked = true;
-      option.classList.add("selected");
+      if (option) {
+        const radio = option.querySelector('input[type="radio"]');
+        if (!radio) return;
+        const name = radio.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach((r) => {
+          r.parentElement.classList.remove("selected");
+        });
+        radio.checked = true;
+        option.classList.add("selected");
+        updateFlowButtons();
+        return;
+      }
+
+      // Flow buttons (Next / Previous)
+      if (e.target.id === "nextBtn") {
+        const action = e.target.getAttribute("data-action");
+        if (action === "see-results") {
+          calculateResults();
+        } else {
+          nextQuestion();
+        }
+        return;
+      }
+      if (e.target.id === "prevBtn") {
+        prevQuestion();
+        return;
+      }
     });
   }
 

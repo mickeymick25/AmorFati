@@ -317,6 +317,65 @@ body {
   font-size: 0.9em;
 }
 
+/* Assessment flow (one question per screen) */
+.question-screen {
+  display: none;
+  animation: fadeIn 0.25s;
+}
+
+.question-screen.active {
+  display: block;
+}
+
+.dimension-tag {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+/* Progress bar (relative to the 10 questions) */
+.progress-bar {
+  height: 8px;
+  background: var(--bg-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  margin-bottom: 20px;
+}
+
+/* Flow buttons (Previous / Next) */
+.flow-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#prevBtn[hidden] {
+  display: none;
+}
+
+#nextBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Context Note */
 .context-note {
   margin: 20px 0;

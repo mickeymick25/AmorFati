@@ -1,7 +1,7 @@
 # Brief — Handoff pour le prochain thread
 
 > Date : 2026-06-24  
-> État : P0–P6 terminés (sauf P4.5 E2E reporté). i18n FR/EN opérationnel. CI/CD opérationnel. 228 tests, 100% coverage.
+> État : P0–P7 terminés (sauf P4.5 E2E reporté). i18n FR/EN, formulaire séquencé (one-question-per-screen). CI/CD opérationnel. 245 tests, 100% coverage.
 
 ---
 
@@ -196,18 +196,19 @@ AmorFati/
 
 ## 5. Métriques
 
-| Métrique          | Valeur                                                                           |
-| ----------------- | -------------------------------------------------------------------------------- |
-| Tests             | 228 (12 fichiers : 9 existants + utils + assessment + i18n)                      |
-| Couverture `src/` | 100% statements, 100% branches, 100% functions, 100% lines                       |
-| `app.js`          | ~108 lignes (était ~860)                                                         |
-| `index.html`      | ~335 lignes (était ~810)                                                         |
-| Modules `src/`    | 22 (8 domain + 1 infrastructure + 7 UI + 1 i18n + 1 barrel + 1 tabs + 2 locales) |
-| Dépendances prod  | i18next + i18next-browser-languagedetector                                       |
-| Build             | ✅ Vite, 27 modules transformés                                                  |
-| Lint              | ✅ ESLint + Prettier, 0 errors, 0 warnings                                       |
-| i18n              | ✅ FR + EN, sélecteur Paramètres, persistance localStorage `amorFatiLang`        |
-| Dark mode         | ✅ `prefers-color-scheme: dark` via 30+ variables CSS                            |
+| Métrique          | Valeur                                                                                 |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| Tests             | 245 (13 fichiers)                                                                      |
+| Couverture `src/` | 100% statements, 100% branches, 100% functions, 100% lines                             |
+| `app.js`          | ~108 lignes (était ~860)                                                               |
+| `index.html`      | ~335 lignes (était ~810)                                                               |
+| Modules `src/`    | 23 (8 domain + 1 infrastructure + 8 UI + 1 i18n + 1 barrel + 1 tabs + 2 locales)       |
+| Dépendances prod  | i18next + i18next-browser-languagedetector                                             |
+| Build             | ✅ Vite, 28 modules transformés                                                        |
+| Lint              | ✅ ESLint + Prettier, 0 errors, 0 warnings                                             |
+| i18n              | ✅ FR + EN, sélecteur Paramètres, persistance localStorage `amorFatiLang`              |
+| Formulaire        | ✅ Séquencé (one-question-per-screen), barre de progression, boutons Suivant/Précédent |
+| Dark mode         | ✅ `prefers-color-scheme: dark` via 30+ variables CSS                                  |
 
 ---
 
@@ -236,6 +237,12 @@ AmorFati/
 | ---- | -------------------------------------------------------- | ---------- | ------ | ----------------------------------------------------------------------------------------- |
 | P6.1 | Bug UX : réponses précédentes visibles (effet d'ancrage) | ✅ Terminé | ~45min | `startAssessment()` reset le formulaire (`resetForm` re-rend via `renderAssessmentForm`)  |
 | P6.2 | Retrait score-badge + shuffle options (anti-ancrage)     | ✅ Terminé | ~30min | `shuffle()` (Fisher-Yates) dans `src/domain/utils.js`, `.score-badge` retiré du DOM + CSS |
+
+### P7 — Formulaire séquencé (retour utilisateur 2026-07-01) — Terminé ✅
+
+| #   | Tâche                                              | Criticité  | Effort | Note                                                                                                                                                                                                                          |
+| --- | -------------------------------------------------- | ---------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P7  | Formulaire une question par écran (style Duolingo) | ✅ Terminé | ~2h30  | `src/ui/assessment-flow.js` (navigation), `.question-screen` + barre de progression + boutons Précédent/Suivant, validation bouton Suivant désactivé si pas de réponse, délégation d'événements, transition fondu, i18n FR/EN |
 
 ---
 

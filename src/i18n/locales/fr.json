@@ -70,7 +70,12 @@
     "contextLabel": "📝 Note de contexte (optionnel)",
     "contextPlaceholder": "Que se passe-t-il dans ta vie en ce moment ? (ex: semaine difficile au travail, période de calme, événement marquant...)",
     "calculateBtn": "📊 Calculer mon score",
-    "newAssessmentBtn": "Nouvelle évaluation"
+    "newAssessmentBtn": "Nouvelle évaluation",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "seeResults": "📊 Voir mes résultats",
+    "progress": "{{n}}/{{total}}",
+    "contextScreenTitle": "📝 Note de contexte (optionnel)"
   },
   "results": {
     "totalScore": "Score total : {{score}}/40",

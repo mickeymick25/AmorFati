@@ -16,6 +16,7 @@ import {
 } from "../logic.js";
 import { appState } from "./state.js";
 import { t, getCurrentLang } from "../i18n/index.js";
+import { resetFlow } from "./assessment-flow.js";
 
 // ========================================
 // Assessment Form
@@ -25,51 +26,70 @@ export function renderAssessmentForm() {
   const container = document.getElementById("assessmentFormContainer");
   if (!container) return;
 
-  let html = '<form id="assessmentForm">';
-
+  // Build a flat ordered list of questions with their dimension order.
+  const allQuestions = [];
   for (const dim of DIMENSION_INFO) {
-    const dimQuestions = QUESTIONS.filter((q) => q.dimension === dim.name);
-
-    html += '<div class="dimension">';
-    html += `<h2>${escapeHtml(t(`dimension.${dim.order}.title`))}</h2>`;
-    html += `<p class="dimension-description">${escapeHtml(t(`dimension.${dim.order}.description`))}</p>`;
-
-    for (const question of dimQuestions) {
-      html += '<div class="question">';
-      html += `<div class="question-text">${escapeHtml(t(`${question.id}.text`))}</div>`;
-      html += '<div class="options">';
-
-      for (const option of shuffle(question.options)) {
-        html += '<label class="option">';
-        html += `<input type="radio" name="${escapeHtml(question.id)}" value="${option.value}" />`;
-        html += '<span class="option-label">';
-        html += escapeHtml(t(`${question.id}.opt${option.value}`));
-        html += "</span>";
-        html += "</label>";
-      }
-
-      html += "</div>";
-      html += "</div>";
+    const dimQs = QUESTIONS.filter((q) => q.dimension === dim.name);
+    for (const q of dimQs) {
+      allQuestions.push({ question: q, dimOrder: dim.order });
     }
-
-    html += "</div>";
   }
 
-  // Context Note
-  html += '<div class="context-note">';
-  html +=
-    '<label for="contextNote">' +
-    escapeHtml(t("assessment.contextLabel")) +
-    "</label>";
-  html += `<textarea id="contextNote" data-i18n-attr="placeholder:assessment.contextPlaceholder" placeholder="${escapeHtml(t("assessment.contextPlaceholder"))}"></textarea>`;
-  html += "</div>";
+  let html = '<form id="assessmentForm"\u003e';
 
-  html += '<button type="button" class="btn" onclick="calculateResults()">';
-  html += escapeHtml(t("assessment.calculateBtn"));
-  html += "</button>";
-  html += "</form>";
+  // Progress bar + text (relative to the 10 questions)
+  html +=
+    '<div class="progress-bar"\u003e\u003cdiv class="progress-fill"\u003e\u003c/div\u003e\u003c/div\u003e';
+  html += '<div class="progress-text" aria-live="polite"\u003e\u003c/div\u003e';
+
+  // One screen per question
+  allQuestions.forEach(({ question, dimOrder }, index) => {
+    const showDimDesc =
+      index === 0 ||
+      allQuestions[index].dimOrder !== allQuestions[index - 1].dimOrder;
+    html += `<div class="question-screen" data-index="${index}" tabindex="-1"\u003e`;
+    html += `<div class="dimension-tag"\u003e${escapeHtml(t(`dimension.${dimOrder}.title`))}\u003c/div\u003e`;
+    if (showDimDesc) {
+      html += `<p class="dimension-description"\u003e${escapeHtml(t(`dimension.${dimOrder}.description`))}\u003c/p\u003e`;
+    }
+    html += `<div class="question-text"\u003e${escapeHtml(t(`${question.id}.text`))}\u003c/div\u003e`;
+    html += '<div class="options"\u003e';
+    for (const option of shuffle(question.options)) {
+      html += '<label class="option"\u003e';
+      html += `<input type="radio" name="${escapeHtml(question.id)}" value="${option.value}" /\u003e`;
+      html += '<span class="option-label"\u003e';
+      html += escapeHtml(t(`${question.id}.opt${option.value}`));
+      html += "\u003c/span\u003e";
+      html += "\u003c/label\u003e";
+    }
+    html += "\u003c/div\u003e"; // .options
+    html += "\u003c/div\u003e"; // .question-screen
+  });
+
+  // Final screen: context note (index = allQuestions.length)
+  const contextIndex = allQuestions.length;
+  html += `<div class="question-screen" data-index="${contextIndex}" tabindex="-1"\u003e`;
+  html += '<div class="context-note"\u003e';
+  html +=
+    '<label for="contextNote"\u003e' +
+    escapeHtml(t("assessment.contextScreenTitle")) +
+    "\u003c/label\u003e";
+  html += `<textarea id="contextNote" data-i18n-attr="placeholder:assessment.contextPlaceholder" placeholder="${escapeHtml(t("assessment.contextPlaceholder"))}"\u003e\u003c/textarea\u003e`;
+  html += "\u003c/div\u003e"; // .context-note
+  html += "\u003c/div\u003e"; // .question-screen
+
+  // Flow buttons
+  html += '<div class="flow-buttons"\u003e';
+  html += `<button type="button" class="btn btn-secondary" id="prevBtn"\u003e${escapeHtml(t("assessment.previous"))}\u003c/button\u003e`;
+  html += `<button type="button" class="btn" id="nextBtn"\u003e${escapeHtml(t("assessment.next"))}\u003c/button\u003e`;
+  html += "\u003c/div\u003e"; // .flow-buttons
+
+  html += "\u003c/form\u003e";
 
   container.innerHTML = html;
+
+  // Initialize the flow: show the first screen, hide others, update buttons.
+  resetFlow();
 }
 
 // ========================================
