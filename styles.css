@@ -317,16 +317,6 @@ body {
   font-size: 0.9em;
 }
 
-.score-badge {
-  display: inline-block;
-  background: var(--primary);
-  color: var(--text-on-primary);
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-size: 0.8em;
-  margin-left: 6px;
-}
-
 /* Context Note */
 .context-note {
   margin: 20px 0;

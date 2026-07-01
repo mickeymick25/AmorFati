@@ -1,12 +1,334 @@
 {
+  "app": {
+    "title": "Amor Fati Tracker",
+    "subtitle": "\"To want nothing other than what is\" - Nietzsche",
+    "skipLink": "Skip to main content",
+    "navAriaLabel": "Main navigation"
+  },
+  "tab": {
+    "welcome": "Home",
+    "assessment": "Assessment",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "meta": {
+    "description": "Amor Fati self-assessment - Track your philosophical journey",
+    "ogTitle": "Amor Fati Tracker - Personal Journey",
+    "ogDescription": "Assess your relationship with life through 5 philosophical dimensions and track your progress toward amor fati."
+  },
+  "welcome": {
+    "heading": "Welcome to your Amor Fati journey",
+    "intro": "This tool lets you assess where you stand in your journey toward full acceptance of your life (amor fati) and track your progress over time.",
+    "confidential": "🔒 100% Private:",
+    "confidentialDesc": "All your data stays on your device. Nothing is sent online. You can even use it offline.",
+    "priorityQuestion": "Before you begin: which dimension would you like to see improve first?",
+    "prioritySubtitle": "This reflection will help guide your inner work. You can change it at any time.",
+    "priorityAriaLabel": "Priority selection",
+    "startBtn": "Start my first assessment"
+  },
+  "priority": {
+    "ressentiment": {
+      "label": "🔥 Past & Resentment",
+      "desc": "Free myself from the weight of my past, overcome anger and bitterness",
+      "short": "Free myself from the weight of my past",
+      "full": "🔥 Past & Resentment - Free myself from the weight of my past"
+    },
+    "souffrance": {
+      "label": "⚡ Present Suffering",
+      "desc": "Better accept and navigate current difficulties",
+      "short": "Better accept current difficulties",
+      "full": "⚡ Present Suffering - Better accept current difficulties"
+    },
+    "authenticite": {
+      "label": "🎭 Authenticity",
+      "desc": "Live by my own values, truly be myself",
+      "short": "Live by my own values",
+      "full": "🎭 Authenticity - Live by my own values"
+    },
+    "creation": {
+      "label": "🎨 Creation",
+      "desc": "Become an active creator of my life rather than merely react",
+      "short": "Become an active creator of my life",
+      "full": "🎨 Creation - Become an active creator of my life"
+    },
+    "eternel": {
+      "label": "♾️ Eternal Return",
+      "desc": "Fully affirm my life, wish to relive it exactly as it is",
+      "short": "Fully affirm my life",
+      "full": "♾️ Eternal Return - Fully affirm my life"
+    },
+    "none": {
+      "label": "🧭 No specific priority",
+      "desc": "I just want to observe my overall progress",
+      "short": "Observe my overall progress",
+      "full": "🧭 No specific priority - Observe my overall progress"
+    }
+  },
+  "assessment": {
+    "selectPriorityAlert": "Please select a priority before starting.",
+    "incompleteAlert": "Please answer all questions ({{answered}}/{{total}} answered)",
+    "contextLabel": "📝 Context note (optional)",
+    "contextPlaceholder": "What's going on in your life right now? (e.g., hard week at work, calm period, significant event...)",
+    "calculateBtn": "📊 Calculate my score",
+    "newAssessmentBtn": "New assessment"
+  },
+  "results": {
+    "totalScore": "Total score: {{score}}/40",
+    "focusDimension": "Focus on {{dimension}}: this is your weakest dimension ({{score}}/8). That's where the work will have the most impact.",
+    "recommendationsTitle": "🎯 Personalized recommendations",
+    "evolutionContinue": "Keep assessing yourself regularly to see your progress over time.",
+    "evolutionSince": "📈 Progress since {{date}}",
+    "previousScore": "Previous score: {{score}}/40",
+    "currentScore": "Current score: {{score}}/40",
+    "evolution": "Change: {{diff}} points",
+    "byDimension": "Progress by dimension:"
+  },
+  "history": {
+    "emptyTitle": "📊 No assessment yet",
+    "emptyDesc": "Start your first assessment to track your progress.",
+    "emptyBtn": "Take an assessment",
+    "chartTitle": "📈 Your Amor Fati score progress",
+    "chartEmpty": "Complete at least 2 assessments to see your progress.",
+    "chartAriaLabel": "Amor Fati score progress chart",
+    "priorityLabel": "Priority: {{priority}}"
+  },
   "settings": {
     "language": {
       "title": "🌐 Interface language",
       "desc": "Choose the display language of the application."
-    }
+    },
+    "currentPriorityTitle": "🎯 Your current priority",
+    "priorityUndefined": "Not set",
+    "changePriorityBtn": "Change my priority",
+    "exportTitle": "📊 Export my data",
+    "exportDesc": "Download all your assessments as a JSON file to back them up or transfer them to another device.",
+    "exportBtn": "Download my data",
+    "importTitle": "📥 Import data",
+    "importDesc": "Restore your assessments from a backup file. You can choose to replace or merge your data.",
+    "importBtn": "Import a file",
+    "tipLabel": "💡 Tip:",
+    "tipDesc": "It's recommended to assess yourself once a week, on the same day (e.g., Sunday evening) for better comparability.",
+    "deleteTitle": "🗑️ Delete all my data",
+    "deleteWarning": "⚠️ Warning:",
+    "deleteWarningDesc": "This action is irreversible. All your assessments will be permanently deleted.",
+    "deleteBtn": "Delete everything"
   },
   "lang": {
     "fr": "Français",
-    "en": "English"
+    "en": "English",
+    "selectorAriaLabel": "Language"
+  },
+  "modal": {
+    "defaultTitle": "Amor Fati",
+    "confirmTitle": "Confirmation",
+    "dangerTitle": "⚠️ Warning",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete"
+  },
+  "data": {
+    "invalidFormat": "Invalid file format",
+    "invalidAssessment": "Invalid assessment data in the file",
+    "importTitle": "📥 Import {{count}} assessment(s)",
+    "importBody": "<p>How would you like to import the data?</p><p><strong>Replace</strong>: current data ({{existing}} assessment(s)) will be deleted.<br><strong>Merge</strong>: imported assessments will be added to existing ones (duplicates are ignored).</p>",
+    "mergeBtn": "Merge",
+    "replaceBtn": "Replace",
+    "importReplaceSuccess": "✅ Data imported successfully (replacement)!",
+    "importMergeSuccess": "✅ {{count}} assessment(s) after merge!",
+    "importError": "❌ Import error: {{message}}",
+    "errorTitle": "Error",
+    "deleteConfirm1": "Are you sure you want to delete ALL your data?<br><br>This action is irreversible!",
+    "deleteConfirm2": "Final confirmation: all your assessments will be permanently lost.",
+    "deleteSuccess": "✅ All data has been deleted."
+  },
+  "priorityModal": {
+    "title": "Change my priority",
+    "body": "<p>Which dimension would you like to see improve first?</p>",
+    "confirmBtn": "Confirm",
+    "updatedAlert": "✅ Your priority has been updated!"
+  },
+  "pwa": {
+    "installTitle": "📱 Install the app",
+    "installDesc": "Install Amor Fati Tracker on your device for quick access and offline use.",
+    "installBtn": "Install",
+    "laterBtn": "Later",
+    "updateBanner": "✨ New version available",
+    "updateReloadBtn": "Reload"
+  },
+  "offline": {
+    "title": "Offline — Amor Fati Tracker",
+    "heading": "🔌 Offline",
+    "desc": "You are offline. You can review your latest locally saved assessments below.",
+    "empty": "No assessment saved locally.",
+    "footer": "When you're back online, reload the page to sync and get the latest version.",
+    "backBtn": "Back to the app",
+    "priorityPrefix": "Priority: {{priority}}",
+    "error": "Error reading local data."
+  },
+  "dimension": {
+    "1": {
+      "title": "1. Relationship to the past & Resentment",
+      "description": "How do you relate to your personal history and the difficult events you've experienced?"
+    },
+    "2": {
+      "title": "2. Attitude toward present suffering",
+      "description": "How do you respond to the current difficulties and suffering in your life?"
+    },
+    "3": {
+      "title": "3. Relationship to self & Authenticity",
+      "description": "To what extent do you live by your own values rather than external expectations?"
+    },
+    "4": {
+      "title": "4. Creation vs Reaction",
+      "description": "Are you an active creator of your life or do you mainly react to circumstances?"
+    },
+    "5": {
+      "title": "5. The Eternal Return test",
+      "description": "Nietzsche's ultimate question: would you relive your life exactly as it has been?"
+    }
+  },
+  "q1": {
+    "text": "When you think back on difficult events in your past, what do you mainly feel?",
+    "opt0": "Vivid anger, a sense of injustice that regularly consumes me",
+    "opt1": "Bitterness, I often tell myself \"if only that hadn't happened\"",
+    "opt2": "Sadness sometimes, but I no longer think about it constantly",
+    "opt3": "Quiet acceptance, it's my story and part of who I am",
+    "opt4": "Full affirmation: I wouldn't want it not to have happened"
+  },
+  "q2": {
+    "text": "Toward people who hurt you in the past, what is your attitude?",
+    "opt0": "I hold deep grudges, I sometimes imagine taking revenge",
+    "opt1": "I still resent them a lot, I avoid thinking about it because it makes me angry",
+    "opt2": "I'm working on forgiving them, but it's hard",
+    "opt3": "I don't really hold grudges anymore, I've moved on",
+    "opt4": "I accept them as part of my story, without resentment or need for forgiveness"
+  },
+  "q3": {
+    "text": "When you go through a difficult trial (illness, failure, loss), what is your dominant reaction?",
+    "opt0": "\"Why me? It's unfair!\" - I feel like a victim",
+    "opt1": "\"I have to turn this into something positive so it has meaning\"",
+    "opt2": "\"It's hard, but it's part of life, I'll get through it\"",
+    "opt3": "\"It's a trial, I accept it and will go through it with dignity\"",
+    "opt4": "\"This suffering is part of my life, I say yes even to that\""
+  },
+  "q4": {
+    "text": "How do you react when something is completely out of your control?",
+    "opt0": "I get annoyed, I fight reality, I refuse to accept it",
+    "opt1": "I'm frustrated but eventually resign myself reluctantly",
+    "opt2": "I accept it fairly quickly and focus on what I can control",
+    "opt3": "I accept it calmly, understanding not everything depends on me",
+    "opt4": "I welcome even that as part of the flow of life"
+  },
+  "q5": {
+    "text": "Regarding your important life choices (work, relationships, projects), you'd say they are:",
+    "opt0": "Mainly dictated by others' expectations (family, society)",
+    "opt1": "A mix, but I struggle to distinguish what truly comes from me",
+    "opt2": "Fairly aligned with my values, even if I sometimes compromise",
+    "opt3": "Clearly aligned with my personal values, I own my choices",
+    "opt4": "I create my own values and live by them, regardless of judgment"
+  },
+  "q6": {
+    "text": "If you were completely honest: do you accept who you really are (strengths AND weaknesses)?",
+    "opt0": "No, I hate myself or reject parts of who I am",
+    "opt1": "I accept my strengths but fight against my weaknesses",
+    "opt2": "I'm learning to accept myself, it's a work in progress",
+    "opt3": "Yes, I accept who I am as a whole",
+    "opt4": "I fully affirm who I am, including my shadow sides"
+  },
+  "q7": {
+    "text": "In your daily life, you'd say you spend most of your time:",
+    "opt0": "Enduring and complaining about what happens to me",
+    "opt1": "Consuming (entertainment, social media, shows...)",
+    "opt2": "Managing my obligations with a little time for myself",
+    "opt3": "Actively building projects I care about",
+    "opt4": "Creating (art, thought, relationships, works) with passion and necessity"
+  },
+  "q8": {
+    "text": "Faced with failure or difficulty, you tend to:",
+    "opt0": "Collapse and give up, remain paralyzed",
+    "opt1": "Look for someone to blame (others, circumstances, yourself)",
+    "opt2": "Step back, learn, and try again",
+    "opt3": "Use the failure as material to create something new",
+    "opt4": "Fully accept it and create from this new reality"
+  },
+  "q9": {
+    "text": "If you had to relive your life EXACTLY as it is (same joys, same suffering, same mistakes), what would you say?",
+    "opt0": "No, absolutely not! My life has too much suffering and failure",
+    "opt1": "No, I'd want to change many things",
+    "opt2": "Maybe... if I could change a few key events",
+    "opt3": "Probably yes, even though some moments were very hard",
+    "opt4": "Yes, absolutely, without changing a single thing"
+  },
+  "q10": {
+    "text": "Honestly, why would you (or not) accept reliving your life?",
+    "opt0": "I wouldn't accept it, there's been too much pointless suffering",
+    "opt1": "Only if the suffering \"served\" some purpose",
+    "opt2": "Because the good moments outweigh the bad ones",
+    "opt3": "Because it's my life, with everything it contains",
+    "opt4": "Because I affirm the totality of existence, even the tragic"
+  },
+  "interpretation": {
+    "0": {
+      "title": "🌑 Nihilism & Resentment (0-8 points)",
+      "text0": "You're currently in a phase of strong reactivity to your life. Resentment and refusal of what is consume much of your energy.",
+      "text1": "This is normal and human. Many people go through it. What matters is recognizing where you are so you can move forward.",
+      "text2": "Start by identifying just one thing in your life you could accept this week, without trying to justify or change it."
+    },
+    "1": {
+      "title": "🌘 Resignation & Struggle (9-16 points)",
+      "text0": "You oscillate between forced acceptance and inner struggle. Part of you wants to let go, another part still resists.",
+      "text1": "This transitional phase takes courage. You're beginning to see there could be another way to live.",
+      "text2": "Focus on the dimensions where your score is lowest - that's where the work will be most transformative."
+    },
+    "2": {
+      "title": "🌗 Acceptance Under Construction (17-24 points)",
+      "text0": "You're on a good path. You've already integrated certain forms of acceptance, even if it's not always easy.",
+      "text1": "Amor fati isn't fully lived yet, but you already understand its logic and apply it at times.",
+      "text2": "Keep up the work. Notice in which situations you fall back into resentment, and why."
+    },
+    "3": {
+      "title": "🌖 Advanced Affirmation (25-32 points)",
+      "text0": "You've reached a significant level of amor fati. You accept much of your life without needing to justify it.",
+      "text1": "There may remain a few zones of resistance - that's normal. What matters is that you actively create rather than react.",
+      "text2": "You're probably already an inspiration to others, even without knowing it. Keep deepening."
+    },
+    "4": {
+      "title": "🌕 Amor Fati Fulfilled (33-40 points)",
+      "text0": "You embody amor fati at a rare level. You affirm your life totally, even in its hardest aspects.",
+      "text1": "Be careful not to fall into pride or the performance of the \"strong person\". True amor fati stays humble.",
+      "text2": "Your very presence can help others see that another relationship to life is possible. Share what you live, without proselytizing."
+    }
+  },
+  "recommendation": {
+    "ressentiment": {
+      "0": "Write a letter (you won't send) to someone who hurt you. Then symbolically burn it.",
+      "1": "Practice the exercise: 'What if this person did exactly what they had to do for me to become who I am?'",
+      "2": "Journal: each evening, note a painful past event and write: 'I say yes to this part of my story.'"
+    },
+    "souffrance": {
+      "0": "Faced with a difficulty this week, ask yourself: 'How can I create something from this?'",
+      "1": "Practice the Stoic distinction: list what depends on you vs. what doesn't.",
+      "2": "Meditation on impermanence: everything passes, even this suffering. Can you accept it while it lasts?"
+    },
+    "authenticite": {
+      "0": "Identify a decision you make out of fear of judgment. Can you do otherwise this week?",
+      "1": "List 5 values that truly define you. Do your life choices reflect them?",
+      "2": "Exercise: for a day, observe how often you censor yourself or play a role."
+    },
+    "creation": {
+      "0": "Replace one hour of consumption with one hour of creation (of anything).",
+      "1": "Faced with a problem, ask yourself: 'What can I create from this constraint?'",
+      "2": "Launch a small creative project this week, without waiting for it to be perfect."
+    },
+    "eternel": {
+      "0": "Practice the eternal return exercise: visualize your life repeating. What makes you say no? Why?",
+      "1": "List 3 aspects of your life you'd want to relive eternally. Then 3 you'd refuse. Explore why.",
+      "2": "Each evening: 'Would I want to relive this day eternally?' If not, what should change?"
+    },
+    "none": {
+      "0": "Simply observe your progress without judging yourself. The path matters as much as the destination.",
+      "1": "Focus on your weakest dimension (see above)."
+    }
   }
 }

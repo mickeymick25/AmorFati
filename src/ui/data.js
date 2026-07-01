@@ -6,6 +6,7 @@ import { CURRENT_SCHEMA_VERSION } from "../domain/migration.js";
 import { DEFAULT_DATA } from "../domain/assessment.js";
 import { mergeAssessments } from "../domain/merge.js";
 import { openModal, showAlert, showDangerConfirm } from "./modal.js";
+import { t } from "../i18n/index.js";
 import { appState, saveData, storage } from "./state.js";
 import { displayHistory } from "./renderer.js";
 import { switchTab } from "./tabs.js";
@@ -35,7 +36,7 @@ export async function importData(event) {
         !importedData.assessments ||
         !Array.isArray(importedData.assessments)
       ) {
-        throw new Error("Format de fichier invalide");
+        throw new Error(t("data.invalidFormat"));
       }
 
       // Validate each assessment
@@ -45,7 +46,7 @@ export async function importData(event) {
           typeof a.totalScore !== "number" ||
           typeof a.dimensionScores !== "object"
         ) {
-          throw new Error("Données d'évaluation invalides dans le fichier");
+          throw new Error(t("data.invalidAssessment"));
         }
       }
 
@@ -53,14 +54,16 @@ export async function importData(event) {
       const existingCount = appState.data.assessments.length;
 
       const choice = await openModal(
-        `📥 Importer ${count} évaluation(s)`,
-        `<p>Comment souhaites-tu importer les données ?</p>
-         <p><strong>Remplacer</strong> : les données actuelles (${existingCount} évaluation(s)) seront supprimées.<br>
-         <strong>Fusionner</strong> : les évaluations importées seront ajoutées aux existantes (les doublons sont ignorés).</p>`,
+        t("data.importTitle", { count }),
+        t("data.importBody", { count, existing: existingCount }),
         [
-          { label: "Annuler", value: null, class: "btn-secondary" },
-          { label: "Fusionner", value: "merge", class: "" },
-          { label: "Remplacer", value: "replace", class: "btn-danger" },
+          { label: t("modal.cancel"), value: null, class: "btn-secondary" },
+          { label: t("data.mergeBtn"), value: "merge", class: "" },
+          {
+            label: t("data.replaceBtn"),
+            value: "replace",
+            class: "btn-danger",
+          },
         ],
       );
 
@@ -68,7 +71,7 @@ export async function importData(event) {
         appState.data = importedData;
         appState.data.version = CURRENT_SCHEMA_VERSION;
         saveData();
-        await showAlert("✅ Données importées avec succès (remplacement) !");
+        await showAlert(t("data.importReplaceSuccess"));
         displayHistory();
         switchTab("history");
       } else if (choice === "merge") {
@@ -79,13 +82,13 @@ export async function importData(event) {
         appState.data.assessments = merged;
         appState.data.version = CURRENT_SCHEMA_VERSION;
         saveData();
-        await showAlert(`✅ ${merged.length} évaluation(s) après fusion !`);
+        await showAlert(t("data.importMergeSuccess", { count: merged.length }));
         displayHistory();
         switchTab("history");
       }
     } catch (error) {
-      await showAlert("❌ Erreur lors de l'import : " + error.message, {
-        title: "Erreur",
+      await showAlert(t("data.importError", { message: error.message }), {
+        title: t("data.errorTitle"),
       });
     }
   };
@@ -95,20 +98,16 @@ export async function importData(event) {
 }
 
 export async function deleteAllData() {
-  const firstConfirm = await showDangerConfirm(
-    "Es-tu sûr(e) de vouloir supprimer TOUTES tes données ?<br><br>Cette action est irréversible !",
-  );
+  const firstConfirm = await showDangerConfirm(t("data.deleteConfirm1"));
 
   if (!firstConfirm) return;
 
-  const secondConfirm = await showDangerConfirm(
-    "Dernière confirmation : toutes tes évaluations seront perdues définitivement.",
-  );
+  const secondConfirm = await showDangerConfirm(t("data.deleteConfirm2"));
 
   if (secondConfirm) {
     appState.data = structuredClone(DEFAULT_DATA);
     saveData();
-    await showAlert("✅ Toutes les données ont été supprimées.");
+    await showAlert(t("data.deleteSuccess"));
     switchTab("welcome");
   }
 }

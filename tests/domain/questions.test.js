@@ -10,30 +10,24 @@ describe("QUESTIONS", () => {
     expect(QUESTIONS).toHaveLength(10);
   });
 
-  it("each question has required fields (id, dimension, text, options)", () => {
+  it("each question has required fields (id, dimension, options)", () => {
     for (const q of QUESTIONS) {
       expect(q).toHaveProperty("id");
       expect(q).toHaveProperty("dimension");
-      expect(q).toHaveProperty("text");
       expect(q).toHaveProperty("options");
       expect(typeof q.id).toBe("string");
       expect(typeof q.dimension).toBe("string");
-      expect(typeof q.text).toBe("string");
-      expect(q.text.length).toBeGreaterThan(0);
     }
   });
 
-  it("each option has value 0-4 and a non-empty label", () => {
+  it("each option has value 0-4 (labels are resolved via i18n)", () => {
     for (const q of QUESTIONS) {
       expect(q.options).toHaveLength(5);
       for (const opt of q.options) {
         expect(opt).toHaveProperty("value");
-        expect(opt).toHaveProperty("label");
         expect(typeof opt.value).toBe("number");
         expect(opt.value).toBeGreaterThanOrEqual(0);
         expect(opt.value).toBeLessThanOrEqual(4);
-        expect(typeof opt.label).toBe("string");
-        expect(opt.label.length).toBeGreaterThan(0);
       }
     }
   });

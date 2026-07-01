@@ -4,6 +4,7 @@
 
 import { DIMENSIONS } from "../domain/questions.js";
 import { showAlert } from "./modal.js";
+import { t } from "../i18n/index.js";
 import { appState, saveData } from "./state.js";
 import { displayResults } from "./renderer.js";
 import { switchTab } from "./tabs.js";
@@ -13,7 +14,7 @@ export async function startAssessment() {
     'input[name="priority"]:checked',
   );
   if (!selectedPriority) {
-    await showAlert("Merci de sélectionner une priorité avant de commencer.");
+    await showAlert(t("assessment.selectPriorityAlert"));
     return;
   }
 
@@ -35,7 +36,10 @@ export async function calculateResults() {
 
   if (answeredQuestions < totalQuestions) {
     await showAlert(
-      `Merci de répondre à toutes les questions (${answeredQuestions}/${totalQuestions} répondues)`,
+      t("assessment.incompleteAlert", {
+        answered: answeredQuestions,
+        total: totalQuestions,
+      }),
     );
     return;
   }

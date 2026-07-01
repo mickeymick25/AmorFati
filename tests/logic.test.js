@@ -17,7 +17,7 @@ describe("getInterpretation", () => {
     expect(result).toBeDefined();
     expect(result.min).toBe(0);
     expect(result.max).toBe(8);
-    expect(result.title).toContain("Nihilisme");
+    expect(result.index).toBe(0);
   });
 
   it("returns nihilism for score 8", () => {
@@ -28,45 +28,45 @@ describe("getInterpretation", () => {
 
   it("returns resignation for score 9", () => {
     const result = getInterpretation(9);
-    expect(result.title).toContain("Résignation");
+    expect(result.index).toBe(1);
     expect(result.min).toBe(9);
     expect(result.max).toBe(16);
   });
 
   it("returns resignation for score 16", () => {
     const result = getInterpretation(16);
-    expect(result.title).toContain("Résignation");
+    expect(result.index).toBe(1);
   });
 
   it("returns acceptance for score 17", () => {
     const result = getInterpretation(17);
-    expect(result.title).toContain("Acceptation");
+    expect(result.index).toBe(2);
     expect(result.min).toBe(17);
     expect(result.max).toBe(24);
   });
 
   it("returns acceptance for score 24", () => {
     const result = getInterpretation(24);
-    expect(result.title).toContain("Acceptation");
+    expect(result.index).toBe(2);
   });
 
   it("returns affirmation for score 25", () => {
     const result = getInterpretation(25);
-    expect(result.title).toContain("Affirmation");
+    expect(result.index).toBe(3);
     expect(result.min).toBe(25);
     expect(result.max).toBe(32);
   });
 
   it("returns accomplished for score 33", () => {
     const result = getInterpretation(33);
-    expect(result.title).toContain("Accompli");
+    expect(result.index).toBe(4);
     expect(result.min).toBe(33);
     expect(result.max).toBe(40);
   });
 
   it("returns accomplished for score 40", () => {
     const result = getInterpretation(40);
-    expect(result.title).toContain("Accompli");
+    expect(result.index).toBe(4);
   });
 
   it("returns undefined for score below 0", () => {
@@ -79,9 +79,9 @@ describe("getInterpretation", () => {
     expect(result).toBeUndefined();
   });
 
-  it("all interpretations have text with 3 paragraphs", () => {
-    for (const interp of INTERPRETATIONS) {
-      expect(interp.text).toHaveLength(3);
+  it("all interpretations have an index 0-4", () => {
+    for (let i = 0; i < INTERPRETATIONS.length; i++) {
+      expect(INTERPRETATIONS[i].index).toBe(i);
     }
   });
 });
@@ -100,7 +100,7 @@ describe("getRecommendations", () => {
   it("returns priority-based recommendations for ressentiment", () => {
     const recs = getRecommendations(fullScores, "ressentiment");
     expect(recs.length).toBeGreaterThan(0);
-    expect(recs[0]).toContain("lettre");
+    expect(recs[0]).toBe("recommendation.ressentiment.0");
   });
 
   it("returns priority-based recommendations for souffrance", () => {
@@ -137,22 +137,9 @@ describe("getRecommendations", () => {
       "Éternel Retour": 6,
     };
     const recs = getRecommendations(lowScores, "souffrance");
-    const focusRec = recs.find((r) => r.includes("Focus"));
+    const focusRec = recs.find((r) => r.startsWith("__focus__"));
     expect(focusRec).toBeDefined();
     expect(focusRec).toContain("Passé & Ressentiment");
-  });
-
-  it("adds creation recommendation when Création < 4", () => {
-    const lowCreation = {
-      "Passé & Ressentiment": 6,
-      "Souffrance présente": 5,
-      Authenticité: 7,
-      Création: 2,
-      "Éternel Retour": 6,
-    };
-    const recs = getRecommendations(lowCreation, "none");
-    const creationRec = recs.find((r) => r.includes("15 minutes"));
-    expect(creationRec).toBeDefined();
   });
 
   it("limits to 5 recommendations max", () => {

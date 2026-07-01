@@ -109,11 +109,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Re-translate the static DOM when the language changes.
-  // (Dynamic modules will be re-rendered in P5.2.2/P5.2.3.)
+  // Re-translate the static DOM and re-render dynamic modules when the language changes.
   onLanguageChanged(() => {
     translatePage();
     updateLangButtonsActive();
+    renderAssessmentForm();
+    displaySettings();
+    displayHistory();
+    // Re-wire option selection on the freshly rendered form
+    document.querySelectorAll(".option").forEach((option) => {
+      option.addEventListener("click", function () {
+        const radio = this.querySelector('input[type="radio"]');
+        const name = radio.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach((r) => {
+          r.parentElement.classList.remove("selected");
+        });
+        radio.checked = true;
+        this.classList.add("selected");
+      });
+    });
   });
 
   // Wire modal priority option selection

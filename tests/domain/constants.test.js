@@ -35,13 +35,17 @@ describe("PRIORITY_LABELS_FULL", () => {
     );
   });
 
-  it("has longer descriptions than PRIORITY_LABELS", () => {
-    const keys = Object.keys(PRIORITY_LABELS);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      expect(PRIORITY_LABELS_FULL[key].length).toBeGreaterThan(
-        PRIORITY_LABELS[key].length,
-      );
+  it("PRIORITY_LABELS_FULL has the same keys as PRIORITY_LABELS", () => {
+    expect(Object.keys(PRIORITY_LABELS_FULL)).toEqual(
+      Object.keys(PRIORITY_LABELS),
+    );
+  });
+
+  it("PRIORITY_LABELS_FULL values are i18n keys (.full suffix)", () => {
+    const keys = Object.keys(PRIORITY_LABELS_FULL);
+    for (const k of keys) {
+      expect(PRIORITY_LABELS_FULL[k]).toBe(`priority.${k}.full`);
+      expect(PRIORITY_LABELS[k]).toBe(`priority.${k}.label`);
     }
   });
 });
@@ -64,17 +68,16 @@ describe("INTERPRETATIONS", () => {
     }
   });
 
-  it("each interpretation has required fields", () => {
+  it("each interpretation has required fields (index, min, max)", () => {
     for (let i = 0; i < INTERPRETATIONS.length; i++) {
       const interp = INTERPRETATIONS[i];
+      expect(interp).toHaveProperty("index");
       expect(interp).toHaveProperty("min");
       expect(interp).toHaveProperty("max");
-      expect(interp).toHaveProperty("title");
-      expect(interp).toHaveProperty("text");
-      expect(interp.text).toHaveLength(3);
+      expect(typeof interp.index).toBe("number");
       expect(typeof interp.min).toBe("number");
       expect(typeof interp.max).toBe("number");
-      expect(typeof interp.title).toBe("string");
+      expect(interp.index).toBe(i);
     }
   });
 
@@ -94,14 +97,14 @@ describe("PRIORITY_RECOMMENDATIONS", () => {
     }
   });
 
-  it("each key has an array of strings", () => {
+  it("each key has an array of recommendation indices (i18n keys are resolved by the caller)", () => {
     const entries = Object.entries(PRIORITY_RECOMMENDATIONS);
     for (let i = 0; i < entries.length; i++) {
       const recs = entries[i][1];
       expect(Array.isArray(recs)).toBe(true);
       for (let j = 0; j < recs.length; j++) {
-        expect(typeof recs[j]).toBe("string");
-        expect(recs[j].length).toBeGreaterThan(0);
+        expect(typeof recs[j]).toBe("number");
+        expect(recs[j]).toBeGreaterThanOrEqual(0);
       }
     }
   });

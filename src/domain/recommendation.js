@@ -7,14 +7,15 @@
 import { PRIORITY_RECOMMENDATIONS } from "./constants.js";
 
 /**
- * Returns an array of recommendation strings based on dimension scores and priority.
+ * Returns an array of recommendation i18n keys based on dimension scores and priority.
+ * The caller resolves the keys via i18next.t().
  * Limits to 5 recommendations maximum.
  * @param {object} dimensionScores - Scores per dimension
  * @param {string} priority - Priority key (e.g. "ressentiment", "souffrance")
- * @returns {string[]} Array of recommendation strings
+ * @returns {string[]} Array of i18n keys
  */
 export function getRecommendations(dimensionScores, priority) {
-  const recommendations = [];
+  const keys = [];
 
   // Find lowest dimension
   let lowestDimension = null;
@@ -29,22 +30,15 @@ export function getRecommendations(dimensionScores, priority) {
 
   // Priority-based recommendations
   if (priority && PRIORITY_RECOMMENDATIONS[priority]) {
-    recommendations.push(...PRIORITY_RECOMMENDATIONS[priority]);
+    for (const idx of PRIORITY_RECOMMENDATIONS[priority]) {
+      keys.push(`recommendation.${priority}.${idx}`);
+    }
   }
 
-  // Lowest dimension recommendation
+  // Lowest dimension recommendation (dynamic text, returned as a marker key)
   if (lowestDimension && lowestScore < 4) {
-    recommendations.push(
-      `<strong>Focus sur "${lowestDimension}"</strong> : C'est ta dimension la plus faible (${lowestScore}/8). C'est là que le travail aura le plus d'impact.`,
-    );
+    keys.push(`__focus__${lowestDimension}__${lowestScore}__`);
   }
 
-  // General recommendation for low creation score
-  if (dimensionScores["Création"] < 4) {
-    recommendations.push(
-      "Tu sembles plus dans la réaction que dans la création. Commence par 15 minutes de création par jour.",
-    );
-  }
-
-  return recommendations.slice(0, 5);
+  return keys.slice(0, 5);
 }

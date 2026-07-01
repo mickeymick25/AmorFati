@@ -1,3 +1,5 @@
+import { t } from "../i18n/index.js";
+
 // ========================================
 // Modal System (replaces alert/confirm/prompt)
 // ========================================
@@ -88,23 +90,26 @@ export function modalKeydownHandler(e) {
   }
 }
 
-export function showAlert(message, { title = "Amor Fati" } = {}) {
+export function showAlert(message, { title = t("modal.defaultTitle") } = {}) {
   return openModal(title, `<p>${message}</p>`, [
-    { label: "OK", value: true, class: "" },
+    { label: t("modal.ok"), value: true, class: "" },
   ]);
 }
 
-export function showConfirm(message, { title = "Confirmation" } = {}) {
+export function showConfirm(message, { title = t("modal.confirmTitle") } = {}) {
   return openModal(title, `<p>${message}</p>`, [
-    { label: "Annuler", value: false, class: "btn-secondary" },
-    { label: "Confirmer", value: true, class: "" },
+    { label: t("modal.cancel"), value: false, class: "btn-secondary" },
+    { label: t("modal.confirm"), value: true, class: "" },
   ]);
 }
 
-export function showDangerConfirm(message, { title = "⚠️ Attention" } = {}) {
+export function showDangerConfirm(
+  message,
+  { title = t("modal.dangerTitle") } = {},
+) {
   return openModal(title, `<p>${message}</p>`, [
-    { label: "Annuler", value: false, class: "btn-secondary" },
-    { label: "Supprimer", value: true, class: "btn-danger" },
+    { label: t("modal.cancel"), value: false, class: "btn-secondary" },
+    { label: t("modal.delete"), value: true, class: "btn-danger" },
   ]);
 }
 

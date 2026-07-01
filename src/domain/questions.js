@@ -48,67 +48,30 @@ export const DIMENSION_INFO = [
 /**
  * Assessment questions, each belonging to a dimension.
  * Option values range from 0 (lowest amor fati) to 4 (highest).
+ * Text labels live in i18n dictionaries (keys: {questionId}.text, {questionId}.opt{value}).
  */
 export const QUESTIONS = [
   // Dimension 1: Passé & Ressentiment
   {
     id: "q1",
     dimension: "Passé & Ressentiment",
-    text: "Quand tu repenses à des événements difficiles de ton passé, que ressens-tu principalement ?",
     options: [
-      {
-        value: 0,
-        label:
-          "Une colère vive, un sentiment d'injustice qui me consume régulièrement",
-      },
-      {
-        value: 1,
-        label:
-          "De l'amertume, je me dis souvent \"si seulement ça ne s'était pas passé\"",
-      },
-      {
-        value: 2,
-        label: "De la tristesse parfois, mais je n'y pense plus constamment",
-      },
-      {
-        value: 3,
-        label:
-          "Une acceptation tranquille, c'est mon histoire et elle fait partie de moi",
-      },
-      {
-        value: 4,
-        label:
-          "Une affirmation complète : je ne voudrais pas que ça n'ait pas existé",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
   {
     id: "q2",
     dimension: "Passé & Ressentiment",
-    text: "Face aux personnes qui t'ont fait du mal dans le passé, quelle est ton attitude ?",
     options: [
-      {
-        value: 0,
-        label: "Je leur en veux profondément, j'imagine parfois me venger",
-      },
-      {
-        value: 1,
-        label:
-          "Je leur en veux encore beaucoup, j'évite d'y penser car ça me met en colère",
-      },
-      {
-        value: 2,
-        label: "Je travaille à leur pardonner, mais c'est difficile",
-      },
-      {
-        value: 3,
-        label: "Je ne leur en veux plus vraiment, j'ai tourné la page",
-      },
-      {
-        value: 4,
-        label:
-          "Je les accepte comme faisant partie de mon histoire, sans ressentiment ni besoin de pardon",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
 
@@ -116,61 +79,23 @@ export const QUESTIONS = [
   {
     id: "q3",
     dimension: "Souffrance présente",
-    text: "Quand tu traverses une épreuve difficile (maladie, échec, perte), quelle est ta réaction dominante ?",
     options: [
-      {
-        value: 0,
-        label: '"Pourquoi moi ? C\'est injuste !" - Je me sens victime',
-      },
-      {
-        value: 1,
-        label:
-          '"Il faut que je transforme ça en quelque chose de positif pour que ça ait un sens"',
-      },
-      {
-        value: 2,
-        label:
-          "\"C'est dur, mais ça fait partie de la vie, je vais m'en sortir\"",
-      },
-      {
-        value: 3,
-        label:
-          "\"C'est une épreuve, je l'accepte et je vais la traverser avec dignité\"",
-      },
-      {
-        value: 4,
-        label:
-          '"Cette souffrance fait partie de ma vie, je dis oui même à cela"',
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
   {
     id: "q4",
     dimension: "Souffrance présente",
-    text: "Comment réagis-tu quand quelque chose échappe complètement à ton contrôle ?",
     options: [
-      {
-        value: 0,
-        label: "Je m'énerve, je lutte contre la réalité, je refuse d'accepter",
-      },
-      {
-        value: 1,
-        label: "Je suis frustré mais je finis par me résigner à contrecœur",
-      },
-      {
-        value: 2,
-        label:
-          "J'accepte relativement vite et je me concentre sur ce que je peux contrôler",
-      },
-      {
-        value: 3,
-        label:
-          "J'accepte sereinement, je comprends que tout ne dépend pas de moi",
-      },
-      {
-        value: 4,
-        label: "J'accueille même cela comme faisant partie du flux de la vie",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
 
@@ -178,61 +103,23 @@ export const QUESTIONS = [
   {
     id: "q5",
     dimension: "Authenticité",
-    text: "Concernant tes choix de vie importants (travail, relations, projets), tu dirais qu'ils sont :",
     options: [
-      {
-        value: 0,
-        label:
-          "Principalement dictés par les attentes des autres (famille, société)",
-      },
-      {
-        value: 1,
-        label:
-          "Un mélange, mais j'ai du mal à distinguer ce qui vient vraiment de moi",
-      },
-      {
-        value: 2,
-        label:
-          "Plutôt alignés avec mes valeurs, même si je fais parfois des compromis",
-      },
-      {
-        value: 3,
-        label:
-          "Clairement alignés avec mes valeurs personnelles, j'assume mes choix",
-      },
-      {
-        value: 4,
-        label:
-          "Je crée mes propres valeurs et vis selon elles, indépendamment du jugement",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
   {
     id: "q6",
     dimension: "Authenticité",
-    text: "Si tu devais être totalement honnête : acceptes-tu qui tu es vraiment (forces ET faiblesses) ?",
     options: [
-      {
-        value: 0,
-        label: "Non, je me déteste ou je rejette des parties de moi-même",
-      },
-      {
-        value: 1,
-        label:
-          "J'accepte mes forces mais je suis en lutte contre mes faiblesses",
-      },
-      {
-        value: 2,
-        label: "J'apprends à m'accepter, c'est un travail en cours",
-      },
-      {
-        value: 3,
-        label: "Oui, j'accepte qui je suis dans ma globalité",
-      },
-      {
-        value: 4,
-        label: "J'affirme totalement qui je suis, y compris mes parts d'ombre",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
 
@@ -240,58 +127,23 @@ export const QUESTIONS = [
   {
     id: "q7",
     dimension: "Création",
-    text: "Dans ta vie quotidienne, tu dirais que tu passes le plus de temps à :",
     options: [
-      {
-        value: 0,
-        label: "Subir et me plaindre de ce qui m'arrive",
-      },
-      {
-        value: 1,
-        label: "Consommer (divertissements, réseaux sociaux, séries...)",
-      },
-      {
-        value: 2,
-        label: "Gérer mes obligations avec un peu de temps pour moi",
-      },
-      {
-        value: 3,
-        label: "Construire activement des projets qui me tiennent à cœur",
-      },
-      {
-        value: 4,
-        label:
-          "Créer (art, pensée, relations, œuvres) avec passion et nécessité",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
   {
     id: "q8",
     dimension: "Création",
-    text: "Face à un échec ou une difficulté, tu as tendance à :",
     options: [
-      {
-        value: 0,
-        label: "T'effondrer et abandonner, rester paralysé",
-      },
-      {
-        value: 1,
-        label: "Chercher qui blâmer (les autres, les circonstances, toi-même)",
-      },
-      {
-        value: 2,
-        label: "Prendre du recul, apprendre et réessayer",
-      },
-      {
-        value: 3,
-        label:
-          "Utiliser l'échec comme matériau pour créer quelque chose de nouveau",
-      },
-      {
-        value: 4,
-        label:
-          "L'accepter totalement et créer à partir de cette nouvelle réalité",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
 
@@ -299,56 +151,23 @@ export const QUESTIONS = [
   {
     id: "q9",
     dimension: "Éternel Retour",
-    text: "Si tu devais revivre ta vie EXACTEMENT à l'identique (même joies, mêmes souffrances, mêmes erreurs), que répondrais-tu ?",
     options: [
-      {
-        value: 0,
-        label: "Non, surtout pas ! Ma vie a trop de souffrance et d'échecs",
-      },
-      {
-        value: 1,
-        label: "Non, je voudrais changer beaucoup de choses",
-      },
-      {
-        value: 2,
-        label: "Peut-être... si je pouvais changer quelques événements clés",
-      },
-      {
-        value: 3,
-        label: "Probablement oui, même si certains moments ont été très durs",
-      },
-      {
-        value: 4,
-        label: "Oui, absolument, sans changer une seule chose",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
   {
     id: "q10",
     dimension: "Éternel Retour",
-    text: "Honnêtement, pourquoi accepterais-tu (ou pas) de revivre ta vie ?",
     options: [
-      {
-        value: 0,
-        label: "Je ne l'accepterais pas, il y a eu trop de souffrance inutile",
-      },
-      {
-        value: 1,
-        label: 'Seulement si la souffrance m\'a "servi" à quelque chose',
-      },
-      {
-        value: 2,
-        label: "Parce que les bons moments compensent les mauvais",
-      },
-      {
-        value: 3,
-        label: "Parce que c'est ma vie, avec tout ce qu'elle comporte",
-      },
-      {
-        value: 4,
-        label:
-          "Parce que j'affirme la totalité de l'existence, même le tragique",
-      },
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
     ],
   },
 ];

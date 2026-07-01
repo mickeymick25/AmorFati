@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Hors ligne — Amor Fati Tracker</title>
+    <title data-i18n-key="title">Hors ligne — Amor Fati Tracker</title>
     <style>
       body {
         font-family:
@@ -48,8 +48,8 @@
   </head>
   <body>
     <div class="card">
-      <h1>🔌 Hors ligne</h1>
-      <p>
+      <h1 data-i18n-key="heading">🔌 Hors ligne</h1>
+      <p data-i18n-key="desc">
         Tu es hors connexion. Tu peux consulter tes dernières évaluations
         sauvegardées localement ci-dessous.
       </p>
@@ -59,37 +59,75 @@
         style="margin-top: 14px; text-align: left"
       ></div>
 
-      <p style="margin-top: 12px">
+      <p style="margin-top: 12px" data-i18n-key="footer">
         Lorsque tu seras de nouveau en ligne, recharge la page pour synchroniser
         et obtenir la dernière version.
       </p>
-      <a class="button" href="/">Revenir à l'application</a>
+      <a class="button" href="/" data-i18n-key="backBtn"
+        >Revenir à l'application</a
+      >
     </div>
     <script>
-      // Affiche l'historique depuis localStorage (clé: amorFatiData)
+      // Offline page i18n — minimal inline dictionaries (page served by SW,
+      // no access to app.js / i18next). Language read from the shared
+      // localStorage key "amorFatiLang" set by i18next-browser-languagedetector.
+      const OFFLINE_STRINGS = {
+        fr: {
+          title: "Hors ligne — Amor Fati Tracker",
+          heading: "🔌 Hors ligne",
+          desc: "Tu es hors connexion. Tu peux consulter tes dernières évaluations sauvegardées localement ci-dessous.",
+          footer:
+            "Lorsque tu seras de nouveau en ligne, recharge la page pour synchroniser et obtenir la dernière version.",
+          backBtn: "Revenir à l'application",
+          empty: "Aucune évaluation sauvegardée localement.",
+          error: "Erreur lors de la lecture des données locales.",
+          priorityPrefix: "Priorité : {{priority}}",
+        },
+        en: {
+          title: "Offline — Amor Fati Tracker",
+          heading: "🔌 Offline",
+          desc: "You are offline. You can review your latest locally saved assessments below.",
+          footer:
+            "When you're back online, reload the page to sync and get the latest version.",
+          backBtn: "Back to the app",
+          empty: "No assessment saved locally.",
+          error: "Error reading local data.",
+          priorityPrefix: "Priority: {{priority}}",
+        },
+      };
+
+      const lang = localStorage.getItem("amorFatiLang") || "fr";
+      const s = OFFLINE_STRINGS[lang] || OFFLINE_STRINGS.fr;
+
+      // Apply text to elements with data-i18n-key
+      document.querySelectorAll("[data-i18n-key]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-key");
+        if (s[key]) el.textContent = s[key];
+      });
+      document.documentElement.lang = lang;
+      document.title = s.title;
+
+      // Display history from localStorage (key: amorFatiData)
       function renderHistory() {
         const container = document.getElementById("historyContainer");
         container.innerHTML = "";
         try {
           const raw = localStorage.getItem("amorFatiData");
-          if (!raw) {
-            container.innerHTML =
-              '<p style="color:#666">Aucune évaluation sauvegardée localement.</p>';
+          if (
+            !raw ||
+            !JSON.parse(raw).assessments ||
+            !JSON.parse(raw).assessments.length
+          ) {
+            container.innerHTML = `<p style="color:#666">${s.empty}</p>`;
             return;
           }
           const data = JSON.parse(raw);
-          if (!data.assessments || data.assessments.length === 0) {
-            container.innerHTML =
-              '<p style="color:#666">Aucune évaluation sauvegardée localement.</p>';
-            return;
-          }
 
           const list = document.createElement("div");
           list.style.display = "flex";
           list.style.flexDirection = "column";
           list.style.gap = "10px";
 
-          // Montrer les évaluations les plus récentes en premier
           const sorted = data.assessments
             .slice()
             .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -105,9 +143,9 @@
             title.style.fontWeight = "700";
             title.style.color = "#333";
             title.textContent =
-              d.toLocaleString("fr-FR") +
+              new Intl.DateTimeFormat(lang, { dateStyle: "long" }).format(d) +
               " — " +
-              (ass.totalScore || "N/A") +
+              (ass.totalScore != null ? ass.totalScore : "N/A") +
               "/40";
 
             const ctx = document.createElement("div");
@@ -122,7 +160,10 @@
               p.style.fontSize = "13px";
               p.style.color = "#555";
               p.style.marginTop = "6px";
-              p.textContent = "Priorité : " + (ass.priority || "—");
+              p.textContent = s.priorityPrefix.replace(
+                "{{priority}}",
+                ass.priority || "—",
+              );
               item.appendChild(p);
             }
             item.appendChild(ctx);
@@ -131,8 +172,7 @@
 
           container.appendChild(list);
         } catch (e) {
-          container.innerHTML =
-            '<p style="color:#c00">Erreur lors de la lecture des données locales.</p>';
+          container.innerHTML = `<p style="color:#c00">${s.error}</p>`;
           console.error(e);
         }
       }

@@ -8,12 +8,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta
       name="description"
+      data-i18n-attr="content:meta.description"
       content="Évaluation personnelle Amor Fati - Suivi de ton évolution philosophique"
     />
     <!-- Open Graph -->
-    <meta property="og:title" content="Amor Fati Tracker - Suivi Personnel" />
+    <meta
+      property="og:title"
+      data-i18n-attr="content:meta.ogTitle"
+      content="Amor Fati Tracker - Suivi Personnel"
+    />
     <meta
       property="og:description"
+      data-i18n-attr="content:meta.ogDescription"
       content="Évalue ton rapport à la vie à travers 5 dimensions philosophiques et suis ton évolution vers l'amor fati."
     />
     <meta property="og:type" content="website" />
@@ -22,9 +28,14 @@
     <meta property="og:locale" content="fr_FR" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Amor Fati Tracker - Suivi Personnel" />
+    <meta
+      name="twitter:title"
+      data-i18n-attr="content:meta.ogTitle"
+      content="Amor Fati Tracker - Suivi Personnel"
+    />
     <meta
       name="twitter:description"
+      data-i18n-attr="content:meta.ogDescription"
       content="Évalue ton rapport à la vie à travers 5 dimensions philosophiques et suis ton évolution vers l'amor fati."
     />
     <meta name="twitter:image" content="icons/icon-512.png" />
@@ -38,18 +49,29 @@
     />
     <link rel="apple-touch-icon" href="icons/icon-180.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>Amor Fati Tracker - Suivi Personnel</title>
+    <title data-i18n-attr="content:meta.ogTitle">
+      Amor Fati Tracker - Suivi Personnel
+    </title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+    <a href="#main-content" class="skip-link" data-i18n="app.skipLink"
+      >Aller au contenu principal</a
+    >
     <div class="container">
       <div class="header">
-        <h1>🌟 Amor Fati Tracker</h1>
-        <p>"Ne rien vouloir d'autre que ce qui est" - Nietzsche</p>
+        <h1>🌟 <span data-i18n="app.title">Amor Fati Tracker</span></h1>
+        <p data-i18n="app.subtitle">
+          "Ne rien vouloir d'autre que ce qui est" - Nietzsche
+        </p>
       </div>
 
-      <div class="nav-tabs" role="tablist" aria-label="Navigation principale">
+      <div
+        class="nav-tabs"
+        role="tablist"
+        data-i18n-attr="aria-label:app.navAriaLabel"
+        aria-label="Navigation principale"
+      >
         <button
           role="tab"
           id="tab-welcome"
@@ -59,7 +81,7 @@
           aria-controls="panel-welcome"
           onclick="switchTab('welcome')"
         >
-          Accueil
+          <span data-i18n="tab.welcome">Accueil</span>
         </button>
         <button
           role="tab"
@@ -71,7 +93,7 @@
           tabindex="-1"
           onclick="switchTab('assessment')"
         >
-          Évaluation
+          <span data-i18n="tab.assessment">Évaluation</span>
         </button>
         <button
           role="tab"
@@ -83,7 +105,7 @@
           tabindex="-1"
           onclick="switchTab('history')"
         >
-          Historique
+          <span data-i18n="tab.history">Historique</span>
         </button>
         <button
           role="tab"
@@ -95,7 +117,7 @@
           tabindex="-1"
           onclick="switchTab('settings')"
         >
-          Paramètres
+          <span data-i18n="tab.settings">Paramètres</span>
         </button>
       </div>
 
@@ -109,25 +131,31 @@
           class="tab-content active"
         >
           <div class="onboarding">
-            <h2>Bienvenue dans ton suivi Amor Fati</h2>
-            <p>
+            <h2 data-i18n="welcome.heading">
+              Bienvenue dans ton suivi Amor Fati
+            </h2>
+            <p data-i18n="welcome.intro">
               Cet outil te permet d'évaluer où tu te situes dans ton cheminement
               vers l'acceptation totale de ta vie (amor fati) et de suivre ton
               évolution dans le temps.
             </p>
 
             <div class="alert alert-info">
-              <strong>🔒 100% Confidentiel :</strong> Toutes tes données restent
-              dans ton appareil. Rien n'est envoyé en ligne. Tu peux même
-              l'utiliser hors connexion.
+              <strong data-i18n="welcome.confidential"
+                >🔒 100% Confidentiel :</strong
+              >
+              <span data-i18n="welcome.confidentialDesc"
+                >Toutes tes données restent dans ton appareil. Rien n'est envoyé
+                en ligne. Tu peux même l'utiliser hors connexion.</span
+              >
             </div>
 
             <div class="priority-selection" id="prioritySelection">
-              <h3>
+              <h3 data-i18n="welcome.priorityQuestion">
                 Avant de commencer : Quelle dimension souhaites-tu voir évoluer
                 en priorité ?
               </h3>
-              <p class="priority-subtitle">
+              <p class="priority-subtitle" data-i18n="welcome.prioritySubtitle">
                 Cette réflexion t'aidera à orienter ton travail sur toi-même. Tu
                 pourras la modifier à tout moment.
               </p>
@@ -135,13 +163,20 @@
               <div
                 class="priority-options"
                 role="radiogroup"
+                data-i18n-attr="aria-label:welcome.priorityAriaLabel"
                 aria-label="Choix de priorité"
               >
                 <label class="priority-option">
                   <input type="radio" name="priority" value="ressentiment" />
                   <div>
-                    <span class="priority-label">🔥 Passé & Ressentiment</span>
-                    <span class="priority-desc"
+                    <span
+                      class="priority-label"
+                      data-i18n="priority.ressentiment.label"
+                      >🔥 Passé & Ressentiment</span
+                    >
+                    <span
+                      class="priority-desc"
+                      data-i18n="priority.ressentiment.desc"
                       >Me libérer du poids de mon passé, dépasser la colère et
                       l'amertume</span
                     >
@@ -151,8 +186,14 @@
                 <label class="priority-option">
                   <input type="radio" name="priority" value="souffrance" />
                   <div>
-                    <span class="priority-label">⚡ Souffrance présente</span>
-                    <span class="priority-desc"
+                    <span
+                      class="priority-label"
+                      data-i18n="priority.souffrance.label"
+                      >⚡ Souffrance présente</span
+                    >
+                    <span
+                      class="priority-desc"
+                      data-i18n="priority.souffrance.desc"
                       >Mieux accepter et traverser les difficultés
                       actuelles</span
                     >
@@ -162,8 +203,14 @@
                 <label class="priority-option">
                   <input type="radio" name="priority" value="authenticite" />
                   <div>
-                    <span class="priority-label">🎭 Authenticité</span>
-                    <span class="priority-desc"
+                    <span
+                      class="priority-label"
+                      data-i18n="priority.authenticite.label"
+                      >🎭 Authenticité</span
+                    >
+                    <span
+                      class="priority-desc"
+                      data-i18n="priority.authenticite.desc"
                       >Vivre selon mes propres valeurs, être vraiment
                       moi-même</span
                     >
@@ -173,8 +220,14 @@
                 <label class="priority-option">
                   <input type="radio" name="priority" value="creation" />
                   <div>
-                    <span class="priority-label">🎨 Création</span>
-                    <span class="priority-desc"
+                    <span
+                      class="priority-label"
+                      data-i18n="priority.creation.label"
+                      >🎨 Création</span
+                    >
+                    <span
+                      class="priority-desc"
+                      data-i18n="priority.creation.desc"
                       >Devenir un créateur actif de ma vie plutôt que
                       subir</span
                     >
@@ -184,8 +237,14 @@
                 <label class="priority-option">
                   <input type="radio" name="priority" value="eternel" />
                   <div>
-                    <span class="priority-label">♾️ Éternel Retour</span>
-                    <span class="priority-desc"
+                    <span
+                      class="priority-label"
+                      data-i18n="priority.eternel.label"
+                      >♾️ Éternel Retour</span
+                    >
+                    <span
+                      class="priority-desc"
+                      data-i18n="priority.eternel.desc"
                       >Affirmer totalement ma vie, vouloir la revivre telle
                       quelle</span
                     >
@@ -195,10 +254,10 @@
                 <label class="priority-option">
                   <input type="radio" name="priority" value="none" />
                   <div>
-                    <span class="priority-label"
+                    <span class="priority-label" data-i18n="priority.none.label"
                       >🧭 Aucune priorité spécifique</span
                     >
-                    <span class="priority-desc"
+                    <span class="priority-desc" data-i18n="priority.none.desc"
                       >Je veux juste observer mon évolution globale</span
                     >
                   </div>
@@ -206,7 +265,11 @@
               </div>
             </div>
 
-            <button class="btn" onclick="startAssessment()">
+            <button
+              class="btn"
+              onclick="startAssessment()"
+              data-i18n="welcome.startBtn"
+            >
               Commencer ma première évaluation
             </button>
           </div>
@@ -253,7 +316,12 @@
             <p data-i18n="settings.language.desc">
               Choisis la langue d'affichage de l'application.
             </p>
-            <div class="lang-selector" role="group" aria-label="Language">
+            <div
+              class="lang-selector"
+              role="group"
+              data-i18n-attr="aria-label:lang.selectorAriaLabel"
+              aria-label="Language"
+            >
               <button
                 type="button"
                 class="btn btn-secondary lang-btn"
@@ -274,27 +342,37 @@
           </div>
 
           <div class="setting-item">
-            <h3>🎯 Ta priorité actuelle</h3>
+            <h3 data-i18n="settings.currentPriorityTitle">
+              🎯 Ta priorité actuelle
+            </h3>
             <p id="currentPriority"></p>
-            <button class="btn btn-secondary" onclick="changePriority()">
+            <button
+              class="btn btn-secondary"
+              onclick="changePriority()"
+              data-i18n="settings.changePriorityBtn"
+            >
               Modifier ma priorité
             </button>
           </div>
 
           <div class="setting-item">
-            <h3>📊 Exporter mes données</h3>
-            <p>
+            <h3 data-i18n="settings.exportTitle">📊 Exporter mes données</h3>
+            <p data-i18n="settings.exportDesc">
               Télécharge toutes tes évaluations en format JSON pour les
               sauvegarder ou les transférer sur un autre appareil.
             </p>
-            <button class="btn btn-secondary" onclick="exportData()">
+            <button
+              class="btn btn-secondary"
+              onclick="exportData()"
+              data-i18n="settings.exportBtn"
+            >
               Télécharger mes données
             </button>
           </div>
 
           <div class="setting-item">
-            <h3>📥 Importer des données</h3>
-            <p>
+            <h3 data-i18n="settings.importTitle">📥 Importer des données</h3>
+            <p data-i18n="settings.importDesc">
               Restaure tes évaluations depuis un fichier de sauvegarde. Tu
               pourras choisir de remplacer tes données ou de les fusionner.
             </p>
@@ -302,24 +380,37 @@
             <button
               class="btn btn-secondary"
               onclick="document.getElementById('importFile').click()"
+              data-i18n="settings.importBtn"
             >
               Importer un fichier
             </button>
           </div>
 
           <div class="alert alert-info">
-            <strong>💡 Conseil :</strong> Il est recommandé de faire une
-            évaluation une fois par semaine, toujours le même jour (ex: dimanche
-            soir) pour une meilleure comparabilité.
+            <strong data-i18n="settings.tipLabel">💡 Conseil :</strong>
+            <span data-i18n="settings.tipDesc"
+              >Il est recommandé de faire une évaluation une fois par semaine,
+              toujours le même jour (ex: dimanche soir) pour une meilleure
+              comparabilité.</span
+            >
           </div>
 
           <div class="setting-item">
-            <h3>🗑️ Supprimer toutes mes données</h3>
+            <h3 data-i18n="settings.deleteTitle">
+              🗑️ Supprimer toutes mes données
+            </h3>
             <p class="text-danger">
-              <strong>⚠️ Attention :</strong> Cette action est irréversible.
-              Toutes tes évaluations seront définitivement supprimées.
+              <strong data-i18n="settings.deleteWarning">⚠️ Attention :</strong>
+              <span data-i18n="settings.deleteWarningDesc"
+                >Cette action est irréversible. Toutes tes évaluations seront
+                définitivement supprimées.</span
+              >
             </p>
-            <button class="btn btn-danger" onclick="deleteAllData()">
+            <button
+              class="btn btn-danger"
+              onclick="deleteAllData()"
+              data-i18n="settings.deleteBtn"
+            >
               Tout supprimer
             </button>
           </div>
@@ -351,16 +442,22 @@
       aria-modal="true"
       aria-labelledby="installTitle"
     >
-      <h3 id="installTitle" class="install-title">
+      <h3 id="installTitle" class="install-title" data-i18n="pwa.installTitle">
         📱 Installer l'application
       </h3>
-      <p class="install-desc">
+      <p class="install-desc" data-i18n="pwa.installDesc">
         Installe Amor Fati Tracker sur ton appareil pour y accéder rapidement et
         l'utiliser hors ligne.
       </p>
       <div class="install-buttons">
-        <button onclick="installApp()" class="btn">Installer</button>
-        <button onclick="dismissInstall()" class="btn btn-secondary">
+        <button onclick="installApp()" class="btn" data-i18n="pwa.installBtn">
+          Installer
+        </button>
+        <button
+          onclick="dismissInstall()"
+          class="btn btn-secondary"
+          data-i18n="pwa.laterBtn"
+        >
           Plus tard
         </button>
       </div>
@@ -375,10 +472,22 @@
       hidden
     >
       <div class="update-banner-content">
-        <span class="update-banner-text">✨ Nouvelle version disponible</span>
+        <span class="update-banner-text" data-i18n="pwa.updateBanner"
+          >✨ Nouvelle version disponible</span
+        >
         <div class="update-banner-actions">
-          <button id="updateReloadBtn" class="btn">Recharger</button>
-          <button id="updateDismissBtn" class="btn btn-secondary">
+          <button
+            id="updateReloadBtn"
+            class="btn"
+            data-i18n="pwa.updateReloadBtn"
+          >
+            Recharger
+          </button>
+          <button
+            id="updateDismissBtn"
+            class="btn btn-secondary"
+            data-i18n="pwa.laterBtn"
+          >
             Plus tard
           </button>
         </div>

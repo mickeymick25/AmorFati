@@ -14,6 +14,7 @@ import {
   escapeHtml,
 } from "../logic.js";
 import { appState } from "./state.js";
+import { t, getCurrentLang } from "../i18n/index.js";
 
 // ========================================
 // Assessment Form
@@ -23,27 +24,25 @@ export function renderAssessmentForm() {
   const container = document.getElementById("assessmentFormContainer");
   if (!container) return;
 
-  const scoreBadgeLabels = ["0 pt", "1 pt", "2 pts", "3 pts", "4 pts"];
-
   let html = '<form id="assessmentForm">';
 
   for (const dim of DIMENSION_INFO) {
     const dimQuestions = QUESTIONS.filter((q) => q.dimension === dim.name);
 
     html += '<div class="dimension">';
-    html += `<h2>${escapeHtml(dim.title)}</h2>`;
-    html += `<p class="dimension-description">${escapeHtml(dim.description)}</p>`;
+    html += `<h2>${escapeHtml(t(`dimension.${dim.order}.title`))}</h2>`;
+    html += `<p class="dimension-description">${escapeHtml(t(`dimension.${dim.order}.description`))}</p>`;
 
     for (const question of dimQuestions) {
       html += '<div class="question">';
-      html += `<div class="question-text">${escapeHtml(question.text)}</div>`;
+      html += `<div class="question-text">${escapeHtml(t(`${question.id}.text`))}</div>`;
       html += '<div class="options">';
 
       for (const option of question.options) {
         html += '<label class="option">';
         html += `<input type="radio" name="${escapeHtml(question.id)}" value="${option.value}" />`;
         html += '<span class="option-label">';
-        html += `${escapeHtml(option.label)} <span class="score-badge">${scoreBadgeLabels[option.value]}</span>`;
+        html += escapeHtml(t(`${question.id}.opt${option.value}`));
         html += "</span>";
         html += "</label>";
       }
@@ -57,13 +56,15 @@ export function renderAssessmentForm() {
 
   // Context Note
   html += '<div class="context-note">';
-  html += '<label for="contextNote">📝 Note de contexte (optionnel)</label>';
   html +=
-    '<textarea id="contextNote" placeholder="Que se passe-t-il dans ta vie en ce moment ? (ex: semaine difficile au travail, période de calme, événement marquant...)"></textarea>';
+    '<label for="contextNote">' +
+    escapeHtml(t("assessment.contextLabel")) +
+    "</label>";
+  html += `<textarea id="contextNote" data-i18n-attr="placeholder:assessment.contextPlaceholder" placeholder="${escapeHtml(t("assessment.contextPlaceholder"))}"></textarea>`;
   html += "</div>";
 
   html += '<button type="button" class="btn" onclick="calculateResults()">';
-  html += "📊 Calculer mon score";
+  html += escapeHtml(t("assessment.calculateBtn"));
   html += "</button>";
   html += "</form>";
 
@@ -73,6 +74,33 @@ export function renderAssessmentForm() {
 // ========================================
 // Results Display
 // ========================================
+
+// Dimension name (FR, stored in data) → i18n key fragment.
+// The dimension names are stored as French strings in the saved data
+// (dimensionScores keys); this maps them to translation keys.
+const DIMENSION_I18N_KEYS = {
+  "Passé & Ressentiment": 1,
+  "Souffrance présente": 2,
+  Authenticité: 3,
+  Création: 4,
+  "Éternel Retour": 5,
+};
+
+function dimensionLabel(name) {
+  const order = DIMENSION_I18N_KEYS[name];
+  if (!order) return escapeHtml(name);
+  return escapeHtml(t(`dimension.${order}.title`));
+}
+
+function resolveRecommendation(key) {
+  // Marker for the dynamic "focus on lowest dimension" recommendation.
+  const m = /^__focus__(.+)__(\d+)__$/.exec(key);
+  if (m) {
+    const [, dim, score] = m;
+    return `<strong>${escapeHtml(t("results.focusDimension", { dimension: dimensionLabel(dim), score }))}</strong>`;
+  }
+  return escapeHtml(t(key));
+}
 
 export function displayResults(assessment) {
   const resultsDiv = document.getElementById("results");
@@ -84,13 +112,22 @@ export function displayResults(assessment) {
     appState.data.priority,
   );
 
-  let html = `
-    <div class="total-score">Score total : ${assessment.totalScore}/40</div>
+  const interpHtml = interpretation
+    ? `<div class="interpretation">
+        <h3>${escapeHtml(t(`interpretation.${interpretation.index}.title`))}</h3>
+        ${[0, 1, 2]
+          .map(
+            (i) =>
+              `<p>${escapeHtml(t(`interpretation.${interpretation.index}.text${i}`))}</p>`,
+          )
+          .join("")}
+    </div>`
+    : "";
 
-    <div class="interpretation">
-        <h3>${escapeHtml(interpretation.title)}</h3>
-        ${interpretation.text.map((p) => `<p>${escapeHtml(p)}</p>`).join("")}
-    </div>
+  let html = `
+    <div class="total-score">${escapeHtml(t("results.totalScore", { score: assessment.totalScore }))}</div>
+
+    ${interpHtml}
 
     <div class="dimension-scores">
     `;
@@ -99,7 +136,7 @@ export function displayResults(assessment) {
     const percentage = (score / 8) * 100;
     html += `
         <div class="dimension-score">
-            <h4>${escapeHtml(dimension)}</h4>
+            <h4>${dimensionLabel(dimension)}</h4>
             <div class="dimension-score-value">${score}/8</div>
             <div class="score-bar">
                 <div class="score-fill" style="width: ${percentage}%"></div>
@@ -114,11 +151,11 @@ export function displayResults(assessment) {
     ${getEvolutionComparison()}
 
     <div class="interpretation">
-        <h3>🎯 Recommandations personnalisées</h3>
-        ${recommendations.map((r) => `<p>→ ${r}</p>`).join("")}
+        <h3>${escapeHtml(t("results.recommendationsTitle"))}</h3>
+        ${recommendations.map((r) => `<p>→ ${resolveRecommendation(r)}</p>`).join("")}
     </div>
 
-    <button class="btn" onclick="resetForm()">Nouvelle évaluation</button>
+    <button class="btn" onclick="resetForm()">${escapeHtml(t("assessment.newAssessmentBtn"))}</button>
     `;
 
   resultsDiv.innerHTML = html;
@@ -127,7 +164,7 @@ export function displayResults(assessment) {
 
 export function getEvolutionComparison() {
   if (appState.data.assessments.length < 2) {
-    return '<div class="alert alert-info" role="status">Continue à t\'évaluer régulièrement pour voir ton évolution dans le temps.</div>';
+    return `<div class="alert alert-info" role="status">${escapeHtml(t("results.evolutionContinue"))}</div>`;
   }
 
   const current =
@@ -140,19 +177,21 @@ export function getEvolutionComparison() {
   const diffColor = diff > 0 ? "#28a745" : diff < 0 ? "#dc3545" : "#6c757d";
   const emoji = diff > 0 ? "📈" : diff < 0 ? "📉" : "➡️";
 
-  const previousDate = new Date(previous.date).toLocaleDateString("fr-FR");
+  const previousDate = new Intl.DateTimeFormat(getCurrentLang(), {
+    dateStyle: "long",
+  }).format(new Date(previous.date));
 
   let html = `
     <div class="alert alert-info" role="status">
-        <strong>${emoji} Évolution depuis le ${escapeHtml(previousDate)}</strong><br>
-        Score précédent : ${previous.totalScore}/40<br>
-        Score actuel : ${current.totalScore}/40<br>
-        Évolution : <span class="evolution-diff" style="color: ${diffColor};">${diffText} points</span>
+        <strong>${emoji} ${escapeHtml(t("results.evolutionSince", { date: previousDate }))}</strong><br>
+        ${escapeHtml(t("results.previousScore", { score: previous.totalScore }))}<br>
+        ${escapeHtml(t("results.currentScore", { score: current.totalScore }))}<br>
+        ${escapeHtml(t("results.evolution", { diff: diffText }))}
+        <span class="evolution-diff" style="color: ${diffColor};">${diffText} points</span>
     </div>
     `;
 
-  html +=
-    '<div class="evolution-section-title"><strong>Évolution par dimension :</strong></div>';
+  html += `<div class="evolution-section-title"><strong>${escapeHtml(t("results.byDimension"))}</strong></div>`;
   html += '<div class="dimension-scores">';
 
   for (const dimension in current.dimensionScores) {
@@ -165,7 +204,7 @@ export function getEvolutionComparison() {
 
     html += `
         <div class="dimension-score">
-            <h4>${escapeHtml(dimension)}</h4>
+            <h4>${dimensionLabel(dimension)}</h4>
             <div class="dimension-score-value">${currentScore}/8 <span class="dim-diff" style="color: ${dimDiffColor};">(${dimDiffText})</span></div>
             <div class="score-bar">
                 <div class="score-fill" style="width: ${(currentScore / 8) * 100}%"></div>
@@ -190,9 +229,9 @@ export function displayHistory() {
   if (appState.data.assessments.length === 0) {
     historyContent.innerHTML = `
         <div class="history-empty">
-            <h3>📊 Aucune évaluation pour le moment</h3>
-            <p>Commence ta première évaluation pour suivre ton évolution.</p>
-            <button class="btn" onclick="switchTab('assessment')">Faire une évaluation</button>
+            <h3>${escapeHtml(t("history.emptyTitle"))}</h3>
+            <p>${escapeHtml(t("history.emptyDesc"))}</p>
+            <button class="btn" onclick="switchTab('assessment')">${escapeHtml(t("history.emptyBtn"))}</button>
         </div>
         `;
     return;
@@ -203,7 +242,7 @@ export function displayHistory() {
   );
 
   let html = '<div class="chart-container">';
-  html += '<div class="chart-title">📈 Évolution de ton score Amor Fati</div>';
+  html += `<div class="chart-title">${escapeHtml(t("history.chartTitle"))}</div>`;
   html += createChart(sortedAssessments.slice().reverse());
   html += "</div>";
 
@@ -211,16 +250,16 @@ export function displayHistory() {
 
   sortedAssessments.forEach((assessment, index) => {
     const date = new Date(assessment.date);
-    const dateStr = date.toLocaleDateString("fr-FR", {
+    const dateStr = new Intl.DateTimeFormat(getCurrentLang(), {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
-    });
-    const timeStr = date.toLocaleTimeString("fr-FR", {
+    }).format(date);
+    const timeStr = new Intl.DateTimeFormat(getCurrentLang(), {
       hour: "2-digit",
       minute: "2-digit",
-    });
+    }).format(date);
 
     html += `
         <div class="history-item" onclick="viewAssessmentDetails(${appState.data.assessments.length - 1 - index})" role="button" tabindex="0" aria-label="Évaluation du ${escapeHtml(dateStr)}">
@@ -229,7 +268,7 @@ export function displayHistory() {
                 <div class="history-score">${assessment.totalScore}/40</div>
             </div>
             ${assessment.context ? `<div class="history-context">"${escapeHtml(assessment.context)}"</div>` : ""}
-            <div class="history-priority">Priorité : ${escapeHtml(PRIORITY_LABELS[assessment.priority] || "Non définie")}</div>
+            <div class="history-priority">${escapeHtml(t("history.priorityLabel", { priority: PRIORITY_LABELS[assessment.priority] || t("settings.priorityUndefined") }))}</div>
         </div>
         `;
   });
@@ -241,7 +280,7 @@ export function displayHistory() {
 
 export function createChart(assessments) {
   if (!assessments || assessments.length < 2) {
-    return '<p class="chart-empty">Effectue au moins 2 évaluations pour voir ton évolution.</p>';
+    return `<p class="chart-empty">${escapeHtml(t("history.chartEmpty"))}</p>`;
   }
 
   const height = 200;
@@ -261,7 +300,7 @@ export function createChart(assessments) {
   }
 
   let svg = `
-    <svg viewBox="0 0 100 ${height}" style="width: 100%; height: ${height}px; background: #f8f9fa; border-radius: 8px;" role="img" aria-label="Graphique d'évolution du score Amor Fati">
+  <svg viewBox="0 0 100 ${height}" style="width: 100%; height: ${height}px; background: #f8f9fa; border-radius: 8px;" role="img" data-i18n-attr="aria-label:history.chartAriaLabel" aria-label="Graphique d'évolution du score Amor Fati">
         <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="#ddd" stroke-width="0.5"/>
         <line x1="${padding}" y1="${height - padding}" x2="${100 - padding}" y2="${height - padding}" stroke="#ddd" stroke-width="0.5"/>
 
@@ -282,7 +321,7 @@ export function createChart(assessments) {
           .map(
             (p) => `
         <circle cx="${p.x}" cy="${p.y}" r="1.5" fill="#667eea"/>
-        <title>${p.date.toLocaleDateString("fr-FR")} : ${p.score}/40</title>
+        <title>${new Intl.DateTimeFormat(getCurrentLang(), { dateStyle: "long" }).format(p.date)} : ${p.score}/40</title>
         `,
           )
           .join("")}
@@ -305,7 +344,15 @@ export function createChart(assessments) {
 
 export function displaySettings() {
   const el = document.getElementById("currentPriority");
-  if (el)
-    el.textContent =
-      PRIORITY_LABELS_FULL[appState.data.priority] || "Non définie";
+  if (el) {
+    const priorityKey = appState.data.priority;
+    if (priorityKey) {
+      el.textContent =
+        t(`priority.${priorityKey}.full`) ||
+        PRIORITY_LABELS_FULL[priorityKey] ||
+        t("settings.priorityUndefined");
+    } else {
+      el.textContent = t("settings.priorityUndefined");
+    }
+  }
 }

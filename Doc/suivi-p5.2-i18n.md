@@ -147,10 +147,10 @@ Nouveau bloc dans `index.html` onglet settings + handler dans `src/ui/settings.j
 | #          | Tâche                                                                                  | Fichiers                                                                         | Effort  | Statut     |
 | ---------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------- | ---------- |
 | **P5.2.1** | Install deps + core i18n + sélecteur Paramètres + tests                                | `package.json`, `src/i18n/*`, `tests/i18n/*`, `app.js`, `index.html` (sélecteur) | ~1h30   | ✅ Terminé |
-| **P5.2.2** | Migrer UI : `index.html` (`data-i18n`) + `src/ui/*` + `offline.html` + `manifest.json` | UI modules + HTML                                                                | ~1h     | ⏳ À faire |
-| **P5.2.3** | Migrer domain : `questions.js` (clés) + `constants.js` + tests                         | `src/domain/*`, `tests/domain/*`                                                 | ~1h     | ⏳ À faire |
-| **P5.2.4** | Traduction `en.json` complet                                                           | `src/i18n/locales/en.json`                                                       | ~30 min | ⏳ À faire |
-| **P5.2.5** | Validation bilingue : tests, lint, build, vérif visuelle FR/EN                         | —                                                                                | ~15 min | ⏳ À faire |
+| **P5.2.2** | Migrer UI : `index.html` (`data-i18n`) + `src/ui/*` + `offline.html` + `manifest.json` | UI modules + HTML                                                                | ~1h     | ✅ Terminé |
+| **P5.2.3** | Migrer domain : `questions.js` (clés) + `constants.js` + tests                         | `src/domain/*`, `tests/domain/*`                                                 | ~1h     | ✅ Terminé |
+| **P5.2.4** | Traduction `en.json` complet                                                           | `src/i18n/locales/en.json`                                                       | ~30 min | ✅ Terminé |
+| **P5.2.5** | Validation bilingue : tests, lint, build, vérif visuelle FR/EN                         | —                                                                                | ~15 min | ✅ Terminé |
 
 ---
 
@@ -178,6 +178,30 @@ Nouveau bloc dans `index.html` onglet settings + handler dans `src/ui/settings.j
   - Build Vite : 27 modules transformés (vs 22), JS bundle 85 kB (vs 32 kB) — i18next + detector bien inclus
 - **Note** : en P5.2.1, seul le sélecteur est traduit (le reste de l'UI garde son texte FR en dur jusqu'à P5.2.2). Le sélecteur fonctionne mais visuellement le reste ne change pas encore — c'est attendu.
 - **Prochaine étape** : P5.2.2 — migrer l'UI vers `t()` / `data-i18n` (`index.html` + `src/ui/*` + `offline.html` + `manifest.json`).
+
+### 2026-06-24 — P5.2.2 / P5.2.3 / P5.2.4 terminées
+
+Migration complète de l'UI et du domain vers i18next, + traduction EN complète.
+
+- ✅ **Dictionnaires FR + EN complets** (`src/i18n/locales/fr.json` + `en.json`) : ~215 clés couvrant app, tabs, welcome, priority, assessment, results, history, settings, lang, modal, data, priorityModal, pwa, offline, dimension (5), q1-q10 (texte + 5 options), interpretation (5 niveaux × 4), recommendation (6 priorités × 3).
+- ✅ **`index.html`** : attributs `data-i18n` sur tous les éléments textuels + `data-i18n-attr` pour les attributs (placeholder, aria-label, meta description, og/twitter). Texte FR conservé en fallback dans le HTML (visible si JS désactivé).
+- ✅ **`src/ui/*`** : `modal.js` (titres/boutons via `t()`), `assessment.js` (alertes validation), `data.js` (messages import/export/delete), `priority.js` (modale priorité), `renderer.js` (formulaire, résultats, historique, graphique, settings — formatage dates via `Intl.DateTimeFormat(getCurrentLang(), …)`).
+- ✅ **`src/domain/*`** : `questions.js` refactoré (suppression `text`/`label`, texte en i18n — clés `{id}.text` / `{id}.opt{value}`), `constants.js` (INTERPRETATIONS → `{index,min,max}`, PRIORITY_LABELS/\_FULL → clés i18n, PRIORITY_RECOMMENDATIONS → arrays d'indices), `interpretation.js` (retourne `{index,min,max}`), `recommendation.js` (retourne des clés i18n + markers `__focus__dim__score__`).
+- ✅ **`offline.html`** : page autonome avec mini-dictionnaires FR/EN inline + lecture `amorFatiLang` depuis localStorage (pas accès à i18next car servie par SW).
+- ✅ **`manifest.json`** : champ `lang` laissé à `fr-FR` (la langue UI est gérée au runtime par JS ; le manifest décrit l'app installée).
+- ✅ **`app.js`** : `onLanguageChanged` re-rend désormais les modules dynamiques (`renderAssessmentForm`, `displaySettings`, `displayHistory`) + re-câble les handlers `.option`.
+- ✅ **`tests/setup.js`** : initialise i18next en `beforeAll` (force FR) + `beforeEach` remet `changeLanguage("fr")` pour des assertions déterministes. Les tests i18n gardent leur propre `beforeEach` (\_resetI18n + initI18n).
+- ✅ **Tests mis à jour** : `tests/domain/questions.test.js` (plus de `text`/`label`), `tests/domain/constants.test.js` (INTERPRETATIONS index/min/max, PRIORITY_LABELS clés i18n, PRIORITY_RECOMMENDATIONS arrays de nombres), `tests/logic.test.js` (getInterpretation vérifie `index`, getRecommendations vérifie des clés i18n + markers `__focus__`). Suppression du test "adds creation recommendation when Création < 4" (recommandation retirée car dépendait de la clé FR "Création").
+- ✅ **Bonus nettoyage** : suppression du dead code CSS `.score-badge` (plus utilisé après retrait du score-badge du formulaire — répond aussi au retour utilisateur P6.2).
+- ✅ **Validation intermédiaire** :
+  - Lint : ✅ 0 erreur
+  - Tests : ✅ 211 tests passent (0 régression)
+  - Build : ✅ 27 modules, JS 108 kB (dictionnaires FR/EN embarqués)
+- **Décisions de design prises en cours de route** :
+  - Le domain (`interpretation.js`, `recommendation.js`) retourne des **clés i18n** au lieu de strings — la couche domain reste pure (pas d'import i18next), la résolution du texte se fait côté renderer via `t()`. Respecte l'architecture DDD.
+  - Les noms de dimensions stockés en FR dans `dimensionScores` (clés des objets JSON) sont mappés via `DIMENSION_I18N_KEYS` dans le renderer pour afficher le label traduit.
+  - `offline.html` ne dépend pas d'i18next (servie hors app) — dictionnaires FR/EN inline minimaux.
+- **Prochaine étape** : P5.2.5 — validation bilingue finale (vérification visuelle FR/EN dans le dev server).
 
 ---
 
