@@ -109,8 +109,8 @@ const DIMENSION_I18N_KEYS = {
 
 function dimensionLabel(name) {
   const order = DIMENSION_I18N_KEYS[name];
-  if (!order) return escapeHtml(name);
-  return escapeHtml(t(`dimension.${order}.title`));
+  if (!order) return name;
+  return t(`dimension.${order}.title`);
 }
 
 function resolveRecommendation(key) {
@@ -118,7 +118,11 @@ function resolveRecommendation(key) {
   const m = /^__focus__(.+)__(\d+)__$/.exec(key);
   if (m) {
     const [, dim, score] = m;
-    return `<strong>${escapeHtml(t("results.focusDimension", { dimension: dimensionLabel(dim), score }))}</strong>`;
+    const text = t("results.focusDimension", {
+      dimension: dimensionLabel(dim),
+      score,
+    });
+    return `<strong>${escapeHtml(text)}</strong>`;
   }
   return escapeHtml(t(key));
 }
@@ -157,7 +161,7 @@ export function displayResults(assessment) {
     const percentage = (score / 8) * 100;
     html += `
         <div class="dimension-score">
-            <h4>${dimensionLabel(dimension)}</h4>
+            <h4>${escapeHtml(dimensionLabel(dimension))}</h4>
             <div class="dimension-score-value">${score}/8</div>
             <div class="score-bar">
                 <div class="score-fill" style="width: ${percentage}%"></div>
@@ -225,7 +229,7 @@ export function getEvolutionComparison() {
 
     html += `
         <div class="dimension-score">
-            <h4>${dimensionLabel(dimension)}</h4>
+            <h4>${escapeHtml(dimensionLabel(dimension))}</h4>
             <div class="dimension-score-value">${currentScore}/8 <span class="dim-diff" style="color: ${dimDiffColor};">(${dimDiffText})</span></div>
             <div class="score-bar">
                 <div class="score-fill" style="width: ${(currentScore / 8) * 100}%"></div>
