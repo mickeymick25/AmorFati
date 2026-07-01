@@ -183,3 +183,156 @@ Deux mécanismes trahissent visuellement le score attendu :
 - Re-câbler ou déléguer les handlers `.option` après re-rendu du formulaire.
 - Vérifier que `calculateResults` fonctionne toujours (les `value` des radios doivent être corrects après shuffle).
 - Ajouter des tests TDD avant le code (projet déjà en TDD, 195 tests, 100% coverage sur `src/`).
+
+---
+
+## 2026-07-01 — Formulaire une question par écran (style Duolingo)
+
+**Source** : retour utilisateur (message direct)
+**Thème** : refonte de l'expérience du formulaire d'évaluation
+**Statut** : à analyser (ci-dessous)
+
+### Retour
+
+> « Aujourd'hui, le formulaire présente toutes les questions à la suite mais l'utilisateur aimerait que l'écran propose les questions les unes après les autres, une seule à la fois. Un peu à l'image de Duolingo. »
+
+L'utilisateur souhaite passer d'un formulaire long (toutes les questions défilent verticalement) à une expérience séquencée : **une question par écran**, avec navigation pas-à-pas, à l'instar de l'app Duolingo (sélection d'une réponse → bouton « Suivant » → transition vers la question suivante, avec une barre de progression).
+
+### Étude de faisabilité
+
+#### État actuel
+
+`renderAssessmentForm()` (`src/ui/renderer.js` L24-73) rend **en une fois** tout le formulaire dans `#assessmentFormContainer` :
+
+- un `<form id="assessmentForm">` unique contenant les 5 dimensions × 2 questions = 10 questions
+- chaque question est un `.question` avec ses 5 options (radios, ordre shufflé)
+- à la fin : une `context-note` (textarea) + un bouton « Calculer mon score »
+- `calculateResults()` (`src/ui/assessment.js`) lit `FormData(form)` pour récupérer toutes les réponses d'un coup
+- navigation : scroll vertical dans la page, pas de pagination
+
+#### Faisabilité
+
+**Élevée.** Le changement est localisé au rendu du formulaire et à l'ajout d'une logique de navigation. `calculateResults` peut rester inchangé (approche A ci-dessous).
+
+#### Approches possibles
+
+**Option A — Pré-rendu + masquage CSS (recommandée)**
+
+- `renderAssessmentForm()` rend toutes les questions comme aujourd'hui, mais enveloppe chaque question dans un `.question-screen` et n'en montre qu'une à la fois via une classe `.active`.
+- Un état JS `currentQuestion` (0-9) gère la navigation (Suivant/Précédent).
+- Ajout d'une barre de progression + boutons Précédent/Suivant en bas du formulaire.
+- `calculateResults` **inchangé** : `FormData(form)` lit tout le formulaire y compris les radios cachés (les radios masqués via CSS restent dans le DOM et restent submittables).
+- La `context-note` est placée sur un écran dédié (écran 11) après la 10ᵉ question, avant le bouton final « Voir mes résultats ».
+- Avantages : changement minimal, préserve `FormData`, préserve le shuffle et la délégation d'événements existante, moins de risque de régression.
+
+**Option B — Re-rendu à chaque question**
+
+- `renderQuestion(index)` ne rend qu'une question à la fois ; les réponses sont stockées dans un objet JS ; `calculateResults` lit cet objet au lieu de `FormData`.
+- Avantages : transitions plus fluides, contrôle total du DOM à chaque écran.
+- Inconvénients : refactor plus profond de `calculateResults`, re-gestion de l'état des réponses, plus de risque de régression, complexité supérieure.
+
+**Recommandation** : Option A (pré-rendu + masquage CSS). C'est l'approche la moins invasive, elle préserve tout le fonctionnement existant (FormData, shuffle, délégation d'événements) et se concentre sur l'expérience visuelle.
+
+#### Architecture cible (Option A)
+
+Nouveau module `src/ui/assessment-flow.js` (logique de navigation, pur UI) :
+
+```js
+// État de progression (module-scoped)
+let currentQuestion = 0;
+const totalQuestions = 10;
+
+export function goToQuestion(index) {
+  /* show/hide .question-screen, update progress, scroll top */
+}
+export function nextQuestion() {
+  /* if currentQuestion < total → goToQuestion(current+1) */
+}
+export function prevQuestion() {
+  /* if currentQuestion > 0 → goToQuestion(current-1) */
+}
+export function isLastQuestion() {
+  /* currentQuestion === totalQuestions - 1 */
+}
+export function updateNextButtonState() {
+  /* disable Suivant if no radio checked on current screen */
+}
+export function resetFlow() {
+  currentQuestion = 0;
+  goToQuestion(0);
+}
+```
+
+`renderAssessmentForm()` (renderer.js) modifié :
+
+- chaque question enveloppée dans `<div class="question-screen" data-index="N">` (seul le premier a `.active`)
+- après les 10 questions : écran `<div class="question-screen" data-index="10">` pour la `context-note` + bouton final
+- barre de progression en haut : `<div class="progress-bar"><div class="progress-fill"></div></div>` + indicateur `{{n}}/{{total}}`
+- boutons bas : `<button class="btn btn-secondary" id="prevBtn">Précédent</button>` + `<button class="btn" id="nextBtn">Suivant</button>` (le dernier écran remplace Suivant par « Voir mes résultats » qui appelle `calculateResults()`)
+
+`app.js` : la délégation d'événements existante sur `#assessmentFormContainer` est étendue pour gérer les clics sur `#nextBtn` / `#prevBtn` et la mise à jour de l'état du bouton Suivant quand une option est sélectionnée.
+
+#### Impact
+
+- **Calcul** : neutre. `calculateResults` lit `FormData(form)` qui contient tous les radios (masqués ou non). Inchangé.
+- **Données / historique** : neutre. Les réponses sont stockées comme avant (clés `q1`-`q10`).
+- **Shuffle** : préservé. Le shuffle s'applique toujours aux options de chaque question au moment du rendu.
+- **i18n** : nouvelles clés à ajouter — `assessment.next`, `assessment.previous`, `assessment.seeResults`, `assessment.progress` (`{{n}}/{{total}}`), `assessment.contextScreenTitle` (titre de l'écran context-note).
+- **Accessibilité** : points d'attention —
+  - focus management : déplacer le focus sur la question courante à chaque changement (`tabindex="-1"` sur le `.question-screen` + `.focus()`).
+  - `aria-live="polite` sur l'indicateur de progression pour annoncer le changement d'écran aux lecteurs d'écran.
+  - les boutons Précédent/Suivant doivent être des `<button>` réels (navigables clavier).
+  - le bouton Suivant désactivé tant qu'aucune option n'est sélectionnée → `aria-disabled` + `disabled`.
+- **CSS** : nouvelles classes `.question-screen`, `.question-screen.active`, `.progress-bar`, `.progress-fill`, `.flow-buttons`. Doit intégrer le dark mode (variables sémantiques) et le mobile-first (déjà en place via P4.4). Transitions optionnelles (`transform: translateX` pour un effet slide Duolingo).
+- **Tests** : nouveaux tests UI pour la navigation (`tests/ui/assessment-flow.test.js`) — goToQuestion, next/prev aux bornes, état du bouton Suivant selon sélection, calculateResults toujours fonctionnel après navigation.
+- **PWA / SW** : neutre (pas de changement de cache, le HTML/JS est re-bundlé → hash change → bannière de mise à jour auto).
+
+#### Risques
+
+- **Faibles**. L'approche A préserve `FormData` et la délégation d'événements. Le risque principal est visuel (transitions, responsive) et accessibilité (focus management).
+- **Edge cases** :
+  - Re-rendu du formulaire (reset, changement de langue) doit réinitialiser `currentQuestion` à 0. `resetFlow()` sera appelé dans `resetForm()` et dans le handler `onLanguageChanged`.
+  - Navigation au clavier (Tab) à travers les options de l'écran courant — les options des autres écrans sont `display: none` donc non-tabulables. OK.
+  - La `context-note` sur l'écran 11 : son `<textarea>` reste dans le form, `calculateResults` lit sa valeur. Inchangé.
+- **Accessibilité** : sans focus management explicite, un utilisateur au lecteur d'écran peut ne pas percevoir le changement d'écran. D'où l'importance du `aria-live` sur la progression et du `.focus()` sur la question courante.
+
+#### Décisions de design à valider avec l'utilisateur
+
+1. **Comportement du bouton Suivant** : désactivé tant qu'aucune option n'est sélectionnée (style Duolingo, guide l'utilisateur) **ou** toujours activé (l'utilisateur peut naviguer librement sans répondre) ? → Recommandation : **désactivé** (parallèle avec Duolingo, évite les évaluations incomplètes implicites).
+2. **Bouton Précédent** : toujours visible **ou** masqué sur la première question ? → Recommandation : **masqué sur la 1ʳᵉ question** (plus propre visuellement).
+3. **Sélection d'une option → passage auto à la suivante ?** Duolingo exige un clic explicite sur « Continuer ». → Recommandation : **clic explicite requis** sur « Suivant » (évite les misclics, permet de re-lire sa réponse).
+4. **Context-note** : sur le dernier écran (écran 11, après la 10ᵉ question) **ou** écran séparé avant les résultats ? → Recommandation : **écran dédié 11** avec son propre titre (« Note de contexte ») puis bouton « Voir mes résultats ».
+5. **Animation de transition** : slide horizontal style Duolingo (`transform: translateX`) **ou** fondu simple (`opacity`) **ou** aucune ? → Recommandation : **fondu simple** (propre, peu de risque, pas de dépendance à la direction du swipe).
+6. **Indicateur de progression** : texte `{{n}}/{{total}}` **ou** barre visuelle **ou** les deux ? → Recommandation : **les deux** (barre visuelle + texte aria-live pour l'accessibilité).
+
+#### Plan d'implémentation (TDD)
+
+| #        | Tâche                                                                                                                                       | Fichiers                                         | Effort |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------ |
+| **P7.1** | `src/ui/assessment-flow.js` (navigation) + `renderAssessmentForm` refactor en `.question-screen` + tests `tests/ui/assessment-flow.test.js` | renderer.js, assessment-flow.js (nouveau), tests | ~1h    |
+| **P7.2** | CSS des écrans + barre de progression + boutons (mobile-first, dark mode, transition fondu)                                                 | styles.css                                       | ~45min |
+| **P7.3** | i18n : clés `assessment.next/previous/seeResults/progress/contextScreenTitle` (FR + EN)                                                     | fr.json, en.json                                 | ~15min |
+| **P7.4** | Validation bouton Suivant + accessibilité (focus management, aria-live, Précédent masqué sur 1ʳᵉ question) + délégation events dans app.js  | assessment-flow.js, app.js                       | ~30min |
+| **P7.5** | Validation finale : lint, tests, build, vérif visuelle                                                                                      | —                                                | ~15min |
+
+Effort total estimé : **~2h30–3h** selon le niveau de polish (transitions, animations).
+
+#### Synthèse et recommandation
+
+| Critère              | Évaluation                                                                  |
+| -------------------- | --------------------------------------------------------------------------- |
+| Faisabilité          | Élevée — changement localisé au rendu du formulaire                         |
+| Risque de régression | Faible — approche A préserve `FormData` et la délégation d'événements       |
+| Bénéfice UX          | Élevé — expérience plus engageante, moins intimidante, meilleure sur mobile |
+| Effort               | ~2h30–3h (5 sous-tâches TDD)                                                |
+| Recommandation       | **À implémenter** (P7 — Formulaire séquencé)                                |
+
+**Préfixe de commit suggéré** : `feat: P7 — one-question-per-screen assessment (Duolingo-style flow)`
+
+**Points d'attention** :
+
+- Réinitialiser `currentQuestion` à 0 dans `resetForm()` et sur `onLanguageChanged`.
+- Gérer le focus sur la question courante (accessibilité).
+- Préserver `calculateResults` inchangé (FormData lit les radios masqués).
+- Le `context-note` reste dans le `<form>` (valeur lue par `FormData`).
+- Tests TDD avant code (projet déjà en TDD, 228 tests, 100% coverage sur `src/`).
